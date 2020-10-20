@@ -1,18 +1,17 @@
-name: Super-Linter
-
-# Run this workflow every time a new commit pushed to your repository
-on: push
-
+name: Upload to S3
+on: [push]
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
-  super-lint:
-    # Name the Job
-    name: Lint code base
-    # Set the type of machine to run on
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
-      - name: Echo hello
-        run: echo hello
+    - uses: actions/checkout@master
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        s3-bucket: ${{ secrets.AWS_BUCKET }} 
+    - name: Build static site
+      run: npm install && npm run build
+    - name: Deploy static site to S3 bucket
+      run: aws s3 sync ./dist/ s3://${{s3-bucket}} --delete
