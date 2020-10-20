@@ -1,19 +1,33 @@
 <template>
-    <div id="draggable-container" ref="draggableContainer">
-        <div id="draggable-header" @mousedown="dragMouseDown">
-            <slot name="header"></slot>
-            <div v-if="!src" class="wrapper">
-                <div  class="file-upload" >
-                    <input type="file" accept="image/*" @change="onChange">
-                    <em class="fa fa-arrow-up"></em>
+    <div id="image-upload">
+        <div id="draggable-container" ref="draggableContainer">
+            <div id="draggable-header" @mousedown="dragMouseDown">
+                <slot name="header"></slot>
+                <div v-if="!src" class="wrapper">
+                    <div  class="file-upload" >
+                        <input type="file" accept="image/*" @change="onChange">
+                        <em class="fa fa-arrow-up"></em>
+                    </div>
                 </div>
+                <v-img v-else
+                       contain
+                       :src="src"
+                       :width="width"
+                       @click="selectImage"
+                       :id="src"
+                />
+                <slot name="footer"></slot>
             </div>
-            <v-img v-else
-                   contain
-                   :src="src"
-                   :width="width"
-            />
-        <slot name="footer"></slot>
+        </div>
+        <div>
+            <v-slider
+                    v-if="src"
+                    v-model="width"
+                    class="align-self-stretch slider-width"
+                    min="0"
+                    max="500"
+                    step="1"
+            ></v-slider>
         </div>
     </div>
 </template>
@@ -23,12 +37,13 @@
         data: () => {
           return {
               src: null,
-              width: "500",
+              width: "250",
               positions: {
                   clientX: undefined,
                   clientY: undefined,
                   movementX: 0,
-                  movementY: 0
+                  movementY: 0,
+                  isDragging: false
               }
           }
         },
@@ -49,6 +64,7 @@
                 };
             },
             dragMouseDown: function (event) {
+                if(!this.src) return;
                 event.preventDefault()
                 // get the mouse cursor position at startup:
                 this.positions.clientX = event.clientX
@@ -57,6 +73,8 @@
                 document.onmouseup = this.closeDragElement
             },
             elementDrag: function (event) {
+                if(!this.src) return;
+                this.positions.isDragging = true;
                 event.preventDefault()
                 this.positions.movementX = this.positions.clientX - event.clientX
                 this.positions.movementY = this.positions.clientY - event.clientY
@@ -67,8 +85,19 @@
                 this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
             },
             closeDragElement () {
+                if(!this.src) return;
                 document.onmouseup = null
                 document.onmousemove = null
+                setTimeout(() => {
+                    this.positions.isDragging = false;
+                }, 50);
+            },
+            selectImage (e) {
+                if(this.positions.isDragging) return;
+                const el = document.getElementById(this.src);
+                if(el.classList.contains("border")) return el.classList.remove("border");
+                el.classList.add("border");
+                console.log('ssss', e);
             }
         },
         watch: {
@@ -77,6 +106,8 @@
     }
 </script>
 <style scoped>
+    #image-upload {
+    }
     #draggable-container {
         position: absolute;
         z-index: 9;
@@ -92,8 +123,8 @@
         justify-content: center;
     }
     .wrapper .file-upload {
-        height: 150px;
-        width: 150px;
+        height: 130px;
+        width: 130px;
         border-radius: 100px;
         position: relative;
         display: flex;
@@ -119,5 +150,11 @@
     .wrapper .file-upload:hover {
         background-position: 0 -100%;
         color: #2590EB;
+    }
+    .border {
+        border: 2px solid #555;
+    }
+    .slider-width {
+        width: 50%;
     }
 </style>
