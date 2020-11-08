@@ -19,7 +19,7 @@
                 <slot name="footer"></slot>
             </div>
         </div>
-        <div>
+        <!--<div>
             <v-slider
                     v-if="src"
                     v-model="width"
@@ -28,11 +28,13 @@
                     max="500"
                     step="1"
             ></v-slider>
-        </div>
+        </div>-->
     </div>
 </template>
 
 <script>
+    import { mapActions, mapState } from 'vuex';
+
     export default {
         data: () => {
           return {
@@ -46,6 +48,11 @@
                   isDragging: false
               }
           }
+        },
+        computed: {
+            ...mapState([
+                'activeImage'
+            ])
         },
         methods: {
             onChange(e) {
@@ -92,16 +99,28 @@
                     this.positions.isDragging = false;
                 }, 50);
             },
-            selectImage (e) {
+            async selectImage (e) {
                 if(this.positions.isDragging) return;
                 const el = document.getElementById(this.src);
-                if(el.classList.contains("border")) return el.classList.remove("border");
+                if(el.classList.contains("border")) {
+                    await this.setActiveImage(null);
+                    return el.classList.remove("border");
+                }
                 el.classList.add("border");
                 console.log('ssss', e);
-            }
+                await this.setActiveImage({
+                    src: this.src,
+                    width: this.width
+                });
+            },
+            ...mapActions({
+                setActiveImage: 'setActiveImage' // map `this.add()` to `this.$store.commit('increment')`
+            })
         },
         watch: {
-
+            activeImage(newValue) {
+                this.width = newValue.width;
+            }
         }
     }
 </script>

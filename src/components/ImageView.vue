@@ -12,7 +12,7 @@
             single-line
     ></v-select>-->
     <v-row v-for="i in n" :key="i">
-      <template >
+      <template>
         <v-col v-for="j in m" :key="(i + 1) * 10 + j" :class="height">
           <ImageUpload class="center" style="">
             <template slot="header">
@@ -33,19 +33,27 @@
         </v-col>
       </template>
     </v-row>
+    <v-row>
+      <v-col>
+        <ImageConfigurer/>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
   import ImageUpload from './ImageUpload';
+  import ImageConfigurer from './ImageConfigurer';
+
   export default {
     name: 'ImageView',
     components: {
-      ImageUpload
+      ImageUpload,
+      ImageConfigurer
     },
     data: () => ({
-      n: 4,
-      m: 2,
+      n: 3,
+      m: 3,
       select: { grid: '1 x 2', m: '1', n: '2' },
       items: [
         { grid: '1 x 3', m: '1', n: '3' },
@@ -57,11 +65,7 @@
         { grid: '3 x 1', m: '3', n: '1' },
         { grid: '3 x 2', m: '3', n: '2' },
         { grid: '3 x 3', m: '3', n: '3' },
-        { grid: '3 x 4', m: '3', n: '4' },
-        { grid: '4 x 1', m: '4', n: '1' },
-        { grid: '4 x 2', m: '4', n: '2' },
-        { grid: '4 x 3', m: '4', n: '3' },
-        { grid: '4 x 4', m: '4', n: '4' },
+        { grid: '3 x 4', m: '3', n: '4' }
       ],
     }),
     mounted() {
@@ -89,16 +93,16 @@
     height: 220px
   }
   .height-sm {
-    height: 400px
+    height: 250px
   }
   .height-md {
-    height: 500px
+    height: 150px
   }
   .height-lg {
-    height: 600px
+    height: 280px
   }
   .height-xl {
-    height: 800px
+    height: 300px
   }
   #image-view {
     overflow: hidden;
