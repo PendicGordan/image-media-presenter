@@ -67,24 +67,24 @@
             },
             dragMouseDown: function (event) {
                 if(!this.src) return;
-                event.preventDefault()
+                event.preventDefault();
                 // get the mouse cursor position at startup:
-                this.positions.clientX = event.clientX
-                this.positions.clientY = event.clientY
-                document.onmousemove = this.elementDrag
-                document.onmouseup = this.closeDragElement
+                this.positions.clientX = event.clientX;
+                this.positions.clientY = event.clientY;
+                document.onmousemove = this.elementDrag;
+                document.onmouseup = this.closeDragElement;
             },
             elementDrag: function (event) {
                 if(!this.src) return;
                 this.positions.isDragging = true;
-                event.preventDefault()
-                this.positions.movementX = this.positions.clientX - event.clientX
-                this.positions.movementY = this.positions.clientY - event.clientY
-                this.positions.clientX = event.clientX
-                this.positions.clientY = event.clientY
+                event.preventDefault();
+                this.positions.movementX = this.positions.clientX - event.clientX;
+                this.positions.movementY = this.positions.clientY - event.clientY;
+                this.positions.clientX = event.clientX;
+                this.positions.clientY = event.clientY;
                 // set the element's new position:
-                this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
-                this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
+                this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px';
+                this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px';
             },
             closeDragElement () {
                 if(!this.src) return;
@@ -114,9 +114,13 @@
         },
         watch: {
             activeImage(newValue) {
-                console.log('abc', this.rotation);
                 this.width = newValue && newValue.width ? newValue.width : this.width;
                 this.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.rotation;
+                if(newValue.rotation === 0) {
+                    setTimeout(() => {
+                        this.rotation = 0;
+                    }, 50);
+                }
             }
         }
     }

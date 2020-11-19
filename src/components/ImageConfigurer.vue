@@ -29,7 +29,7 @@
                     class="align-self-stretch slider-width"
                     min="0"
                     max="360"
-                    step="1.0"
+                    step="1"
                     :thumb-size="24"
                     thumb-label="always"
             >
@@ -55,7 +55,6 @@
         },
         watch: {
             width(newValue) {
-                console.log('tttt');
                 this.setActiveImage({
                     src: this.activeImage.src,
                     width: newValue,
@@ -63,7 +62,6 @@
                 });
             },
             rotation(newValue) {
-                console.log('rrrrr');
                 this.setActiveImage({
                     src: this.activeImage.src,
                     width: this.activeImage.width,
