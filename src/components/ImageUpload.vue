@@ -9,26 +9,20 @@
                         <em class="fa fa-arrow-up"></em>
                     </div>
                 </div>
-                <v-img v-else
-                       contain
-                       :src="src"
-                       :width="width"
-                       @click="selectImage"
-                       :id="src"
-                />
+                <div v-else
+                     :style="`transform: rotate(${rotation}deg);`"
+                >
+                    <v-img
+                           contain
+                           :src="src"
+                           :width="width"
+                           @click="selectImage"
+                           :id="src"
+                    />
+                </div>
                 <slot name="footer"></slot>
             </div>
         </div>
-        <!--<div>
-            <v-slider
-                    v-if="src"
-                    v-model="width"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="500"
-                    step="1"
-            ></v-slider>
-        </div>-->
     </div>
 </template>
 
@@ -40,6 +34,7 @@
           return {
               src: null,
               width: "250",
+              rotation: 0,
               positions: {
                   clientX: undefined,
                   clientY: undefined,
@@ -93,13 +88,13 @@
             },
             closeDragElement () {
                 if(!this.src) return;
-                document.onmouseup = null
-                document.onmousemove = null
+                document.onmouseup = null;
+                document.onmousemove = null;
                 setTimeout(() => {
                     this.positions.isDragging = false;
                 }, 50);
             },
-            async selectImage (e) {
+            async selectImage () {
                 if(this.positions.isDragging) return;
                 const el = document.getElementById(this.src);
                 if(el.classList.contains("border")) {
@@ -107,10 +102,10 @@
                     return el.classList.remove("border");
                 }
                 el.classList.add("border");
-                console.log('ssss', e);
                 await this.setActiveImage({
                     src: this.src,
-                    width: this.width
+                    width: this.width,
+                    rotation: this.rotation
                 });
             },
             ...mapActions({
@@ -119,7 +114,9 @@
         },
         watch: {
             activeImage(newValue) {
-                this.width = newValue.width;
+                console.log('abc', this.rotation);
+                this.width = newValue && newValue.width ? newValue.width : this.width;
+                this.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.rotation;
             }
         }
     }
