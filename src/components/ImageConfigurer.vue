@@ -1,87 +1,128 @@
 <template>
     <div id="ImageConfigurer">
         <div v-if="activeImage">
-            <v-slider
-                    v-model="imageData.width"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="500"
-                    step="1"
-            ></v-slider>
-            <v-btn @click="rotateLeft"
-                   fab
-                   dark
-                   color="primary">
-                <v-icon dark>
-                    mdi-rotate-right
-                </v-icon>
-            </v-btn>
-            <v-btn @click="rotateRight"
-                   fab
-                   dark
-                   color="primary">
-                <v-icon dark>
-                    mdi-rotate-left
-                </v-icon>
-            </v-btn>
-            <v-slider
-                    v-model="imageData.rotation"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="360"
-                    step="1"
-                    :thumb-size="24"
-                    thumb-label="always"
+            <div id="editor">
+                <div v-if="value === 'basic'">
+                    <v-slider
+                            v-model="imageData.width"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="500"
+                            step="1"
+                    ></v-slider>
+                    <v-btn @click="rotateLeft"
+                           fab
+                           dark
+                           color="primary">
+                        <v-icon dark>
+                            mdi-rotate-right
+                        </v-icon>
+                    </v-btn>
+                    <v-btn @click="rotateRight"
+                           fab
+                           dark
+                           color="primary">
+                        <v-icon dark>
+                            mdi-rotate-left
+                        </v-icon>
+                    </v-btn>
+                    <v-slider
+                            v-model="imageData.rotation"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="360"
+                            step="1"
+                            :thumb-size="24"
+                            thumb-label="always"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="imageData.roundFactor"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="50"
+                            step="1"
+                    >
+                    </v-slider>
+                </div>
+                <div v-else-if="value === 'filter'">
+                    <v-slider
+                            v-model="imageData.blurringLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="imageData.sepiaLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="imageData.saturationLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="imageData.invertLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="imageData.opacityLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="imageData.brightnessLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                </div>
+                <div v-else-if="value === 'other'">
+                    c
+                </div>
+            </div>
+            <v-bottom-navigation
+                    v-model="value"
+                    color="primary"
+                    horizontal
+                    shift
             >
-            </v-slider>
-            <v-slider
-                    v-model="imageData.roundFactor"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="50"
-                    step="1"
-            >
-            </v-slider>
-            <v-slider
-                    v-model="imageData.blurringLevel"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="100"
-                    step="1"
-            >
-            </v-slider>
-            <v-slider
-                    v-model="imageData.sepiaLevel"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="100"
-                    step="1"
-            >
-            </v-slider>
-            <v-slider
-                    v-model="imageData.saturationLevel"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="100"
-                    step="1"
-            >
-            </v-slider>
-            <v-slider
-                    v-model="imageData.invertLevel"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="100"
-                    step="1"
-            >
-            </v-slider>
-            <v-slider
-                    v-model="imageData.opacityLevel"
-                    class="align-self-stretch slider-width"
-                    min="0"
-                    max="100"
-                    step="1"
-            >
-            </v-slider>
+                <v-btn value="basic">
+                    <span>Recents</span>
+
+                    <v-icon>mdi-history</v-icon>
+                </v-btn>
+
+                <v-btn value="filter">
+                    <span>Favorites</span>
+
+                    <v-icon>mdi-heart</v-icon>
+                </v-btn>
+
+                <v-btn value="other">
+                    <span>Nearby</span>
+
+                    <v-icon>mdi-map-marker</v-icon>
+                </v-btn>
+            </v-bottom-navigation>
         </div>
     </div>
 </template>
@@ -103,8 +144,10 @@
                 sepiaLevel: 0,
                 saturationLevel: 60,
                 invertLevel: 0,
-                opacityLevel: 50
-            }
+                opacityLevel: 50,
+                brightnessLevel: 100
+            },
+            value: 0
         }),
         props: {
         },
@@ -162,6 +205,12 @@
                     this.setActiveImage(this.imageData);
                 }
             },
+            'imageData.brightnessLevel'(newValue) {
+                if(this.imageData) {
+                    this.imageData.brightnessLevel = newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
             activeImage(newValue) {
                 this.imageData = newValue;
             }
@@ -183,6 +232,13 @@
 </script>
 <style scoped>
     #ImageConfigurer {
+        max-width: 100%;
+        width: 100%;
+        margin: auto;
+        position: fixed;
+        bottom: 0;
+    }
+    #editor {
         max-width: 50%;
         margin: auto;
     }
