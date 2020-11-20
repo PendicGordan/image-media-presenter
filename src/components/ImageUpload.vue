@@ -18,7 +18,12 @@
                            :width="imageData.width"
                            @click="selectImage"
                            :id="imageData.uuid"
-                           :style="{'border-radius': imageData.roundFactor + '%'}"
+                           :style="{
+                                'border-radius': imageData.roundFactor + '%',
+                                '-webkit-filter': 'grayscale(' + imageData.blurringLevel / 100 + ')',
+                                'filter': 'grayscale(' + imageData.blurringLevel / 100 + ')'
+                           }"
+                           class="blur"
                     />
                 </div>
                 <slot name="footer"></slot>
@@ -42,7 +47,8 @@
                   rotation: 0,
                   positionX: null,
                   positionY: null,
-                  roundFactor: 0
+                  roundFactor: 0,
+                  blurringLevel: 0
               },
               positions: {
                   clientX: null,
@@ -63,7 +69,6 @@
                 const el = document.getElementById(this.imageData.uuid)
                 if(payload.uuid === this.imageData.uuid || !el) return;
                 el.classList.remove("border");
-                console.log('ffffffffffffffffffffffffffff', payload);
             });
         },
         methods: {
@@ -97,7 +102,6 @@
                 this.positions.isDragging = true;
                 event.preventDefault();
                 if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;
-                console.log(event.clientY);
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;
                 this.positions.clientX = event.clientX;
@@ -135,6 +139,7 @@
                 this.imageData.width = newValue && newValue.width ? newValue.width : this.imageData.width;
                 this.imageData.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.imageData.rotation;
                 this.imageData.roundFactor = newValue && newValue.roundFactor ? (newValue.roundFactor !== 1 ? newValue.roundFactor : 0) : this.imageData.roundFactor;
+                this.imageData.blurringLevel = newValue && newValue.blurringLevel ? (newValue.blurringLevel !== 1 ? newValue.blurringLevel : 0) : this.imageData.blurringLevel;
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;
@@ -195,5 +200,8 @@
     }
     .slider-width {
         width: 50%;
+    }
+    .blur {
+
     }
 </style>

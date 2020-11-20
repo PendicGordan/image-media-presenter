@@ -32,7 +32,7 @@
       ImageConfigurer
     },
     data: () => ({
-      n: 2,
+      n: 1,
       m: 3,
       select: { grid: '1 x 2', m: '1', n: '2' },
       items: [

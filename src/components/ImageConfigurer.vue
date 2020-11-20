@@ -40,8 +40,14 @@
                     min="0"
                     max="50"
                     step="1"
-                    :thumb-size="24"
-                    thumb-label="always"
+            >
+            </v-slider>
+            <v-slider
+                    v-model="imageData.blurringLevel"
+                    class="align-self-stretch slider-width"
+                    min="0"
+                    max="100"
+                    step="1"
             >
             </v-slider>
         </div>
@@ -60,7 +66,8 @@
                 rotation: "0",
                 positionX: 0,
                 positionY: 0,
-                roundFactor: 0
+                roundFactor: 0,
+                blurringLevel: 0
             }
         }),
         props: {
@@ -80,6 +87,18 @@
             'imageData.rotation'(newValue) {
                 if(this.imageData) {
                     this.imageData.rotation = newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
+            'imageData.roundFactor'(newValue) {
+                if(this.imageData) {
+                    this.imageData.roundFactor = newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
+            'imageData.blurringLevel'(newValue) {
+                if(this.imageData) {
+                    this.imageData.blurringLevel = newValue;
                     this.setActiveImage(this.imageData);
                 }
             },
