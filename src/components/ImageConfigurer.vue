@@ -74,6 +74,14 @@
                     step="1"
             >
             </v-slider>
+            <v-slider
+                    v-model="imageData.opacityLevel"
+                    class="align-self-stretch slider-width"
+                    min="0"
+                    max="100"
+                    step="1"
+            >
+            </v-slider>
         </div>
     </div>
 </template>
@@ -94,7 +102,8 @@
                 blurringLevel: 0,
                 sepiaLevel: 0,
                 saturationLevel: 60,
-                invertLevel: 0
+                invertLevel: 0,
+                opacityLevel: 50
             }
         }),
         props: {
@@ -144,6 +153,12 @@
             'imageData.invertLevel'(newValue) {
                 if(this.imageData) {
                     this.imageData.invertLevel = newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
+            'imageData.opacityLevel'(newValue) {
+                if(this.imageData) {
+                    this.imageData.opacityLevel = newValue;
                     this.setActiveImage(this.imageData);
                 }
             },

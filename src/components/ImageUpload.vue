@@ -20,8 +20,8 @@
                            :id="imageData.uuid"
                            :style="{
                                 'border-radius': imageData.roundFactor + '%',
-                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100})`,
-                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100})`
+                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100})`,
+                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100})`
                            }"
                            class="blur"
                     />
@@ -51,7 +51,8 @@
                   blurringLevel: 0,
                   sepiaLevel: 0,
                   saturationLevel: 1,
-                  invertLevel: 0
+                  invertLevel: 0,
+                  opacityLevel: 100
               },
               positions: {
                   clientX: null,
@@ -146,6 +147,7 @@
                 this.imageData.sepiaLevel = newValue && newValue.sepiaLevel ? (newValue.sepiaLevel !== 1 ? newValue.sepiaLevel : 0) : this.imageData.sepiaLevel;
                 this.imageData.saturationLevel = newValue && newValue.saturationLevel ? newValue.saturationLevel : this.imageData.saturationLevel;
                 this.imageData.invertLevel = newValue && newValue.invertLevel ? newValue.invertLevel : this.imageData.invertLevel;
+                this.imageData.opacityLevel = newValue && newValue.opacityLevel ? newValue.opacityLevel : this.imageData.opacityLevel;
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;
