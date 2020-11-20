@@ -54,9 +54,6 @@
       ],
       isEnabled: true
     }),
-    mounted() {
-      console.log(this.height);
-    },
     computed: {
       height: function() {
         return 'height-' + this.$vuetify.breakpoint.name;
@@ -68,9 +65,6 @@
     watch: {
       select() {
         console.log(this.select);
-      },
-      backgroundImage() {
-        console.log('bbb');
       }
     },
     methods: {

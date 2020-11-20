@@ -119,10 +119,11 @@
                         </v-btn>
                         <v-checkbox
                                 v-model="imageData.isBackgroundImage"
-                                label="primary"
+                                label="Set as background"
                                 color="primary"
                                 value="primary"
                                 hide-details
+                                @change="handleImageBackground"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
@@ -175,7 +176,7 @@
                 opacityLevel: 50,
                 brightnessLevel: 100,
                 contrastLevel: 100,
-                isBackgroundImage: false
+                isBackgroundImage: null
             },
             value: 0
         }),
@@ -245,7 +246,6 @@
                 if(this.imageData) {
                     this.imageData.isBackgroundImage = newValue;
                     this.setActiveImage(this.imageData);
-                    this.setBackgroundImage({isEnabled: this.imageData.isBackgroundImage, backgroundImage: this.imageData.src});
                 }
             },
             activeImage(newValue) {
@@ -267,6 +267,16 @@
             },
             activateFilterAnimation() {
                 EventBus.$emit('ANIMATE_IMAGE', { uuid: this.imageData.uuid });
+            },
+            handleImageBackground(e) {
+                this.setBackgroundImage({
+                    isEnabled: e,
+                    backgroundImage: this.imageData.src
+                });
+                EventBus.$emit('BACKGROUND_IMAGE_SET', {
+                    uuid: this.imageData.uuid,
+                    isEnabled: e
+                });
             }
         }
     };

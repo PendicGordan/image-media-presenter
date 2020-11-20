@@ -55,7 +55,7 @@
                   opacityLevel: 100,
                   brightnessLevel: 100,
                   contrastLevel: 100,
-                  isBackgroundImage: false
+                  isBackgroundImage: null
               },
               positions: {
                   clientX: null,
@@ -81,6 +81,10 @@
                 const el = document.getElementById(this.imageData.uuid);
                 if(payload.uuid !== this.imageData.uuid || !el) return;
                 this.activateFilterAnimation();
+            });
+            EventBus.$on('BACKGROUND_IMAGE_SET', (payload) => {
+                if(payload.uuid !== this.imageData.uuid && payload.isEnabled) this.imageData.isBackgroundImage = false;
+                else if (payload.uuid === this.imageData.uuid) this.imageData.isBackgroundImage = payload.isEnabled;
             });
         },
         methods: {
@@ -160,7 +164,7 @@
                 this.imageData.invertLevel = newValue && newValue.invertLevel ? newValue.invertLevel : this.imageData.invertLevel;
                 this.imageData.opacityLevel = newValue && newValue.opacityLevel ? newValue.opacityLevel : this.imageData.opacityLevel;
                 this.imageData.brightnessLevel = newValue && newValue.brightnessLevel ? newValue.brightnessLevel : this.imageData.brightnessLevel;
-                this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage !== undefined ? newValue.isBackgroundImage : false;
+                this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage ? newValue.isBackgroundImage : null;
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;
