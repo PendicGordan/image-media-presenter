@@ -111,7 +111,19 @@
                 </v-row>
                 <v-row v-else-if="value === 'other'">
                     <v-col md>
-                        abc
+                        <v-btn @click="activateFilterAnimation"
+                               fab
+                               dark
+                               color="primary">
+                            <v-icon>mdi-animation</v-icon>
+                        </v-btn>
+                        <v-checkbox
+                                v-model="imageData.isBackgroundImage"
+                                label="primary"
+                                color="primary"
+                                value="primary"
+                                hide-details
+                        ></v-checkbox>
                     </v-col>
                 </v-row>
             </div>
@@ -135,7 +147,6 @@
 
                 <v-btn value="other">
                     <span>Nearby</span>
-
                     <v-icon>mdi-map-marker</v-icon>
                 </v-btn>
             </v-bottom-navigation>
@@ -145,6 +156,7 @@
 
 <script>
     import { mapState, mapActions } from 'vuex';
+    import EventBus from '../helpers/eventBus';
 
     export default {
         data: () => ({
@@ -162,7 +174,8 @@
                 invertLevel: 0,
                 opacityLevel: 50,
                 brightnessLevel: 100,
-                contrastLevel: 100
+                contrastLevel: 100,
+                isBackgroundImage: false
             },
             value: 0
         }),
@@ -228,10 +241,11 @@
                     this.setActiveImage(this.imageData);
                 }
             },
-            'imageData.contrastLevel'(newValue) {
+            'imageData.isBackgroundImage'(newValue) {
                 if(this.imageData) {
-                    this.imageData.contrastLevel= newValue;
+                    this.imageData.isBackgroundImage = newValue;
                     this.setActiveImage(this.imageData);
+                    this.setBackgroundImage({isEnabled: this.imageData.isBackgroundImage, backgroundImage: this.imageData.src});
                 }
             },
             activeImage(newValue) {
@@ -240,7 +254,8 @@
         },
         methods: {
             ...mapActions([
-                'setActiveImage'
+                'setActiveImage',
+                'setBackgroundImage'
             ]),
             rotateRight() {
                 this.imageData.rotation = this.imageData.rotation - 90 >= 0 ? this.imageData.rotation - 90 + "" : 360 - Math.abs(this.imageData.rotation - 90);
@@ -249,6 +264,9 @@
             rotateLeft() {
                 this.imageData.rotation = this.imageData.rotation + 90 < 360 ? this.imageData.rotation + 90 + "" : (this.imageData.rotation + 90) % 360 + "";
                 this.setActiveImage(this.imageData);
+            },
+            activateFilterAnimation() {
+                EventBus.$emit('ANIMATE_IMAGE', { uuid: this.imageData.uuid });
             }
         }
     };
@@ -260,6 +278,7 @@
         margin: auto;
         position: fixed;
         bottom: 0;
+        z-index: 999
     }
     #editor {
         max-width: 80%;

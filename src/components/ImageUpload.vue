@@ -54,7 +54,8 @@
                   invertLevel: 0,
                   opacityLevel: 100,
                   brightnessLevel: 100,
-                  contrastLevel: 100
+                  contrastLevel: 100,
+                  isBackgroundImage: false
               },
               positions: {
                   clientX: null,
@@ -72,9 +73,14 @@
         },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
-                const el = document.getElementById(this.imageData.uuid)
+                const el = document.getElementById(this.imageData.uuid);
                 if(payload.uuid === this.imageData.uuid || !el) return;
                 el.classList.remove("border");
+            });
+            EventBus.$on('ANIMATE_IMAGE', (payload) => {
+                const el = document.getElementById(this.imageData.uuid);
+                if(payload.uuid !== this.imageData.uuid || !el) return;
+                this.activateFilterAnimation();
             });
         },
         methods: {
@@ -137,7 +143,10 @@
             },
             ...mapActions({
                 setActiveImage: 'setActiveImage' // map `this.add()` to `this.$store.commit('increment')`
-            })
+            }),
+            activateFilterAnimation() {
+                document.getElementById(this.imageData.uuid).classList.toggle('animated');
+            }
         },
         watch: {
             activeImage(newValue) {
@@ -151,7 +160,7 @@
                 this.imageData.invertLevel = newValue && newValue.invertLevel ? newValue.invertLevel : this.imageData.invertLevel;
                 this.imageData.opacityLevel = newValue && newValue.opacityLevel ? newValue.opacityLevel : this.imageData.opacityLevel;
                 this.imageData.brightnessLevel = newValue && newValue.brightnessLevel ? newValue.brightnessLevel : this.imageData.brightnessLevel;
-                this.imageData.contrastLevel = newValue && newValue.contrastLevel ? newValue.contrastLevel : this.imageData.contrastLevel;
+                this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage !== undefined ? newValue.isBackgroundImage : false;
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;
@@ -212,5 +221,21 @@
     }
     .slider-width {
         width: 50%;
+    }
+    .animated {
+        -webkit-animation: filter-animation 5s infinite;
+    }
+    @-webkit-keyframes filter-animation {
+        0% {
+            -webkit-filter: sepia(0) saturate(2);
+        }
+
+        50% {
+            -webkit-filter: sepia(1) saturate(8);
+        }
+
+        100% {
+            -webkit-filter: sepia(0) saturate(2);
+        }
     }
 </style>
