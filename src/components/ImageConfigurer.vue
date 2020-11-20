@@ -2,102 +2,118 @@
     <div id="ImageConfigurer">
         <div v-if="activeImage">
             <div id="editor">
-                <div v-if="value === 'basic'">
-                    <v-slider
-                            v-model="imageData.width"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="500"
-                            step="1"
-                    ></v-slider>
-                    <v-btn @click="rotateLeft"
-                           fab
-                           dark
-                           color="primary">
-                        <v-icon dark>
-                            mdi-rotate-right
-                        </v-icon>
-                    </v-btn>
-                    <v-btn @click="rotateRight"
-                           fab
-                           dark
-                           color="primary">
-                        <v-icon dark>
-                            mdi-rotate-left
-                        </v-icon>
-                    </v-btn>
-                    <v-slider
-                            v-model="imageData.rotation"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="360"
-                            step="1"
-                            :thumb-size="24"
-                            thumb-label="always"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="imageData.roundFactor"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="50"
-                            step="1"
-                    >
-                    </v-slider>
-                </div>
-                <div v-else-if="value === 'filter'">
-                    <v-slider
-                            v-model="imageData.blurringLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="imageData.sepiaLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="imageData.saturationLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="imageData.invertLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="imageData.opacityLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="imageData.brightnessLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
-                    >
-                    </v-slider>
-                </div>
-                <div v-else-if="value === 'other'">
-                    c
-                </div>
+                <v-row cols="1" v-if="value === 'basic'">
+                    <v-col md>
+                        <v-slider
+                                v-model="imageData.width"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="500"
+                                step="1"
+                        ></v-slider>
+                        <v-btn @click="rotateLeft"
+                               fab
+                               dark
+                               color="primary">
+                            <v-icon dark>
+                                mdi-rotate-right
+                            </v-icon>
+                        </v-btn>
+                        <v-btn @click="rotateRight"
+                               fab
+                               dark
+                               color="primary">
+                            <v-icon dark>
+                                mdi-rotate-left
+                            </v-icon>
+                        </v-btn>
+                        <v-slider
+                                v-model="imageData.rotation"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="360"
+                                step="1"
+                                :thumb-size="24"
+                                thumb-label="always"
+                        >
+                        </v-slider>
+                        <v-slider
+                                v-model="imageData.roundFactor"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="50"
+                                step="1"
+                        >
+                        </v-slider>
+                    </v-col>
+                </v-row>
+                <v-row cols="2" v-else-if="value === 'filter'">
+                    <v-col md>
+                        <v-slider
+                                v-model="imageData.blurringLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                        <v-slider
+                                v-model="imageData.sepiaLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                        <v-slider
+                                v-model="imageData.saturationLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                        <v-slider
+                                v-model="imageData.invertLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                        <v-slider
+                                v-model="imageData.opacityLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                    </v-col>
+                    <v-col md>
+                        <v-slider
+                                v-model="imageData.brightnessLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                        <v-slider
+                                v-model="imageData.contrastLevel"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="100"
+                                step="1"
+                        >
+                        </v-slider>
+                    </v-col>
+                </v-row>
+                <v-row v-else-if="value === 'other'">
+                    <v-col md>
+                        abc
+                    </v-col>
+                </v-row>
             </div>
             <v-bottom-navigation
                     v-model="value"
@@ -145,7 +161,8 @@
                 saturationLevel: 60,
                 invertLevel: 0,
                 opacityLevel: 50,
-                brightnessLevel: 100
+                brightnessLevel: 100,
+                contrastLevel: 100
             },
             value: 0
         }),
@@ -211,6 +228,12 @@
                     this.setActiveImage(this.imageData);
                 }
             },
+            'imageData.contrastLevel'(newValue) {
+                if(this.imageData) {
+                    this.imageData.contrastLevel= newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
             activeImage(newValue) {
                 this.imageData = newValue;
             }
@@ -239,7 +262,7 @@
         bottom: 0;
     }
     #editor {
-        max-width: 50%;
+        max-width: 80%;
         margin: auto;
     }
 </style>
