@@ -20,8 +20,8 @@
                            :id="imageData.uuid"
                            :style="{
                                 'border-radius': imageData.roundFactor + '%',
-                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100})`,
-                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100})`
+                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel})`,
+                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel})`
                            }"
                            class="blur"
                     />
@@ -49,7 +49,8 @@
                   positionY: null,
                   roundFactor: 0,
                   blurringLevel: 0,
-                  sepiaLevel: 0
+                  sepiaLevel: 0,
+                  saturationLevel: 1
               },
               positions: {
                   clientX: null,
@@ -142,6 +143,7 @@
                 this.imageData.roundFactor = newValue && newValue.roundFactor ? (newValue.roundFactor !== 1 ? newValue.roundFactor : 0) : this.imageData.roundFactor;
                 this.imageData.blurringLevel = newValue && newValue.blurringLevel ? (newValue.blurringLevel !== 1 ? newValue.blurringLevel : 0) : this.imageData.blurringLevel;
                 this.imageData.sepiaLevel = newValue && newValue.sepiaLevel ? (newValue.sepiaLevel !== 1 ? newValue.sepiaLevel : 0) : this.imageData.sepiaLevel;
+                this.imageData.saturationLevel = newValue && newValue.saturationLevel ? newValue.saturationLevel : this.imageData.saturationLevel;
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;

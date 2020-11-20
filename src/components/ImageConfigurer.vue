@@ -58,6 +58,14 @@
                     step="1"
             >
             </v-slider>
+            <v-slider
+                    v-model="imageData.saturationLevel"
+                    class="align-self-stretch slider-width"
+                    min="0"
+                    max="100"
+                    step="1"
+            >
+            </v-slider>
         </div>
     </div>
 </template>
@@ -76,7 +84,8 @@
                 positionY: 0,
                 roundFactor: 0,
                 blurringLevel: 0,
-                sepiaLevel: 0
+                sepiaLevel: 0,
+                saturationLevel: 60
             }
         }),
         props: {
@@ -114,6 +123,12 @@
             'imageData.sepiaLevel'(newValue) {
                 if(this.imageData) {
                     this.imageData.sepiaLevel = newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
+            'imageData.saturationLevel'(newValue) {
+                if(this.imageData) {
+                    this.imageData.saturationLevel = newValue;
                     this.setActiveImage(this.imageData);
                 }
             },
