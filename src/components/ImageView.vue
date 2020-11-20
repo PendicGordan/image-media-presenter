@@ -1,16 +1,5 @@
 <template>
   <div id="image-view">
-    <!--<v-select
-            v-model="select"
-            :hint="'Currently selected: ' + `${select.m} x ${select.n}`"
-            :items="items"
-            item-text="grid"
-            :item-value="select"
-            label="Select a grid"
-            persistent-hint
-            return-object
-            single-line
-    ></v-select>-->
     <v-row v-for="i in n" :key="i">
       <template>
         <v-col v-for="j in m" :key="(i + 1) * 10 + j" :class="height">
@@ -21,15 +10,6 @@
             </template>
           </ImageUpload>
           <br />
-          <div>
-        <!--<v-slider
-
-                class="align-self-stretch"
-                min="200"
-                max="500"
-                step="1"
-        ></v-slider>-->
-          </div>
         </v-col>
       </template>
     </v-row>

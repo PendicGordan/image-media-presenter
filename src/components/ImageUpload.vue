@@ -3,21 +3,21 @@
         <div id="draggable-container" ref="draggableContainer">
             <div id="draggable-header" @mousedown="dragMouseDown">
                 <slot name="header"></slot>
-                <div v-if="!src" class="wrapper">
+                <div v-if="!imageData.src" class="wrapper">
                     <div  class="file-upload" >
                         <input type="file" accept="image/*" @change="onChange">
                         <em class="fa fa-arrow-up"></em>
                     </div>
                 </div>
                 <div v-else
-                     :style="`transform: rotate(${rotation}deg);`"
+                     :style="`transform: rotate(${imageData.rotation}deg);`"
                 >
                     <v-img
                            contain
-                           :src="src"
-                           :width="width"
+                           :src="imageData.src"
+                           :width="imageData.width"
                            @click="selectImage"
-                           :id="src"
+                           :id="imageData.src"
                     />
                 </div>
                 <slot name="footer"></slot>
@@ -32,12 +32,16 @@
     export default {
         data: () => {
           return {
-              src: null,
-              width: "250",
-              rotation: 0,
+              imageData: {
+                  src: null,
+                  width: "250",
+                  rotation: 0,
+                  positionX: null,
+                  positionY: null
+              },
               positions: {
-                  clientX: undefined,
-                  clientY: undefined,
+                  clientX: null,
+                  clientY: null,
                   movementX: 0,
                   movementY: 0,
                   isDragging: false
@@ -61,12 +65,12 @@
 
                 reader.onload = e => {
                     let src = e.target.result;
-                    this.src = src;
+                    this.imageData.src = src;
                     this.$emit('loaded', { src, file });
                 };
             },
             dragMouseDown: function (event) {
-                if(!this.src) return;
+                if(!this.imageData.src) return;
                 event.preventDefault();
                 // get the mouse cursor position at startup:
                 this.positions.clientX = event.clientX;
@@ -75,7 +79,7 @@
                 document.onmouseup = this.closeDragElement;
             },
             elementDrag: function (event) {
-                if(!this.src) return;
+                if(!this.imageData.src) return;
                 this.positions.isDragging = true;
                 event.preventDefault();
                 this.positions.movementX = this.positions.clientX - event.clientX;
@@ -87,26 +91,22 @@
                 this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px';
             },
             closeDragElement () {
-                if(!this.src) return;
+                if(!this.imageData.src) return;
                 document.onmouseup = null;
                 document.onmousemove = null;
-                setTimeout(() => {
+                setTimeout(async () => {
                     this.positions.isDragging = false;
                 }, 50);
             },
             async selectImage () {
                 if(this.positions.isDragging) return;
-                const el = document.getElementById(this.src);
+                const el = document.getElementById(this.imageData.src);
                 if(el.classList.contains("border")) {
                     await this.setActiveImage(null);
                     return el.classList.remove("border");
                 }
                 el.classList.add("border");
-                await this.setActiveImage({
-                    src: this.src,
-                    width: this.width,
-                    rotation: this.rotation
-                });
+                await this.setActiveImage(this.imageData);
             },
             ...mapActions({
                 setActiveImage: 'setActiveImage' // map `this.add()` to `this.$store.commit('increment')`
@@ -114,11 +114,13 @@
         },
         watch: {
             activeImage(newValue) {
-                this.width = newValue && newValue.width ? newValue.width : this.width;
-                this.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.rotation;
-                if(newValue.rotation === 0) {
+                console.log(newValue && newValue.src !== this.imageData.src);
+                if(newValue && newValue.src !== this.imageData.src) return;
+                this.imageData.width = newValue && newValue.width ? newValue.width : this.imageData.width;
+                this.imageData.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.imageData.rotation;
+                if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
-                        this.rotation = 0;
+                        this.imageData.rotation = 0;
                     }, 50);
                 }
             }

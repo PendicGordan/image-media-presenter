@@ -2,7 +2,7 @@
     <div id="ImageConfigurer">
         <div v-if="activeImage">
             <v-slider
-                    v-model="width"
+                    v-model="imageData.width"
                     class="align-self-stretch slider-width"
                     min="0"
                     max="500"
@@ -25,7 +25,7 @@
                 </v-icon>
             </v-btn>
             <v-slider
-                    v-model="rotation"
+                    v-model="imageData.rotation"
                     class="align-self-stretch slider-width"
                     min="0"
                     max="360"
@@ -43,8 +43,13 @@
 
     export default {
         data: () => ({
-            width: "250",
-            rotation: "0"
+            imageData: {
+                src: null,
+                width: "0",
+                rotation: "0",
+                positionX: 0,
+                positionY: 0
+            }
         }),
         props: {
         },
@@ -54,19 +59,17 @@
             ])
         },
         watch: {
-            width(newValue) {
-                this.setActiveImage({
-                    src: this.activeImage.src,
-                    width: newValue,
-                    rotation: this.activeImage.rotation
-                });
+            'imageData.width'(newValue) {
+                console.log('sdsadas');
+                this.imageData.width = newValue;
+                this.setActiveImage(this.imageData);
             },
-            rotation(newValue) {
-                this.setActiveImage({
-                    src: this.activeImage.src,
-                    width: this.activeImage.width,
-                    rotation: newValue
-                });
+            'imageData.rotation'(newValue) {
+                this.imageData.rotation = newValue;
+                this.setActiveImage(this.imageData);
+            },
+            activeImage(newValue) {
+                this.imageData = newValue;
             }
         },
         methods: {
@@ -74,20 +77,12 @@
                 'setActiveImage'
             ]),
             rotateRight() {
-                this.setActiveImage({
-                    src: this.activeImage.src,
-                    width: this.activeImage.width,
-                    rotation: this.activeImage.rotation - 90 >= 0 ? this.activeImage.rotation - 90 + "" : 270
-                });
-                this.rotation = this.rotation - 90 >= 0 ? this.rotation - 90 + "" : 270;
+                this.imageData.rotation = this.imageData.rotation - 90 >= 0 ? this.imageData.rotation - 90 + "" : 360 - Math.abs(this.imageData.rotation - 90);
+                this.setActiveImage(this.imageData);
             },
             rotateLeft() {
-                this.setActiveImage({
-                    src: this.activeImage.src,
-                    width: this.activeImage.width,
-                    rotation: this.activeImage.rotation + 90 !== 360 ? this.activeImage.rotation + 90 + "" : 0 + ""
-                });
-                this.rotation = this.rotation + 90 !== 360 ? this.rotation + 90 + "" : 0 + ""
+                this.imageData.rotation = this.imageData.rotation + 90 < 360 ? this.imageData.rotation + 90 + "" : (this.imageData.rotation + 90) % 360 + "";
+                this.setActiveImage(this.imageData);
             }
         }
     };
