@@ -34,6 +34,16 @@
                     thumb-label="always"
             >
             </v-slider>
+            <v-slider
+                    v-model="imageData.roundFactor"
+                    class="align-self-stretch slider-width"
+                    min="0"
+                    max="50"
+                    step="1"
+                    :thumb-size="24"
+                    thumb-label="always"
+            >
+            </v-slider>
         </div>
     </div>
 </template>
@@ -49,7 +59,8 @@
                 width: "0",
                 rotation: "0",
                 positionX: 0,
-                positionY: 0
+                positionY: 0,
+                roundFactor: 0
             }
         }),
         props: {

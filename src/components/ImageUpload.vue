@@ -18,6 +18,7 @@
                            :width="imageData.width"
                            @click="selectImage"
                            :id="imageData.uuid"
+                           :style="{'border-radius': imageData.roundFactor + '%'}"
                     />
                 </div>
                 <slot name="footer"></slot>
@@ -40,7 +41,8 @@
                   width: "250",
                   rotation: 0,
                   positionX: null,
-                  positionY: null
+                  positionY: null,
+                  roundFactor: 0
               },
               positions: {
                   clientX: null,
@@ -132,6 +134,7 @@
                 if(newValue && newValue.uuid !== this.imageData.uuid) return;
                 this.imageData.width = newValue && newValue.width ? newValue.width : this.imageData.width;
                 this.imageData.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.imageData.rotation;
+                this.imageData.roundFactor = newValue && newValue.roundFactor ? (newValue.roundFactor !== 1 ? newValue.roundFactor : 0) : this.imageData.roundFactor;
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;
