@@ -4,8 +4,10 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
+import UUID from "vue-uuid";
 
 Vue.config.productionTip = false;
+Vue.use(UUID);
 
 new Vue({
   router,

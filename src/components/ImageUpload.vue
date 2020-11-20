@@ -17,7 +17,7 @@
                            :src="imageData.src"
                            :width="imageData.width"
                            @click="selectImage"
-                           :id="imageData.src"
+                           :id="imageData.uuid"
                     />
                 </div>
                 <slot name="footer"></slot>
@@ -28,11 +28,14 @@
 
 <script>
     import { mapActions, mapState } from 'vuex';
+    import { uuid } from 'vue-uuid';
+    import EventBus from '../helpers/eventBus';
 
     export default {
         data: () => {
           return {
               imageData: {
+                  uuid: uuid.v1(),
                   src: null,
                   width: "250",
                   rotation: 0,
@@ -53,6 +56,14 @@
                 'activeImage'
             ])
         },
+        mounted () {
+            EventBus.$on('IMAGE_SELECTED', (payload) => {
+                const el = document.getElementById(this.imageData.uuid)
+                if(payload.uuid === this.imageData.uuid || !el) return;
+                el.classList.remove("border");
+                console.log('ffffffffffffffffffffffffffff', payload);
+            });
+        },
         methods: {
             onChange(e) {
                 if (! e.target.files.length) return;
@@ -69,19 +80,22 @@
                     this.$emit('loaded', { src, file });
                 };
             },
-            dragMouseDown: function (event) {
+            dragMouseDown (event) {
                 if(!this.imageData.src) return;
                 event.preventDefault();
                 // get the mouse cursor position at startup:
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
+
                 document.onmousemove = this.elementDrag;
                 document.onmouseup = this.closeDragElement;
             },
-            elementDrag: function (event) {
+            elementDrag (event) {
                 if(!this.imageData.src) return;
                 this.positions.isDragging = true;
                 event.preventDefault();
+                if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;
+                console.log(event.clientY);
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;
                 this.positions.clientX = event.clientX;
@@ -100,11 +114,12 @@
             },
             async selectImage () {
                 if(this.positions.isDragging) return;
-                const el = document.getElementById(this.imageData.src);
+                const el = document.getElementById(this.imageData.uuid);
                 if(el.classList.contains("border")) {
                     await this.setActiveImage(null);
                     return el.classList.remove("border");
                 }
+                EventBus.$emit('IMAGE_SELECTED', {uuid: this.imageData.uuid});
                 el.classList.add("border");
                 await this.setActiveImage(this.imageData);
             },
@@ -114,8 +129,7 @@
         },
         watch: {
             activeImage(newValue) {
-                console.log(newValue && newValue.src !== this.imageData.src);
-                if(newValue && newValue.src !== this.imageData.src) return;
+                if(newValue && newValue.uuid !== this.imageData.uuid) return;
                 this.imageData.width = newValue && newValue.width ? newValue.width : this.imageData.width;
                 this.imageData.rotation = newValue && newValue.rotation ? (newValue.rotation !== 1 ? newValue.rotation : 0) : this.imageData.rotation;
                 if(newValue && newValue.rotation === 0) {

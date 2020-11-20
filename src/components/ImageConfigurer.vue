@@ -13,7 +13,7 @@
                    dark
                    color="primary">
                 <v-icon dark>
-                    mdi-rotate-left
+                    mdi-rotate-right
                 </v-icon>
             </v-btn>
             <v-btn @click="rotateRight"
@@ -21,7 +21,7 @@
                    dark
                    color="primary">
                 <v-icon dark>
-                    mdi-rotate-right
+                    mdi-rotate-left
                 </v-icon>
             </v-btn>
             <v-slider
@@ -44,6 +44,7 @@
     export default {
         data: () => ({
             imageData: {
+                uuid: null,
                 src: null,
                 width: "0",
                 rotation: "0",
@@ -60,13 +61,16 @@
         },
         watch: {
             'imageData.width'(newValue) {
-                console.log('sdsadas');
-                this.imageData.width = newValue;
-                this.setActiveImage(this.imageData);
+                if(this.imageData) {
+                    this.imageData.width = newValue;
+                    this.setActiveImage(this.imageData);
+                }
             },
             'imageData.rotation'(newValue) {
-                this.imageData.rotation = newValue;
-                this.setActiveImage(this.imageData);
+                if(this.imageData) {
+                    this.imageData.rotation = newValue;
+                    this.setActiveImage(this.imageData);
+                }
             },
             activeImage(newValue) {
                 this.imageData = newValue;

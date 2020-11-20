@@ -27,7 +27,6 @@ export default new Vuex.Store({
 			state.presentations = data;
 		},
 		setActiveImage(state, data) {
-			console.log('ac', data);
 			state.activeImage = data;
 		}
 	}
