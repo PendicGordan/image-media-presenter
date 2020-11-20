@@ -66,6 +66,14 @@
                     step="1"
             >
             </v-slider>
+            <v-slider
+                    v-model="imageData.invertLevel"
+                    class="align-self-stretch slider-width"
+                    min="0"
+                    max="100"
+                    step="1"
+            >
+            </v-slider>
         </div>
     </div>
 </template>
@@ -85,7 +93,8 @@
                 roundFactor: 0,
                 blurringLevel: 0,
                 sepiaLevel: 0,
-                saturationLevel: 60
+                saturationLevel: 60,
+                invertLevel: 0
             }
         }),
         props: {
@@ -129,6 +138,12 @@
             'imageData.saturationLevel'(newValue) {
                 if(this.imageData) {
                     this.imageData.saturationLevel = newValue;
+                    this.setActiveImage(this.imageData);
+                }
+            },
+            'imageData.invertLevel'(newValue) {
+                if(this.imageData) {
+                    this.imageData.invertLevel = newValue;
                     this.setActiveImage(this.imageData);
                 }
             },
