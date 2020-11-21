@@ -23,7 +23,6 @@
                                 '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`,
                                 'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`
                            }"
-                           class="blur"
                     />
                 </div>
                 <slot name="footer"></slot>

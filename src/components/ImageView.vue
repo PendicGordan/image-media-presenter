@@ -4,9 +4,14 @@
       'background-image': `${backgroundImageData.isEnabled ? 'url(' + backgroundImageData.backgroundImage + ')' : 'none'}`,
     }"
   >
-    <v-row v-for="i in n" :key="i">
+    <v-row v-for="i in n" :key="i" @click.self="addImageUpload" class="fill-height" fluid>
       <template>
-        <v-col v-for="j in m" :key="(i + 1) * 10 + j" :class="height">
+        <component
+                v-for="(component, index) in components"
+                :key="index"
+                :is="component"
+        />
+        <!--<v-col v-for="j in m" :key="(i + 1) * 10 + j" :class="height">
           <ImageUpload class="center" style="">
             <template slot="header">
             </template>
@@ -14,14 +19,15 @@
             </template>
           </ImageUpload>
           <br />
-        </v-col>
+        </v-col>-->
       </template>
     </v-row>
-    <v-row>
+    <v-row v-if="activeImage">
       <v-col>
         <ImageConfigurer/>
       </v-col>
     </v-row>
+
   </div>
 </template>
 
@@ -37,6 +43,7 @@
       ImageConfigurer
     },
     data: () => ({
+      components: [ImageUpload],
       n: 1,
       m: 3,
       select: { grid: '1 x 2', m: '1', n: '2' },
@@ -59,7 +66,8 @@
         return 'height-' + this.$vuetify.breakpoint.name;
       },
       ...mapState([
-        'backgroundImageData'
+        'backgroundImageData',
+        'activeImage'
       ])
     },
     watch: {
@@ -70,6 +78,10 @@
     methods: {
       makeGrid(e) {
         console.log(e);
+      },
+      addImageUpload() {
+        console.log('ttt');
+        this.components.push(ImageUpload);
       }
     }
   }

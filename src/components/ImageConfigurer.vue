@@ -135,19 +135,19 @@
                     shift
             >
                 <v-btn value="basic">
-                    <span>Recents</span>
+                    <span>Basic</span>
 
-                    <v-icon>mdi-history</v-icon>
+                    <v-icon>mdi-move-resize</v-icon>
                 </v-btn>
 
                 <v-btn value="filter">
-                    <span>Favorites</span>
+                    <span>Filters</span>
 
-                    <v-icon>mdi-heart</v-icon>
+                    <v-icon>mdi-image-filter-vintage</v-icon>
                 </v-btn>
 
                 <v-btn value="other">
-                    <span>Nearby</span>
+                    <span>Other</span>
                     <v-icon>mdi-map-marker</v-icon>
                 </v-btn>
             </v-bottom-navigation>
