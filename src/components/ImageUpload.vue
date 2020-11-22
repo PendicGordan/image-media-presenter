@@ -70,6 +70,10 @@
                 'activeImage'
             ])
         },
+        props: {
+            clientX: Number,
+            clientY: Number
+        },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
                 const el = document.getElementById(this.imageData.uuid);
@@ -85,15 +89,19 @@
                 if(payload.uuid !== this.imageData.uuid && payload.isEnabled) this.imageData.isBackgroundImage = false;
                 else if (payload.uuid === this.imageData.uuid) this.imageData.isBackgroundImage = payload.isEnabled;
             });
+            this.positions.movementX = this.clientX;
+            this.positions.movementY = this.clientY;
+            this.positions.clientX = this.clientX;
+            this.positions.clientY = this.clientY;
+            this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop + this.positions.movementY - 111) + 'px';
+            this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft + this.positions.movementX - 50) + 'px';
         },
         methods: {
             onChange(e) {
                 if (! e.target.files.length) return;
 
                 let file = e.target.files[0];
-
                 let reader = new FileReader();
-
                 reader.readAsDataURL(file);
 
                 reader.onload = e => {
@@ -116,7 +124,7 @@
                 if(!this.imageData.src) return;
                 this.positions.isDragging = true;
                 event.preventDefault();
-                if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;
+                //if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;
                 this.positions.clientX = event.clientX;

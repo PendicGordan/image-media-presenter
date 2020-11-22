@@ -5,7 +5,7 @@
                 <v-row cols="1" v-if="value === 'basic'">
                     <v-col md>
                         <v-slider
-                                v-model="imageData.width"
+                                v-model="activeImage.width"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="500"
@@ -28,7 +28,7 @@
                             </v-icon>
                         </v-btn>
                         <v-slider
-                                v-model="imageData.rotation"
+                                v-model="activeImage.rotation"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="360"
@@ -38,7 +38,7 @@
                         >
                         </v-slider>
                         <v-slider
-                                v-model="imageData.roundFactor"
+                                v-model="activeImage.roundFactor"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="50"
@@ -50,7 +50,7 @@
                 <v-row cols="2" v-else-if="value === 'filter'">
                     <v-col md>
                         <v-slider
-                                v-model="imageData.blurringLevel"
+                                v-model="activeImage.blurringLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -58,7 +58,7 @@
                         >
                         </v-slider>
                         <v-slider
-                                v-model="imageData.sepiaLevel"
+                                v-model="activeImage.sepiaLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -66,7 +66,7 @@
                         >
                         </v-slider>
                         <v-slider
-                                v-model="imageData.saturationLevel"
+                                v-model="activeImage.saturationLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -74,7 +74,7 @@
                         >
                         </v-slider>
                         <v-slider
-                                v-model="imageData.invertLevel"
+                                v-model="activeImage.invertLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -82,7 +82,7 @@
                         >
                         </v-slider>
                         <v-slider
-                                v-model="imageData.opacityLevel"
+                                v-model="activeImage.opacityLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -92,7 +92,7 @@
                     </v-col>
                     <v-col md>
                         <v-slider
-                                v-model="imageData.brightnessLevel"
+                                v-model="activeImage.brightnessLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -100,7 +100,7 @@
                         >
                         </v-slider>
                         <v-slider
-                                v-model="imageData.contrastLevel"
+                                v-model="activeImage.contrastLevel"
                                 class="align-self-stretch slider-width"
                                 min="0"
                                 max="100"
@@ -118,7 +118,7 @@
                             <v-icon>mdi-animation</v-icon>
                         </v-btn>
                         <v-checkbox
-                                v-model="imageData.isBackgroundImage"
+                                v-model="activeImage.isBackgroundImage"
                                 label="Set as background"
                                 color="primary"
                                 value="primary"
@@ -258,23 +258,27 @@
                 'setBackgroundImage'
             ]),
             rotateRight() {
-                this.imageData.rotation = this.imageData.rotation - 90 >= 0 ? this.imageData.rotation - 90 + "" : 360 - Math.abs(this.imageData.rotation - 90);
-                this.setActiveImage(this.imageData);
+                this.activeImage.rotation = this.activeImage.rotation - 90 >= 0 ? this.activeImage.rotation - 90 + "" : 360 - Math.abs(this.activeImage.rotation - 90);
+                this.setActiveImage(this.activeImage);
             },
             rotateLeft() {
-                this.imageData.rotation = this.imageData.rotation + 90 < 360 ? this.imageData.rotation + 90 + "" : (this.imageData.rotation + 90) % 360 + "";
-                this.setActiveImage(this.imageData);
+                this.activeImage.rotation = this.activeImage.rotation + 90 < 360 ? this.activeImage.rotation + 90 + "" : (this.activeImage.rotation + 90) % 360 + "";
+                this.setActiveImage(this.activeImage);
             },
             activateFilterAnimation() {
-                EventBus.$emit('ANIMATE_IMAGE', { uuid: this.imageData.uuid });
+                EventBus.$emit('ANIMATE_IMAGE', { uuid: this.activeImage.uuid });
             },
             handleImageBackground(e) {
+                console.log({
+                    isEnabled: e,
+                    backgroundImage: this.activeImage.src
+                });
                 this.setBackgroundImage({
                     isEnabled: e,
-                    backgroundImage: this.imageData.src
+                    backgroundImage: this.activeImage.src
                 });
                 EventBus.$emit('BACKGROUND_IMAGE_SET', {
-                    uuid: this.imageData.uuid,
+                    uuid: this.activeImage.uuid,
                     isEnabled: e
                 });
             }

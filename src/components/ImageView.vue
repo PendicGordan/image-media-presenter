@@ -9,7 +9,8 @@
         <component
                 v-for="(component, index) in components"
                 :key="index"
-                :is="component"
+                :is="component.componentName"
+                v-bind="{clientX: component.clientX, clientY: component.clientY}"
         />
         <!--<v-col v-for="j in m" :key="(i + 1) * 10 + j" :class="height">
           <ImageUpload class="center" style="">
@@ -43,7 +44,7 @@
       ImageConfigurer
     },
     data: () => ({
-      components: [ImageUpload],
+      components: [],
       n: 1,
       m: 3,
       select: { grid: '1 x 2', m: '1', n: '2' },
@@ -59,7 +60,7 @@
         { grid: '3 x 3', m: '3', n: '3' },
         { grid: '3 x 4', m: '3', n: '4' }
       ],
-      isEnabled: true
+      isEnabled: false
     }),
     computed: {
       height: function() {
@@ -79,9 +80,8 @@
       makeGrid(e) {
         console.log(e);
       },
-      addImageUpload() {
-        console.log('ttt');
-        this.components.push(ImageUpload);
+      addImageUpload(e) {
+        this.components.push({componentName: ImageUpload, clientX: e.clientX, clientY: e.clientY});
       }
     }
   }
