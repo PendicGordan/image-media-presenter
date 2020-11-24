@@ -11,7 +11,8 @@ export default new Vuex.Store({
 		backgroundImageData: {
 			isEnabled: false,
 			backgroundImage: 'none'
-		}
+		},
+        savedImages: {}
 	},
 	getters: {
 		presentations: state => state.presentations,
@@ -28,7 +29,10 @@ export default new Vuex.Store({
 		},
 		async setBackgroundImage({commit}, data) {
 			commit('setBackgroundImage', data);
-		}
+		},
+        async saveActiveImageData({commit}, data) {
+            commit('saveActiveImageData', data);
+        }
 	},
 	mutations: {
 		setPresentations(state, data) {
@@ -37,8 +41,11 @@ export default new Vuex.Store({
 		setActiveImage(state, data) {
 			state.activeImage = data;
 		},
-		setBackgroundImage(state, data) {
-			state.backgroundImageData = data;
-		}
+        saveActiveImageData(state, data) {
+			state.backgroundImageData[data.uuid] = data;
+		},
+        setBackgroundImage(state, data) {
+            state.backgroundImageData = data;
+        }
 	}
 });

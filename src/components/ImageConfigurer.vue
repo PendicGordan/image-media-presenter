@@ -1,7 +1,20 @@
 <template>
     <div id="ImageConfigurer">
         <div v-if="activeImage">
-            <div id="editor">
+            <div>
+                <v-alert
+                        v-if="alertShown"
+                        dense
+                        text
+                        type="success"
+                        transition="fade-transition"
+                        dismissible
+                        @input="closeAlert"
+                >
+                    The image has been saved!
+                </v-alert>
+            </div>
+            <div id="editor" v-if="!alertShown">
                 <v-row cols="1" v-if="value === 'basic'">
                     <v-col md>
                         <v-slider
@@ -133,10 +146,14 @@
                     color="primary"
                     horizontal
                     shift
+                    v-if="!alertShown"
             >
+                <v-btn value="save-image" @click="saveAndClearImage">
+                    <span>Save image</span>
+                    <v-icon>mdi-content-save</v-icon>
+                </v-btn>
                 <v-btn value="basic">
                     <span>Basic</span>
-
                     <v-icon>mdi-move-resize</v-icon>
                 </v-btn>
 
@@ -161,24 +178,9 @@
 
     export default {
         data: () => ({
-            imageData: {
-                uuid: null,
-                src: null,
-                width: "0",
-                rotation: "0",
-                positionX: 0,
-                positionY: 0,
-                roundFactor: 0,
-                blurringLevel: 0,
-                sepiaLevel: 0,
-                saturationLevel: 60,
-                invertLevel: 0,
-                opacityLevel: 50,
-                brightnessLevel: 100,
-                contrastLevel: 100,
-                isBackgroundImage: null
-            },
-            value: 0
+            value: 'basic',
+            alertShown: false,
+            alertTimeout: null
         }),
         props: {
         },
@@ -188,75 +190,28 @@
             ])
         },
         watch: {
-            'imageData.width'(newValue) {
-                if(this.imageData) {
-                    this.imageData.width = newValue;
-                    this.setActiveImage(this.imageData);
+
+        },
+        created() {
+            EventBus.$on('IMAGE_CLICKED', () => {
+                if(this.alertTimeout !== null) {
+                    clearTimeout(this.alertTimeout);
+                    this.clearImageAndAlert();
+                    this.value = 'basic';
                 }
-            },
-            'imageData.rotation'(newValue) {
-                if(this.imageData) {
-                    this.imageData.rotation = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.roundFactor'(newValue) {
-                if(this.imageData) {
-                    this.imageData.roundFactor = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.blurringLevel'(newValue) {
-                if(this.imageData) {
-                    this.imageData.blurringLevel = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.sepiaLevel'(newValue) {
-                if(this.imageData) {
-                    this.imageData.sepiaLevel = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.saturationLevel'(newValue) {
-                if(this.imageData) {
-                    this.imageData.saturationLevel = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.invertLevel'(newValue) {
-                if(this.imageData) {
-                    this.imageData.invertLevel = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.opacityLevel'(newValue) {
-                if(this.imageData) {
-                    this.imageData.opacityLevel = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.brightnessLevel'(newValue) {
-                if(this.imageData) {
-                    this.imageData.brightnessLevel = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            'imageData.isBackgroundImage'(newValue) {
-                if(this.imageData) {
-                    this.imageData.isBackgroundImage = newValue;
-                    this.setActiveImage(this.imageData);
-                }
-            },
-            activeImage(newValue) {
-                this.imageData = newValue;
-            }
+            });
         },
         methods: {
             ...mapActions([
                 'setActiveImage',
-                'setBackgroundImage'
+                'setBackgroundImage',
+                'saveActiveImageData'
             ]),
+            saveAndClearImage () {
+                this.saveActiveImageData(this.activeImage);
+                this.alertShown = true;
+                this.closeAlert(true);
+            },
             rotateRight() {
                 this.activeImage.rotation = this.activeImage.rotation - 90 >= 0 ? this.activeImage.rotation - 90 + "" : 360 - Math.abs(this.activeImage.rotation - 90);
                 this.setActiveImage(this.activeImage);
@@ -269,10 +224,6 @@
                 EventBus.$emit('ANIMATE_IMAGE', { uuid: this.activeImage.uuid });
             },
             handleImageBackground(e) {
-                console.log({
-                    isEnabled: e,
-                    backgroundImage: this.activeImage.src
-                });
                 this.setBackgroundImage({
                     isEnabled: e,
                     backgroundImage: this.activeImage.src
@@ -281,6 +232,26 @@
                     uuid: this.activeImage.uuid,
                     isEnabled: e
                 });
+            },
+            closeAlert (methodCalled) {
+                if(this.alertTimeout !== null) {
+                    clearTimeout(this.alertTimeout);
+                }
+                if(methodCalled === false) {
+                    this.clearConfigurer();
+                } else {
+                    this.alertTimeout = setTimeout(() => {
+                        this.clearConfigurer();
+                    }, 4000);
+                }
+            },
+            clearConfigurer() {
+                this.clearImageAndAlert();
+                EventBus.$emit('SAVED_IMAGE');
+            },
+            clearImageAndAlert() {
+                this.alertShown = false;
+                this.setActiveImage(null);
             }
         }
     };

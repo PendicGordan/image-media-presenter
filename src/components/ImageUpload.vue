@@ -89,6 +89,12 @@
                 if(payload.uuid !== this.imageData.uuid && payload.isEnabled) this.imageData.isBackgroundImage = false;
                 else if (payload.uuid === this.imageData.uuid) this.imageData.isBackgroundImage = payload.isEnabled;
             });
+            EventBus.$on('SAVED_IMAGE', () => {
+                const el = document.getElementById(this.imageData.uuid);
+                if(el && el.classList.contains("border")) {
+                    el.classList.remove("border");
+                }
+            });
             this.positions.movementX = this.clientX;
             this.positions.movementY = this.clientY;
             this.positions.clientX = this.clientX;
@@ -142,6 +148,7 @@
                 }, 50);
             },
             async selectImage () {
+                EventBus.$emit('IMAGE_CLICKED', {});
                 if(this.positions.isDragging) return;
                 const el = document.getElementById(this.imageData.uuid);
                 if(el.classList.contains("border")) {
