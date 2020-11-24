@@ -3,18 +3,66 @@
         <div v-if="activeImage">
             <div>
                 <v-alert
-                        v-if="alertShown"
+                        v-if="saveAlertShown"
                         dense
                         text
                         type="success"
                         transition="fade-transition"
                         dismissible
-                        @input="closeAlert"
+                        @input="closeSaveAlert"
                 >
                     The image has been saved!
                 </v-alert>
             </div>
-            <div id="editor" v-if="!alertShown">
+            <div>
+                <v-alert
+                        v-if="deleteAlertShown"
+                        dense
+                        text
+                        type="warning"
+                        transition="fade-transition"
+                        dismissible
+                        @input="closeDeleteAlert"
+                >
+                    The image has been deleted!
+                </v-alert>
+                <v-dialog
+                        v-click-outside="dialogNotClicked"
+                        v-model="deleteDialogShown"
+                        max-width="290"
+                >
+                    <v-card>
+                    <v-card-title class="headline">
+                       Delete confirmation
+                    </v-card-title>
+
+                    <v-card-text>
+                        Are you sure you want to delete the image?
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                                color="green darken-1"
+                                text
+                                @click="cancelRemove"
+                        >
+                            Disagree
+                        </v-btn>
+
+                        <v-btn
+                                color="green darken-1"
+                                text
+                                @click="confirmRemoveAndClearImage"
+                        >
+                            Agree
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+                </v-dialog>
+            </div>
+            <div id="editor" v-if="!saveAlertShown && !deleteAlertShown">
                 <v-row cols="1" v-if="value === 'basic'">
                     <v-col md>
                         <v-slider
@@ -146,7 +194,7 @@
                     color="primary"
                     horizontal
                     shift
-                    v-if="!alertShown"
+                    v-if="!saveAlertShown && !deleteAlertShown"
             >
                 <v-btn value="save-image" @click="saveAndClearImage">
                     <span>Save image</span>
@@ -167,6 +215,10 @@
                     <span>Other</span>
                     <v-icon>mdi-map-marker</v-icon>
                 </v-btn>
+                <v-btn value="remove-image" @click="removeAndClearImage">
+                    <span>Remove image</span>
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn>
             </v-bottom-navigation>
         </div>
     </div>
@@ -179,8 +231,15 @@
     export default {
         data: () => ({
             value: 'basic',
-            alertShown: false,
-            alertTimeout: null
+            saveAlertShown: false,
+            deleteAlertShown: false,
+            saveAlertTimeout: null,
+            deleteAlertTimeout: null,
+            imageManipulateAction: {
+                SAVED_IMAGE: 'SAVED_IMAGE',
+                DELETED_IMAGE: 'DELETED_IMAGE'
+            },
+            deleteDialogShown: false
         }),
         props: {
         },
@@ -194,9 +253,14 @@
         },
         created() {
             EventBus.$on('IMAGE_CLICKED', () => {
-                if(this.alertTimeout !== null) {
-                    clearTimeout(this.alertTimeout);
-                    this.clearImageAndAlert();
+                if(this.saveAlertTimeout !== null) {
+                    clearTimeout(this.saveAlertTimeout);
+                    this.clearConfigurer();
+                    this.value = 'basic';
+                }
+                if(this.deleteAlertTimeout !== null) {
+                    clearTimeout(this.deleteAlertTimeout);
+                    this.clearConfigurer();
                     this.value = 'basic';
                 }
             });
@@ -205,12 +269,32 @@
             ...mapActions([
                 'setActiveImage',
                 'setBackgroundImage',
-                'saveActiveImageData'
+                'saveActiveImageData',
+                'deleteActiveImageData'
             ]),
             saveAndClearImage () {
                 this.saveActiveImageData(this.activeImage);
-                this.alertShown = true;
-                this.closeAlert(true);
+                this.saveAlertShown = true;
+                this.closeSaveAlert(true);
+            },
+            removeAndClearImage () {
+                this.deleteDialogShown = true;
+            },
+            confirmRemoveAndClearImage() {
+                this.deleteDialogShown = false;
+                this.closeDeleteAlert(true);
+                this.deleteActiveImageData(this.activeImage);
+                this.deleteAlertShown = true;
+            },
+            cancelRemove() {
+                this.deleteDialogShown = false;
+                this.value = 'basic';
+            },
+            dialogNotClicked() {
+                this.value = 'basic';
+              if(this.deleteDialogShown) {
+                  console.log('aa');
+              }
             },
             rotateRight() {
                 this.activeImage.rotation = this.activeImage.rotation - 90 >= 0 ? this.activeImage.rotation - 90 + "" : 360 - Math.abs(this.activeImage.rotation - 90);
@@ -233,24 +317,38 @@
                     isEnabled: e
                 });
             },
-            closeAlert (methodCalled) {
-                if(this.alertTimeout !== null) {
-                    clearTimeout(this.alertTimeout);
+            closeSaveAlert(methodCalled) {
+                if(this.saveAlertTimeout !== null) {
+                    clearTimeout(this.saveAlertTimeout);
                 }
                 if(methodCalled === false) {
+                    EventBus.$emit(this.imageManipulateAction.SAVED_IMAGE);
                     this.clearConfigurer();
                 } else {
-                    this.alertTimeout = setTimeout(() => {
+                    EventBus.$emit(this.imageManipulateAction.SAVED_IMAGE);
+                    this.saveAlertTimeout = setTimeout(() => {
+                        this.clearConfigurer();
+                    }, 4000);
+                }
+            },
+            closeDeleteAlert(methodCalled) {
+                if(this.deleteAlertTimeout !== null) {
+                    clearTimeout(this.deleteAlertTimeout );
+                }
+                if(methodCalled === false) {
+                    console.log('ff');
+                    EventBus.$emit(this.imageManipulateAction.DELETED_IMAGE, this.activeImage);
+                    this.clearConfigurer();
+                } else {
+                    EventBus.$emit(this.imageManipulateAction.DELETED_IMAGE, this.activeImage);
+                    this.deleteAlertTimeout  = setTimeout(() => {
                         this.clearConfigurer();
                     }, 4000);
                 }
             },
             clearConfigurer() {
-                this.clearImageAndAlert();
-                EventBus.$emit('SAVED_IMAGE');
-            },
-            clearImageAndAlert() {
-                this.alertShown = false;
+                this.saveAlertShown = false;
+                this.deleteAlertShown = false;
                 this.setActiveImage(null);
             }
         }

@@ -33,14 +33,13 @@
 
 <script>
     import { mapActions, mapState } from 'vuex';
-    import { uuid } from 'vue-uuid';
     import EventBus from '../helpers/eventBus';
 
     export default {
         data: () => {
           return {
               imageData: {
-                  uuid: uuid.v1(),
+                  uuid: null,
                   src: null,
                   width: "250",
                   rotation: 0,
@@ -72,7 +71,8 @@
         },
         props: {
             clientX: Number,
-            clientY: Number
+            clientY: Number,
+            uuid: String
         },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
@@ -95,6 +95,7 @@
                     el.classList.remove("border");
                 }
             });
+            this.imageData.uuid = this.uuid;
             this.positions.movementX = this.clientX;
             this.positions.movementY = this.clientY;
             this.positions.clientX = this.clientX;

@@ -32,6 +32,9 @@ export default new Vuex.Store({
 		},
         async saveActiveImageData({commit}, data) {
             commit('saveActiveImageData', data);
+        },
+        async deleteActiveImageData({commit}, data) {
+            commit('deleteActiveImageData', data);
         }
 	},
 	mutations: {
@@ -44,6 +47,9 @@ export default new Vuex.Store({
         saveActiveImageData(state, data) {
 			state.backgroundImageData[data.uuid] = data;
 		},
+        deleteActiveImageData(state, data) {
+            delete state.backgroundImageData[data.uuid];
+        },
         setBackgroundImage(state, data) {
             state.backgroundImageData = data;
         }

@@ -7,8 +7,9 @@
     <v-row v-for="i in n" :key="i" @click.self="addImageUpload" class="fill-height" fluid>
       <template>
         <component
-                v-for="(component, index) in components"
-                :key="index"
+                v-for="(component) in components"
+                :key="component.uuid"
+                :uuid="component.uuid"
                 :is="component.componentName"
                 v-bind="{clientX: component.clientX, clientY: component.clientY}"
         />
@@ -35,6 +36,8 @@
   import ImageUpload from './ImageUpload';
   import ImageConfigurer from './ImageConfigurer';
   import { mapState } from 'vuex';
+  import EventBus from '../helpers/eventBus';
+  import { uuid } from 'vue-uuid';
 
   export default {
     name: 'ImageView',
@@ -80,8 +83,13 @@
         console.log(e);
       },
       addImageUpload(e) {
-        this.components.push({componentName: ImageUpload, clientX: e.clientX, clientY: e.clientY});
+        this.components.push({componentName: ImageUpload, clientX: e.clientX, clientY: e.clientY, uuid: uuid.v1()});
       }
+    },
+    mounted() {
+      EventBus.$on('DELETED_IMAGE', (imageData) => {
+          this.components = this.components.filter(component => component.uuid !== imageData.uuid );
+      });
     }
   }
 </script>
