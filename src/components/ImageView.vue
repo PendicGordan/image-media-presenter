@@ -1,7 +1,7 @@
 <template>
-  <div style="width:100%">
-    <v-row class="fill-height">
-      <div style="width:100%;margin-top: 10px;height:100%;">
+  <div style="width: 99.15%; margin-left: 0.40%;">
+    <v-row>
+      <div style="width:100%;margin-top: 0.25%;height:100%;">
         <grid-layout :layout.sync="layout"
                      :col-num="4"
                      :row-height="1"
@@ -61,10 +61,10 @@
         responsive: false,
         index: 0,
         layout: [
-          {"x":0,"y":0,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()},
-          {"x":2,"y":0,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()},
-          {"x":0,"y":2,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()},
-          {"x":2,"y":2,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()}
+          {"x":0,"y":0,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()},
+          {"x":2,"y":0,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()},
+          {"x":0,"y":2,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()},
+          {"x":2,"y":2,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()}
         ]
       }
     },
@@ -132,13 +132,13 @@
     cursor: pointer;
   }
   .height-parent {
-    border: 10px solid #FFFFFF;
+    border: 10px solid #FFbFFa;
   }
   .height-child {
     /*display: table-caption;
     vertical-align: middle; !*Vertically centered*!
     text-align: center;*/
     height:100%;
-    border: 4px solid #2dF4FF;/* Horizontally centered */
+    border: 4px solid #adF4FF;/* Horizontally centered */
   }
 </style>

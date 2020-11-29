@@ -3,7 +3,7 @@
     <Header />
 
     <v-main>
-      <ImageView/>
+      <ImageView />
     </v-main>
   </v-app>
 </template>
@@ -17,11 +17,11 @@ export default {
 
   components: {
     Header,
-    ImageView,
+    ImageView
   },
 
   data: () => ({
-    //
+
   }),
 };
 </script>

@@ -25,22 +25,6 @@
                            }"
                     />
                 </div>
-                <!--<div v-else
-                     :style="`transform: rotate(${imageData.rotation}deg);`"
-                >
-                    <v-img
-                           contain
-                           :src="imageData.src"
-                           :width="imageData.width"
-                           @click="selectImage"
-                           :id="imageData.uuid"
-                           :style="{
-                                'border-radius': imageData.roundFactor + '%',
-                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`,
-                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`
-                           }"
-                    />
-                </div>-->
             </div>
         </div>
         </div>
@@ -49,7 +33,6 @@
 <script>
     import { mapActions, mapState } from 'vuex';
     import EventBus from '../helpers/eventBus';
-    //import { Draggable } from 'draggable-vue-directive'
 
     export default {
         data: () => {
@@ -79,9 +62,6 @@
                   isDragging: false
               }
           }
-        },
-        directives: {
-            //Draggable
         },
         computed: {
             ...mapState([
@@ -120,9 +100,6 @@
             console.log(this.imageData.uuid);
         },
         methods: {
-            boundElement(e) {
-                console.log(e);
-            },
             onChange(e) {
                 if (! e.target.files.length) return;
 
@@ -150,7 +127,6 @@
                 if(!this.imageData.src) return;
                 this.positions.isDragging = true;
                 event.preventDefault();
-                //if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;;
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
 
@@ -165,7 +141,6 @@
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
 
-                // set the element's new position:
                 this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px';
                 this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px';
 
