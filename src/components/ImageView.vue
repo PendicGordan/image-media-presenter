@@ -1,123 +1,144 @@
 <template>
-  <div id="image-view"
-    :style="{
-      'background-image': `${backgroundImageData.isEnabled ? 'url(' + backgroundImageData.backgroundImage + ')' : 'none'}`,
-    }"
-  >
-    <v-row v-for="i in n" :key="i" @click.self="addImageUpload" class="fill-height" fluid>
-      <template>
-        <component
-                v-for="(component) in components"
-                :key="component.uuid"
-                :uuid="component.uuid"
-                :is="component.componentName"
-                v-bind="{clientX: component.clientX, clientY: component.clientY}"
-        />
-        <!--<v-col v-for="j in m" :key="(i + 1) * 10 + j" :class="height">
-          <ImageUpload class="center" style="">
-            <template slot="header">
-            </template>
-            <template slot="footer">
-            </template>
-          </ImageUpload>
-          <br />
-        </v-col>-->
-      </template>
+  <div style="width:100%">
+    <v-row class="fill-height">
+      <div style="width:100%;margin-top: 10px;height:100%;">
+        <grid-layout :layout.sync="layout"
+                     :col-num="4"
+                     :row-height="1"
+                     :is-draggable="draggable"
+                     :is-resizable="resizable"
+                     :responsive="responsive"
+                     :vertical-compact="true"
+                     :use-css-transforms="true"
+                     :margin="[0, 0]"
+                     :autoSize="true"
+        >
+          <grid-item v-for="item in layout"
+                     :static="item.static"
+                     :x="item.x"
+                     :y="item.y"
+                     :w="item.w"
+                     :h="item.h"
+                     :i="item.i"
+                     :key="item.i"
+                     :margin="[0, 0]"
+                     class="height-parent"
+          >
+            <ImageUpload :key="item.i" :uuid="item.i" class="height-child">
+            </ImageUpload>
+          </grid-item>
+        </grid-layout>
+      </div>
     </v-row>
     <v-row v-if="activeImage">
-      <v-col>
-        <ImageConfigurer/>
-      </v-col>
+      <ImageConfigurer>
+
+      </ImageConfigurer>
     </v-row>
   </div>
 </template>
 
 <script>
-  import ImageUpload from './ImageUpload';
+  import { GridLayout, GridItem } from "vue-grid-layout";
   import ImageConfigurer from './ImageConfigurer';
-  import { mapState } from 'vuex';
-  import EventBus from '../helpers/eventBus';
-  import { uuid } from 'vue-uuid';
+  import ImageUpload from './ImageUpload';
+  import {uuid} from 'vue-uuid';
+  import {mapState} from 'vuex';
 
   export default {
-    name: 'ImageView',
     components: {
-      ImageUpload,
-      ImageConfigurer
+      GridLayout,
+      GridItem,
+      ImageConfigurer,
+      ImageUpload
     },
-    data: () => ({
-      components: [],
-      n: 1,
-      m: 3,
-      select: { grid: '1 x 2', m: '1', n: '2' },
-      items: [
-        { grid: '1 x 3', m: '1', n: '3' },
-        { grid: '1 x 4', m: '1', n: '4' },
-        { grid: '2 x 1', m: '2', n: '1' },
-        { grid: '2 x 2', m: '2', n: '2' },
-        { grid: '2 x 3', m: '2', n: '3' },
-        { grid: '2 x 4', m: '2', n: '4' },
-        { grid: '3 x 1', m: '3', n: '1' },
-        { grid: '3 x 2', m: '3', n: '2' },
-        { grid: '3 x 3', m: '3', n: '3' },
-        { grid: '3 x 4', m: '3', n: '4' }
-      ],
-      isEnabled: false
-    }),
-    computed: {
-      height: function() {
-        return 'height-' + this.$vuetify.breakpoint.name;
-      },
-      ...mapState([
-        'backgroundImageData',
-        'activeImage'
-      ])
-    },
-    watch: {
-      select() {
-        console.log(this.select);
+    data() {
+      return {
+        numberOfColumns: 2,
+        numberOfRows: 2,
+        draggable: false,
+        resizable: false,
+        responsive: false,
+        index: 0,
+        layout: [
+          {"x":0,"y":0,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()},
+          {"x":2,"y":0,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()},
+          {"x":0,"y":2,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()},
+          {"x":2,"y":2,"w":2,"h":window.innerHeight / 2, "i":uuid.v4()}
+        ]
       }
     },
     methods: {
-      makeGrid(e) {
-        console.log(e);
-      },
-      addImageUpload(e) {
-        this.components.push({componentName: ImageUpload, clientX: e.clientX, clientY: e.clientY, uuid: uuid.v1()});
+      handleResize() {
+        let numberOfRows = this.numberOfRows;
+        this.layout.forEach(item => item.h = window.innerHeight / numberOfRows);
       }
     },
-    mounted() {
-      EventBus.$on('DELETED_IMAGE', (imageData) => {
-          this.components = this.components.filter(component => component.uuid !== imageData.uuid );
-      });
+    created() {
+      window.addEventListener('resize', this.handleResize);
+    },
+    computed: {
+      ...mapState([
+              'activeImage'
+      ])
     }
   }
 </script>
-<style scoped>
-  .height-xs {
-    height: 220px
-  }
-  .height-sm {
-    height: 250px
-  }
-  .height-md {
-    height: 150px
-  }
-  .height-lg {
-    height: 280px
-  }
-  .height-xl {
-    height: 300px
-  }
-  #image-view {
-    overflow: hidden;
-    //background-image: url('https://cdn.pixabay.com/photo/2015/06/19/21/24/the-road-815297__340.jpg');
-    /* background-color: #8f2c2c; */
-    height: 100vh;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-  }
 
+<style scoped>
+  .vue-grid-layout {
+    background: #eee;
+  }
+  .vue-grid-item:not(.vue-grid-placeholder) {
+    background: #ccc;
+    border: 1px solid black;
+  }
+  .vue-grid-item .resizing {
+    opacity: 0.9;
+  }
+  .vue-grid-item .static {
+    background: #cce;
+  }
+  .vue-grid-item .text {
+    font-size: 24px;
+    text-align: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .vue-grid-item .no-drag {
+
+  }
+  .vue-grid-item .minMax {
+    font-size: 12px;
+  }
+  .vue-grid-item .add {
+    cursor: pointer;
+  }
+  .vue-draggable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 0;
+    left: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><circle cx='5' cy='5' r='5' fill='#999999'/></svg>") no-repeat;
+    background-position: bottom right;
+    padding: 0 8px 8px 0;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+  .height-parent {
+    border: 10px solid #FFFFFF;
+  }
+  .height-child {
+    /*display: table-caption;
+    vertical-align: middle; !*Vertically centered*!
+    text-align: center;*/
+    height:100%;
+    border: 4px solid #2dF4FF;/* Horizontally centered */
+  }
 </style>

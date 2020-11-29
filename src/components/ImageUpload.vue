@@ -1,15 +1,31 @@
 <template>
-    <div id="image-upload">
+    <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;;">
         <div id="draggable-container" ref="draggableContainer">
-            <div id="draggable-header" @mousedown="dragMouseDown">
-                <slot name="header"></slot>
-                <div v-if="!imageData.src" class="wrapper">
-                    <div  class="file-upload" >
-                        <input type="file" accept="image/*" @change="onChange">
-                        <em class="fa fa-arrow-up"></em>
+            <div :id="'draggable-header' + imageData.uuid" @mousedown="dragMouseDown">
+                <div v-if="!imageData.src" class="">
+                    <div class="file-upload upload-image">
+                        <label :for="'file-input' + imageData.uuid">
+                            <img src="../../public/img/uploader.jpg" alt="uploader" class="image-uploader" />
+                        </label>
+                        <input type="file" :id="'file-input' + imageData.uuid" accept="image/*" @change="onChange">
                     </div>
                 </div>
-                <div v-else
+                <div v-else :style="`transform: rotate(${imageData.rotation}deg);`">
+                        <v-img
+                            :key="imageData.uuid"
+                            contain
+                            :src="imageData.src"
+                            :width="imageData.width"
+                            @click="selectImage"
+                            :id="imageData.uuid"
+                            :style="{
+                                'border-radius': imageData.roundFactor + '%',
+                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`,
+                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`
+                           }"
+                    />
+                </div>
+                <!--<div v-else
                      :style="`transform: rotate(${imageData.rotation}deg);`"
                 >
                     <v-img
@@ -24,16 +40,16 @@
                                 'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`
                            }"
                     />
-                </div>
-                <slot name="footer"></slot>
+                </div>-->
             </div>
         </div>
-    </div>
+        </div>
 </template>
 
 <script>
     import { mapActions, mapState } from 'vuex';
     import EventBus from '../helpers/eventBus';
+    //import { Draggable } from 'draggable-vue-directive'
 
     export default {
         data: () => {
@@ -63,6 +79,9 @@
                   isDragging: false
               }
           }
+        },
+        directives: {
+            //Draggable
         },
         computed: {
             ...mapState([
@@ -95,15 +114,15 @@
                     el.classList.remove("border");
                 }
             });
+            //this.draggableValue.boundingRect = this.$refs[this.$ref.handleId];
+
             this.imageData.uuid = this.uuid;
-            this.positions.movementX = this.clientX;
-            this.positions.movementY = this.clientY;
-            this.positions.clientX = this.clientX;
-            this.positions.clientY = this.clientY;
-            this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop + this.positions.movementY - 111) + 'px';
-            this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft + this.positions.movementX - 50) + 'px';
+            console.log(this.imageData.uuid);
         },
         methods: {
+            boundElement(e) {
+                console.log(e);
+            },
             onChange(e) {
                 if (! e.target.files.length) return;
 
@@ -112,8 +131,9 @@
                 reader.readAsDataURL(file);
 
                 reader.onload = e => {
-                    let src = e.target.result;
+                    const src = e.target.result;
                     this.imageData.src = src;
+                    console.log(this.imageData.uuid);
                     this.$emit('loaded', { src, file });
                 };
             },
@@ -123,7 +143,6 @@
                 // get the mouse cursor position at startup:
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
-
                 document.onmousemove = this.elementDrag;
                 document.onmouseup = this.closeDragElement;
             },
@@ -131,14 +150,53 @@
                 if(!this.imageData.src) return;
                 this.positions.isDragging = true;
                 event.preventDefault();
-                //if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;
+                //if(event.clientY  <= document.getElementById('header').getBoundingClientRect().height) return;;
+                let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
+                let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
+
+                console.log('wrapperElement bottom right top left', wrapperElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
+                    wrapperElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
+                console.log('draggableElement bottom right top left', draggableElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
+                                                draggableElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
+                console.log('client left top', event.clientX, event.clientY);
+
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
+
                 // set the element's new position:
                 this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px';
                 this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px';
+
+                let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
+                let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
+                let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
+                let imageHeaderRight = wrapperElement.getBoundingClientRect().right;
+
+                let draggableHeaderBottom = draggableElement.getBoundingClientRect().bottom;
+                let draggableHeaderLeft = draggableElement.getBoundingClientRect().left;
+                let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
+                let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
+
+                if(imageHeaderRight < draggableHeaderRight) {
+                    this.$refs.draggableContainer.style.left =  wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width + 'px';
+                    this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                }
+
+                if(imageHeaderBottom < draggableHeaderBottom) {
+                    this.$refs.draggableContainer.style.top =  wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height + 'px';
+                    this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                }
+
+                if(imageHeaderLeft > draggableHeaderLeft) {
+                    this.$refs.draggableContainer.style.left = 0 + 'px';
+                    this.positions.movementX = 0;
+                }
+                if(imageHeaderTop > draggableHeaderTop) {
+                    this.$refs.draggableContainer.style.top = 0 + 'px';
+                    this.positions.movementY = 0;
+                }
             },
             closeDragElement () {
                 if(!this.imageData.src) return;
@@ -161,7 +219,7 @@
                 await this.setActiveImage(this.imageData);
             },
             ...mapActions({
-                setActiveImage: 'setActiveImage' // map `this.add()` to `this.$store.commit('increment')`
+                setActiveImage: 'setActiveImage'
             }),
             activateFilterAnimation() {
                 document.getElementById(this.imageData.uuid).classList.toggle('animated');
@@ -190,71 +248,40 @@
     }
 </script>
 <style scoped>
-    #image-upload {
-    }
     #draggable-container {
         position: absolute;
         z-index: 9;
+        //height: 100%;
     }
     #draggable-header {
         z-index: 10;
     }
-    .wrapper {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+
+    .image-upload {
+        border: 4px solid #db263b;
+        padding: 0;
+    }
+    .image-uploader {
+        cursor: pointer;
+        border: 4px solid #2590EB;
     }
     .wrapper .file-upload {
-        height: 130px;
-        width: 130px;
-        border-radius: 100px;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 4px solid #2590EB;
-        overflow: hidden;
-        background-image: linear-gradient(to bottom, #2590EB 50%, #FFFFFF 50%);
-        background-size: 100% 200%;
+        border: 4px solid #eb263b;
         transition: all 1s;
         color: #FFFFFF;
-        font-size: 100px;
-    }
-    .wrapper .file-upload input[type='file'] {
-        height: 125px;
-        width: 125px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        cursor: pointer;
+        height: 100%;
     }
     .wrapper .file-upload:hover {
-        background-position: 0 -100%;
-        color: #2590EB;
+
+        //background-image: url("../../public/img/uploader.jpg");
     }
     .border {
         border: 2px solid #555;
     }
-    .slider-width {
-        width: 50%;
-    }
     .animated {
         -webkit-animation: filter-animation 5s infinite;
     }
-    @-webkit-keyframes filter-animation {
-        0% {
-            -webkit-filter: sepia(0) saturate(2);
-        }
-
-        50% {
-            -webkit-filter: sepia(1) saturate(8);
-        }
-
-        100% {
-            -webkit-filter: sepia(0) saturate(2);
-        }
+    .upload-image > input {
+        display: none;
     }
 </style>
