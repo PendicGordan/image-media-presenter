@@ -26,41 +26,6 @@
                 >
                     The image has been deleted!
                 </v-alert>
-                <v-dialog
-                        v-click-outside="dialogNotClicked"
-                        v-model="deleteDialogShown"
-                        max-width="290"
-                >
-                    <v-card>
-                    <v-card-title class="headline">
-                       Delete confirmation
-                    </v-card-title>
-
-                    <v-card-text>
-                        Are you sure you want to delete the image?
-                    </v-card-text>
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-
-                        <v-btn
-                                color="green darken-1"
-                                text
-                                @click="cancelRemove"
-                        >
-                            Disagree
-                        </v-btn>
-
-                        <v-btn
-                                color="green darken-1"
-                                text
-                                @click="confirmRemoveAndClearImage"
-                        >
-                            Agree
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-                </v-dialog>
             </div>
             <div id="editor" v-if="!saveAlertShown && !deleteAlertShown">
                 <v-row cols="1" v-if="value === 'basic'">
@@ -238,8 +203,7 @@
             imageManipulateAction: {
                 SAVED_IMAGE: 'SAVED_IMAGE',
                 DELETED_IMAGE: 'DELETED_IMAGE'
-            },
-            deleteDialogShown: false
+            }
         }),
         props: {
         },
@@ -277,24 +241,11 @@
                 this.saveAlertShown = true;
                 this.closeSaveAlert(true);
             },
-            removeAndClearImage () {
-                this.deleteDialogShown = true;
-            },
-            confirmRemoveAndClearImage() {
-                this.deleteDialogShown = false;
+            removeAndClearImage() {
                 this.closeDeleteAlert(true);
                 this.deleteActiveImageData(this.activeImage);
+                EventBus.$emit('DELETED_IMAGE', {uuid: this.activeImage.uuid});
                 this.deleteAlertShown = true;
-            },
-            cancelRemove() {
-                this.deleteDialogShown = false;
-                this.value = 'basic';
-            },
-            dialogNotClicked() {
-                this.value = 'basic';
-              if(this.deleteDialogShown) {
-                  console.log('aa');
-              }
             },
             rotateRight() {
                 this.activeImage.rotation = this.activeImage.rotation - 90 >= 0 ? this.activeImage.rotation - 90 + "" : 360 - Math.abs(this.activeImage.rotation - 90);
@@ -336,7 +287,6 @@
                     clearTimeout(this.deleteAlertTimeout );
                 }
                 if(methodCalled === false) {
-                    console.log('ff');
                     EventBus.$emit(this.imageManipulateAction.DELETED_IMAGE, this.activeImage);
                     this.clearConfigurer();
                 } else {

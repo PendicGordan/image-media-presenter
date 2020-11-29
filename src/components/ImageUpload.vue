@@ -94,10 +94,16 @@
                     el.classList.remove("border");
                 }
             });
-            //this.draggableValue.boundingRect = this.$refs[this.$ref.handleId];
+            EventBus.$on('DELETED_IMAGE', (payload) => {
+                if(this.imageData.uuid !== payload.uuid) return;
+                const el = document.getElementById(this.imageData.uuid);
+                if(el && el.classList.contains("border")) {
+                    el.classList.remove("border");
+                }
+                this.removeImage();
+            });
 
             this.imageData.uuid = this.uuid;
-            console.log(this.imageData.uuid);
         },
         methods: {
             onChange(e) {
@@ -185,6 +191,7 @@
                 EventBus.$emit('IMAGE_CLICKED', {});
                 if(this.positions.isDragging) return;
                 const el = document.getElementById(this.imageData.uuid);
+                console.log(el);
                 if(el.classList.contains("border")) {
                     await this.setActiveImage(null);
                     return el.classList.remove("border");
@@ -198,6 +205,32 @@
             }),
             activateFilterAnimation() {
                 document.getElementById(this.imageData.uuid).classList.toggle('animated');
+            },
+            removeImage() {
+                this.imageData = {
+                    uuid: this.imageData.uuid,
+                    src: null,
+                    width: "250",
+                    rotation: 0,
+                    positionX: null,
+                    positionY: null,
+                    roundFactor: 0,
+                    blurringLevel: 0,
+                    sepiaLevel: 0,
+                    saturationLevel: 1,
+                    invertLevel: 0,
+                    opacityLevel: 100,
+                    brightnessLevel: 100,
+                    contrastLevel: 100,
+                    isBackgroundImage: null
+                };
+                this.positions = {
+                    clientX: null,
+                    clientY: null,
+                    movementX: 0,
+                    movementY: 0,
+                    isDragging: false
+                }
             }
         },
         watch: {
@@ -226,7 +259,6 @@
     #draggable-container {
         position: absolute;
         z-index: 9;
-        //height: 100%;
     }
     #draggable-header {
         z-index: 10;
