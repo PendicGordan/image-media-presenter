@@ -116,7 +116,6 @@
                 reader.onload = e => {
                     const src = e.target.result;
                     this.imageData.src = src;
-                    console.log(this.imageData.uuid);
                     this.$emit('loaded', { src, file });
                 };
             },
@@ -185,13 +184,13 @@
                 document.onmousemove = null;
                 setTimeout(async () => {
                     this.positions.isDragging = false;
-                }, 50);
+                }, 100);
             },
             async selectImage () {
-                EventBus.$emit('IMAGE_CLICKED', {});
+
                 if(this.positions.isDragging) return;
+                EventBus.$emit('IMAGE_CLICKED', {});
                 const el = document.getElementById(this.imageData.uuid);
-                console.log(el);
                 if(el.classList.contains("border")) {
                     await this.setActiveImage(null);
                     return el.classList.remove("border");
@@ -230,7 +229,9 @@
                     movementX: 0,
                     movementY: 0,
                     isDragging: false
-                }
+                };
+                this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.parentElement.style.top;
+                this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.parentElement.style.left;
             }
         },
         watch: {

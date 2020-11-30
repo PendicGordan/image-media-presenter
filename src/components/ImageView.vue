@@ -90,7 +90,7 @@
     background: #eee;
   }
   .vue-grid-item:not(.vue-grid-placeholder) {
-    background: #ccc;
+    //background: #ccc;
     border: 1px solid black;
   }
   .vue-grid-item .resizing {
