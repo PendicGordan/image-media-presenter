@@ -1,8 +1,6 @@
 <template>
     <div id="footer" style="margin-top: 500px">
-
-
-        <div >sdaaaaaaaaaaaaaaa</div>
+        <div ></div>
     </div>
 </template>
 

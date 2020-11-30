@@ -3,8 +3,8 @@
     <v-row>
       <div style="width:100%;margin-top: 0.25%;height:100%;">
         <grid-layout :layout.sync="layout"
-                     :col-num="4"
-                     :row-height="1"
+                     :col-num="numberOfColumns"
+                     :row-height="columnHeight"
                      :is-draggable="draggable"
                      :is-resizable="resizable"
                      :responsive="responsive"
@@ -44,6 +44,7 @@
   import ImageUpload from './ImageUpload';
   import {uuid} from 'vue-uuid';
   import {mapState} from 'vuex';
+  import EventBus from "../helpers/eventBus";
 
   export default {
     components: {
@@ -60,11 +61,10 @@
         resizable: false,
         responsive: false,
         index: 0,
+        columnHeight: 0,
+        //columnWidth: 0,
         layout: [
-          {"x":0,"y":0,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()},
-          {"x":2,"y":0,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()},
-          {"x":0,"y":2,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()},
-          {"x":2,"y":2,"w":2,"h":window.innerHeight / 2 - 35, "i":uuid.v4()}
+
         ]
       }
     },
@@ -81,13 +81,40 @@
       ...mapState([
               'activeImage'
       ])
+    },
+    mounted() {
+      EventBus.$on('CHANGE_LAYOUT', payload => {
+        this.layout = [];
+        console.log(payload);
+        this.numberOfColumns = payload.columns;
+        this.numberOfRows = payload.rows;
+        this.columnHeight = window.innerHeight / this.numberOfRows - 35;
+        for(let i = 0; i < this.numberOfRows; ++i) {
+          for(let j = 0; j < this.numberOfColumns; ++j) {
+            this.layout.push({
+              "x":j ,"y":i ,"w":1,"h": 1, "i":uuid.v4()
+            });
+          }
+        }
+      });
+
+      console.log(window.innerHeight / this.numberOfColumns);
+      this.columnHeight = window.innerHeight / this.numberOfColumns - 35;
+      //this.columnWidth = window.innerWidth / this.numberOfRows;
+      for(let i = 0; i < this.numberOfRows; ++i) {
+        for(let j = 0; j < this.numberOfColumns; ++j) {
+          this.layout.push({
+            "x":j ,"y":i ,"w":1,"h": 1, "i":uuid.v4()
+          });
+        }
+      }
     }
   }
 </script>
 
 <style scoped>
   .vue-grid-layout {
-    background: #eee;
+    //background: #eee;
   }
   .vue-grid-item:not(.vue-grid-placeholder) {
     //background: #ccc;
