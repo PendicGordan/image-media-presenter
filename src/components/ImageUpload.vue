@@ -44,6 +44,7 @@
                   rotation: 0,
                   positionX: null,
                   positionY: null,
+                  slideId: -1,
                   roundFactor: 0,
                   blurringLevel: 0,
                   sepiaLevel: 0,
@@ -65,7 +66,8 @@
         },
         computed: {
             ...mapState([
-                'activeImage'
+                'activeImage',
+                'activeSlide'
             ])
         },
         props: {
@@ -104,6 +106,8 @@
             });
 
             this.imageData.uuid = this.uuid;
+            this.imageData.slideId = this.activeSlide;
+            this.assignImageToTheSlide(this.imageData);
         },
         methods: {
             onChange(e) {
@@ -200,7 +204,8 @@
                 await this.setActiveImage(this.imageData);
             },
             ...mapActions({
-                setActiveImage: 'setActiveImage'
+                setActiveImage: 'setActiveImage',
+                assignImageToTheSlide: 'assignImageToTheSlide'
             }),
             activateFilterAnimation() {
                 document.getElementById(this.imageData.uuid).classList.toggle('animated');

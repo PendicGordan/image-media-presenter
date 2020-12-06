@@ -72,6 +72,15 @@
                         >
                         </v-slider>
                     </v-col>
+                    <v-col md>
+
+                    </v-col>
+                    <v-col md>
+
+                    </v-col>
+                    <v-col md>
+
+                    </v-col>
                 </v-row>
                 <v-row cols="2" v-else-if="value === 'filter'">
                     <v-col md>

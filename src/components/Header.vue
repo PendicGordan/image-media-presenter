@@ -12,11 +12,29 @@
         <v-spacer></v-spacer>
         <div>
             <v-btn
+                    depressed
+                    color="primary"
+                    @click="saveCurrentSlide"
+            >
+                Save slide
+            </v-btn>
+        </div>
+        <div>
+            <v-select
+                    :items="slides"
+                    label="Slide No."
+                    @change="changeSlide"
+                    v-model="activeSlide"
+            >
+            </v-select>
+        </div>
+        <div>
+            <v-btn
                     @click="toggleMenu"
                     text
             >
-                <span class="mr-2">Latest Release</span>
-                <v-icon>mdi-open-in-new</v-icon>
+                <span class="mr-2">Choose layout</span>
+                <v-icon>mdi-grid</v-icon>
             </v-btn>
             <table id="layoutTable" style="position: absolute; color: white; text-align: center; z-index: 11; padding-top: 10px;" v-if="showLayout" >
                 <tr>
@@ -54,21 +72,40 @@
                 </tr>
             </table>
         </div>
+        <div>
+            <v-btn
+                    class="mx-2"
+                    fab
+                    dark
+                    color="teal"
+                    @click="toggleManagementMenu"
+            >
+                <v-icon dark>
+                    mdi-format-list-bulleted-square
+                </v-icon>
+            </v-btn>
+        </div>
     </v-app-bar>
 </template>
 
 <script>
     import EventBus from "../helpers/eventBus";
+    import { mapState, mapActions } from 'vuex';
 
     export default {
         name: 'Header',
         data() {
             return {
                 hoverLayout: [1, 2],
-                showLayout: false
+                showLayout: false,
+                toggleActionMenu: false
             };
         },
-        components: {
+        computed: {
+            ...mapState([
+                'slides',
+                'activeSlide'
+            ])
         },
         methods: {
             itemTitle(item) {
@@ -83,7 +120,20 @@
             },
             changeLayout(rows, columns) {
                 EventBus.$emit('CHANGE_LAYOUT', { rows, columns });
-            }
+            },
+            changeSlide(e) {
+                this.changeActiveSlide(e);
+            },
+            toggleManagementMenu() {
+                this.toggleActionMenu = !this.toggleActionMenu;
+                EventBus.$emit('TOGGLE_ACTION_MENU', this.toggleActionMenu)
+            },
+            saveCurrentSlide() {
+                console.log(this.activeSlide);
+            },
+            ...mapActions([
+                'changeActiveSlide'
+            ]),
         },
         props: {
         }

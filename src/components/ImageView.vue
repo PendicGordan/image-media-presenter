@@ -1,5 +1,6 @@
 <template>
-  <div style="width: 99.15%; margin-left: 0.40%;">
+  <div style="width: 99.15%; margin-left: 0.40%;" id="image-view">
+    <ActionMenu v-if="toggleActionMenu" />
     <v-row>
       <div style="width:100%;margin-top: 0.25%;height:100%;">
         <grid-layout :layout.sync="layout"
@@ -31,7 +32,7 @@
       </div>
     </v-row>
     <v-row v-if="activeImage">
-      <ImageConfigurer>
+      <ImageConfigurer >
 
       </ImageConfigurer>
     </v-row>
@@ -45,13 +46,15 @@
   import {uuid} from 'vue-uuid';
   import {mapState} from 'vuex';
   import EventBus from "../helpers/eventBus";
+  import ActionMenu from "./ActionMenu";
 
   export default {
     components: {
       GridLayout,
       GridItem,
       ImageConfigurer,
-      ImageUpload
+      ImageUpload,
+      ActionMenu
     },
     data() {
       return {
@@ -63,6 +66,7 @@
         index: 0,
         columnHeight: 0,
         //columnWidth: 0,
+        toggleActionMenu: false,
         layout: [
 
         ]
@@ -75,7 +79,7 @@
       }
     },
     created() {
-      window.addEventListener('resize', this.handleResize);
+      //window.addEventListener('resize', this.handleResize);
     },
     computed: {
       ...mapState([
@@ -84,6 +88,7 @@
     },
     mounted() {
       EventBus.$on('CHANGE_LAYOUT', payload => {
+        const uuids = this.layout.map(layoutItem => layoutItem.i);
         this.layout = [];
         console.log(payload);
         this.numberOfColumns = payload.columns;
@@ -91,11 +96,21 @@
         this.columnHeight = window.innerHeight / this.numberOfRows - 35;
         for(let i = 0; i < this.numberOfRows; ++i) {
           for(let j = 0; j < this.numberOfColumns; ++j) {
+            let itemUuid;
+            if(uuids.length !== 0) {
+              itemUuid = uuids[0];
+              uuids.shift();
+            } else {
+              itemUuid = uuid.v4();
+            }
             this.layout.push({
-              "x":j ,"y":i ,"w":1,"h": 1, "i":uuid.v4()
+              "x":j ,"y":i ,"w":1,"h": 1, "i": itemUuid
             });
           }
         }
+      });
+      EventBus.$on('TOGGLE_ACTION_MENU', payload => {
+        this.toggleActionMenu = payload;
       });
 
       console.log(window.innerHeight / this.numberOfColumns);
@@ -167,5 +182,12 @@
     text-align: center;*/
     height:100%;
     border: 4px solid #adF4FF;/* Horizontally centered */
+  }
+  #action-menu {
+    position: absolute;
+    z-index: 1000;
+  }
+  #image-view {
+    position: relative;
   }
 </style>

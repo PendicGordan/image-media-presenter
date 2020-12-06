@@ -12,6 +12,7 @@
 import ImageView from './components/ImageView';
 import Header from "./components/Header";
 
+
 export default {
   name: 'App',
 
