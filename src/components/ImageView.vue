@@ -25,7 +25,7 @@
                      :margin="[0, 0]"
                      class="height-parent"
           >
-            <ImageUpload :key="item.i" :uuid="item.i" class="height-child">
+            <ImageUpload :key="item.i" :uuid="item.i" :x="item.x" :y="item.y" :src="item.src" class="height-child">
             </ImageUpload>
           </grid-item>
         </grid-layout>
@@ -81,9 +81,27 @@
     created() {
       //window.addEventListener('resize', this.handleResize);
     },
+    watch: {
+      activeSlide(newSlide) {
+        this.layout = [];
+        console.log(Object.values(newSlide.images));
+        this.columnHeight = window.innerHeight / this.numberOfRows - 35;
+        let images = Object.values(newSlide.images);
+        let arr = [];
+        images.forEach(image => {
+          console.log(image);
+          arr.push({"x": image.x, "y": image.y, "w": 1, "h": 1, "i": image.uuid, src: image.src});
+        });
+        this.layout = arr;
+        //this.layout.push({
+          //"x": image.y, "y": image.x, "w": 1, "h": 1, "i": image.uuid
+        //});
+      }
+    },
     computed: {
       ...mapState([
-              'activeImage'
+              'activeImage',
+              'activeSlide'
       ])
     },
     mounted() {
@@ -100,12 +118,16 @@
             if(uuids.length !== 0) {
               itemUuid = uuids[0];
               uuids.shift();
+              //const image = this.activeSlide.images.filter(image => image.uuid === itemUuid)[0];
+              this.layout.push({
+                "x":j ,"y":i ,"w":1,"h": 1, "i": itemUuid, src: null
+              });
             } else {
               itemUuid = uuid.v4();
+              this.layout.push({
+                "x":j ,"y":i ,"w":1,"h": 1, "i": itemUuid
+              });
             }
-            this.layout.push({
-              "x":j ,"y":i ,"w":1,"h": 1, "i": itemUuid
-            });
           }
         }
       });
@@ -116,13 +138,14 @@
       console.log(window.innerHeight / this.numberOfColumns);
       this.columnHeight = window.innerHeight / this.numberOfColumns - 35;
       //this.columnWidth = window.innerWidth / this.numberOfRows;
-      for(let i = 0; i < this.numberOfRows; ++i) {
-        for(let j = 0; j < this.numberOfColumns; ++j) {
-          this.layout.push({
-            "x":j ,"y":i ,"w":1,"h": 1, "i":uuid.v4()
-          });
+      if(this.activeSlide)
+        for(let i = 0; i < this.activeSlide.maxY; ++i) {
+          for(let j = 0; j < this.activeSlide.maxX; ++j) {
+            this.layout.push({
+              "x":j ,"y":i ,"w":1,"h": 1, "i":uuid.v4(), src: null
+            });
+          }
         }
-      }
     }
   }
 </script>

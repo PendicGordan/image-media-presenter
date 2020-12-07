@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex);
+import {uuid} from 'vue-uuid';
 
 export default new Vuex.Store({
 	strict: false,
 	state: {
 		presentations: [],
-		slides: [{text: 1, images: {}}, {text: 2, images: {}}],
-		activeSlide: 1,
+		slides: [],
+		activeSlide: null, // {text: 1, images: {}, maxX: 2, maxY: 2},
 		activeImage: null,
 		backgroundImageData: {
 			isEnabled: false,
@@ -44,6 +45,15 @@ export default new Vuex.Store({
         },
 		async assignImageToTheSlide({commit}, data) {
 			commit('assignImageToTheSlide', data);
+		},
+		async changeActiveSlide({commit}, data) {
+			commit('changeActiveSlide', data);
+		},
+		async createNewSlide({commit}) {
+			commit('createNewSlide');
+		},
+		async saveImage({commit}, data) {
+			commit('saveImage', data);
 		}
 	},
 	mutations: {
@@ -63,6 +73,60 @@ export default new Vuex.Store({
             state.backgroundImageData = data;
         },
 		assignImageToTheSlide(state, data) {
+			for(let i = 0; i < state.slides.length; ++i) {
+				if(state.slides[i].text === data.slideId) {
+					state.slides[i].images[data.uuid] = data;
+					break;
+				}
+			}
+		},
+		changeActiveSlide(state, data) {
+			console.log('slideId', data);
+			console.log(state.slides);
+			for(let i = 0; i < state.slides.length; ++i) {
+				if(state.slides[i].text === data) {
+					console.log('fffffffffffff');
+					state.activeSlide = state.slides[i];
+					console.log('nnnnnnnnnnnnnn');
+					break;
+				}
+			}
+			//const slideId = data;
+			/*state.activeSlide = state.slides.filter(slide => slide.text === slideId)[0];
+			console.log(state.slides);
+			console.log(state.activeSlide);*/
+		},
+		createNewSlide(state) {
+			const nextSlideId = state.slides.length + 1;
+			state.slides.push({ text: nextSlideId, images: {}, maxX: 2, maxY: 2});
+			for(let i = 0; i < 2; ++i) {
+				for(let j = 0; j < 2; ++j) {
+					const imageUuid = uuid.v4();
+					state.slides[state.slides.length - 1].images[imageUuid] = {
+						uuid: imageUuid,
+						src: null,
+						width: "250",
+						x: i,
+						y: j,
+						rotation: 0,
+						positionX: null,
+						positionY: null,
+						roundFactor: 0,
+						blurringLevel: 0,
+						sepiaLevel: 0,
+						saturationLevel: 1,
+						invertLevel: 0,
+						opacityLevel: 100,
+						brightnessLevel: 100,
+						contrastLevel: 100,
+						isBackgroundImage: null
+					}
+				}
+			}
+			state.activeSlide = state.slides[state.slides.length - 1];
+		},
+		saveImage(state, data) {
+			console.log(state, data);
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === data.slideId) {
 					state.slides[i].images[data.uuid] = data;

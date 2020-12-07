@@ -14,6 +14,15 @@
             <v-btn
                     depressed
                     color="primary"
+                    @click="createNewSlide"
+            >
+                New slide
+            </v-btn>
+        </div>
+        <div>
+            <v-btn
+                    depressed
+                    color="primary"
                     @click="saveCurrentSlide"
             >
                 Save slide
@@ -24,7 +33,7 @@
                     :items="slides"
                     label="Slide No."
                     @change="changeSlide"
-                    v-model="activeSlide"
+                    v-model="currentSlideId"
             >
             </v-select>
         </div>
@@ -98,7 +107,8 @@
             return {
                 hoverLayout: [1, 2],
                 showLayout: false,
-                toggleActionMenu: false
+                toggleActionMenu: false,
+                currentSlideId: 1
             };
         },
         computed: {
@@ -132,10 +142,17 @@
                 console.log(this.activeSlide);
             },
             ...mapActions([
-                'changeActiveSlide'
-            ]),
+                'changeActiveSlide',
+                'createNewSlide'
+            ])
         },
-        props: {
+        watch: {
+            activeSlide(newValue) {
+                this.currentSlideId = newValue.text;
+            }
+        },
+        mounted() {
+            this.currentSlideId = this.activeSlide.text;
         }
     };
 </script>

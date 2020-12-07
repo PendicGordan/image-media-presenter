@@ -46,6 +46,8 @@
                   positionY: null,
                   slideId: -1,
                   roundFactor: 0,
+                  x: 0,
+                  y: 0,
                   blurringLevel: 0,
                   sepiaLevel: 0,
                   saturationLevel: 1,
@@ -73,7 +75,10 @@
         props: {
             clientX: Number,
             clientY: Number,
-            uuid: String
+            uuid: String,
+            x: Number,
+            y: Number,
+            src: String
         },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
@@ -106,8 +111,11 @@
             });
 
             this.imageData.uuid = this.uuid;
-            this.imageData.slideId = this.activeSlide;
-            this.assignImageToTheSlide(this.imageData);
+            this.imageData.slideId = this.activeSlide.text;
+            this.imageData.x = this.x;
+            this.imageData.y = this.y;
+            this.imageData.src = this.src;
+            //this.assignImageToTheSlide(this.imageData);
         },
         methods: {
             onChange(e) {
@@ -121,6 +129,8 @@
                     const src = e.target.result;
                     this.imageData.src = src;
                     this.$emit('loaded', { src, file });
+                    console.log('ggg');
+                    this.saveImage(this.imageData);
                 };
             },
             dragMouseDown (event) {
@@ -205,7 +215,8 @@
             },
             ...mapActions({
                 setActiveImage: 'setActiveImage',
-                assignImageToTheSlide: 'assignImageToTheSlide'
+                assignImageToTheSlide: 'assignImageToTheSlide',
+                saveImage: 'saveImage'
             }),
             activateFilterAnimation() {
                 document.getElementById(this.imageData.uuid).classList.toggle('animated');
@@ -215,6 +226,8 @@
                     uuid: this.imageData.uuid,
                     src: null,
                     width: "250",
+                    x: 0,
+                    y: 0,
                     rotation: 0,
                     positionX: null,
                     positionY: null,

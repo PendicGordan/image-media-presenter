@@ -20,7 +20,11 @@ export default {
     Header,
     ImageView
   },
-
+  created() {
+    // TODO load presentations
+    // TODO extract slides
+    // TODO set active slide
+  },
   data: () => ({
 
   }),
