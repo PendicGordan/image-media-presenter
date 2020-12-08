@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div v-else :style="`transform: rotate(${imageData.rotation}deg);`">
-                        <v-img
+                    <v-img
                             :key="imageData.uuid"
                             contain
                             :src="imageData.src"
@@ -19,13 +19,18 @@
                             @click="selectImage"
                             :id="imageData.uuid"
                             :style="{
-                                'border-radius': imageData.roundFactor + '%',
-                                '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`,
-                                'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`
-                           }"
+                            'border-radius': imageData.roundFactor + '%',
+                            '-webkit-filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`,
+                            'filter': `grayscale(${imageData.blurringLevel / 100}) sepia(${imageData.sepiaLevel / 100}) saturate(${imageData.saturationLevel}) invert(${imageData.invertLevel / 100}) opacity(${imageData.opacityLevel / 100}) brightness(${imageData.brightnessLevel / 100}) contrast(${imageData.contrastLevel / 100})`
+                       }"
                     />
                 </div>
             </div>
+        </div>
+        <div v-if="activeImage && imageData.uuid === activeImage.uuid">
+            <ImageConfigurer >
+
+            </ImageConfigurer>
         </div>
         </div>
 </template>
@@ -33,6 +38,7 @@
 <script>
     import { mapActions, mapState } from 'vuex';
     import EventBus from '../helpers/eventBus';
+    import ImageConfigurer from './ImageConfigurer';
 
     export default {
         data: () => {
@@ -65,6 +71,9 @@
                   isDragging: false
               }
           }
+        },
+        components: {
+            ImageConfigurer
         },
         computed: {
             ...mapState([
@@ -200,7 +209,6 @@
                 }, 100);
             },
             async selectImage () {
-
                 if(this.positions.isDragging) return;
                 EventBus.$emit('IMAGE_CLICKED', {});
                 const el = document.getElementById(this.imageData.uuid);
@@ -285,6 +293,7 @@
     .image-upload {
         border: 4px solid #db263b;
         padding: 0;
+        position: relative
     }
     .image-uploader {
         cursor: pointer;

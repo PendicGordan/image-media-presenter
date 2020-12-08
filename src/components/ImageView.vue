@@ -31,19 +31,12 @@
         </grid-layout>
       </div>
     </v-row>
-    <v-row v-if="activeImage">
-      <ImageConfigurer >
-
-      </ImageConfigurer>
-    </v-row>
   </div>
 </template>
 
 <script>
   import { GridLayout, GridItem } from "vue-grid-layout";
-  import ImageConfigurer from './ImageConfigurer';
   import ImageUpload from './ImageUpload';
-  //import {uuid} from 'vue-uuid';
   import {mapState, mapActions} from 'vuex';
   import EventBus from "../helpers/eventBus";
   import ActionMenu from "./ActionMenu";
@@ -52,7 +45,6 @@
     components: {
       GridLayout,
       GridItem,
-      ImageConfigurer,
       ImageUpload,
       ActionMenu
     },

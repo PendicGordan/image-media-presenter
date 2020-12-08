@@ -1,200 +1,198 @@
 <template>
     <div id="ImageConfigurer">
-        <div v-if="activeImage">
-            <div>
-                <v-alert
-                        v-if="saveAlertShown"
-                        dense
-                        text
-                        type="success"
-                        transition="fade-transition"
-                        dismissible
-                        @input="closeSaveAlert"
-                >
-                    The image has been saved!
-                </v-alert>
-            </div>
-            <div>
-                <v-alert
-                        v-if="deleteAlertShown"
-                        dense
-                        text
-                        type="warning"
-                        transition="fade-transition"
-                        dismissible
-                        @input="closeDeleteAlert"
-                >
-                    The image has been deleted!
-                </v-alert>
-            </div>
-            <div id="editor" v-if="!saveAlertShown && !deleteAlertShown">
-                <v-row cols="1" v-if="value === 'basic'">
-                    <v-col md>
-                        <v-slider
-                                v-model="activeImage.width"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="500"
-                                step="1"
-                        ></v-slider>
-                        <v-btn @click="rotateLeft"
-                               fab
-                               dark
-                               color="primary">
-                            <v-icon dark>
-                                mdi-rotate-right
-                            </v-icon>
-                        </v-btn>
-                        <v-btn @click="rotateRight"
-                               fab
-                               dark
-                               color="primary">
-                            <v-icon dark>
-                                mdi-rotate-left
-                            </v-icon>
-                        </v-btn>
-                        <v-slider
-                                v-model="activeImage.rotation"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="360"
-                                step="1"
-                                :thumb-size="24"
-                                thumb-label="always"
-                        >
-                        </v-slider>
-                        <v-slider
-                                v-model="activeImage.roundFactor"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="50"
-                                step="1"
-                        >
-                        </v-slider>
-                    </v-col>
-                    <v-col md>
-
-                    </v-col>
-                    <v-col md>
-
-                    </v-col>
-                    <v-col md>
-
-                    </v-col>
-                </v-row>
-                <v-row cols="2" v-else-if="value === 'filter'">
-                    <v-col md>
-                        <v-slider
-                                v-model="activeImage.blurringLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                        <v-slider
-                                v-model="activeImage.sepiaLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                        <v-slider
-                                v-model="activeImage.saturationLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                        <v-slider
-                                v-model="activeImage.invertLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                        <v-slider
-                                v-model="activeImage.opacityLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                    </v-col>
-                    <v-col md>
-                        <v-slider
-                                v-model="activeImage.brightnessLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                        <v-slider
-                                v-model="activeImage.contrastLevel"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="100"
-                                step="1"
-                        >
-                        </v-slider>
-                    </v-col>
-                </v-row>
-                <v-row v-else-if="value === 'other'">
-                    <v-col md>
-                        <v-btn @click="activateFilterAnimation"
-                               fab
-                               dark
-                               color="primary">
-                            <v-icon>mdi-animation</v-icon>
-                        </v-btn>
-                        <v-checkbox
-                                v-model="activeImage.isBackgroundImage"
-                                label="Set as background"
-                                color="primary"
-                                value="primary"
-                                hide-details
-                                @change="handleImageBackground"
-                        ></v-checkbox>
-                    </v-col>
-                </v-row>
-            </div>
-            <v-bottom-navigation
-                    v-model="value"
-                    color="primary"
-                    horizontal
-                    shift
-                    v-if="!saveAlertShown && !deleteAlertShown"
+        <div>
+            <v-alert
+                    v-if="saveAlertShown"
+                    dense
+                    text
+                    type="success"
+                    transition="fade-transition"
+                    dismissible
+                    @input="closeSaveAlert"
             >
-                <v-btn value="save-image" @click="saveAndClearImage">
-                    <span>Save image</span>
-                    <v-icon>mdi-content-save</v-icon>
-                </v-btn>
-                <v-btn value="basic">
-                    <span>Basic</span>
-                    <v-icon>mdi-move-resize</v-icon>
-                </v-btn>
-
-                <v-btn value="filter">
-                    <span>Filters</span>
-
-                    <v-icon>mdi-image-filter-vintage</v-icon>
-                </v-btn>
-
-                <v-btn value="other">
-                    <span>Other</span>
-                    <v-icon>mdi-map-marker</v-icon>
-                </v-btn>
-                <v-btn value="remove-image" @click="removeAndClearImage">
-                    <span>Remove image</span>
-                    <v-icon>mdi-delete</v-icon>
-                </v-btn>
-            </v-bottom-navigation>
+                The image has been saved!
+            </v-alert>
         </div>
+        <div>
+            <v-alert
+                    v-if="deleteAlertShown"
+                    dense
+                    text
+                    type="warning"
+                    transition="fade-transition"
+                    dismissible
+                    @input="closeDeleteAlert"
+            >
+                The image has been deleted!
+            </v-alert>
+        </div>
+        <div id="editor" v-if="!saveAlertShown && !deleteAlertShown">
+            <v-row cols="1" v-if="value === 'basic'">
+                <v-col md>
+                    <v-slider
+                            v-model="activeImage.width"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="500"
+                            step="1"
+                    ></v-slider>
+                    <v-btn @click="rotateLeft"
+                           fab
+                           dark
+                           color="primary">
+                        <v-icon dark>
+                            mdi-rotate-right
+                        </v-icon>
+                    </v-btn>
+                    <v-btn @click="rotateRight"
+                           fab
+                           dark
+                           color="primary">
+                        <v-icon dark>
+                            mdi-rotate-left
+                        </v-icon>
+                    </v-btn>
+                    <v-slider
+                            v-model="activeImage.rotation"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="360"
+                            step="1"
+                            :thumb-size="24"
+                            thumb-label="always"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.roundFactor"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="50"
+                            step="1"
+                    >
+                    </v-slider>
+                </v-col>
+                <v-col md>
+
+                </v-col>
+                <v-col md>
+
+                </v-col>
+                <v-col md>
+
+                </v-col>
+            </v-row>
+            <v-row cols="2" v-else-if="value === 'filter'">
+                <v-col md>
+                    <v-slider
+                            v-model="activeImage.blurringLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.sepiaLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.saturationLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.invertLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.opacityLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                </v-col>
+                <v-col md>
+                    <v-slider
+                            v-model="activeImage.brightnessLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.contrastLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                    >
+                    </v-slider>
+                </v-col>
+            </v-row>
+            <v-row v-else-if="value === 'other'">
+                <v-col md>
+                    <v-btn @click="activateFilterAnimation"
+                           fab
+                           dark
+                           color="primary">
+                        <v-icon>mdi-animation</v-icon>
+                    </v-btn>
+                    <v-checkbox
+                            v-model="activeImage.isBackgroundImage"
+                            label="Set as background"
+                            color="primary"
+                            value="primary"
+                            hide-details
+                            @change="handleImageBackground"
+                    ></v-checkbox>
+                </v-col>
+            </v-row>
+        </div>
+        <v-bottom-navigation
+                v-model="value"
+                color="primary"
+                horizontal
+                shift
+                v-if="!saveAlertShown && !deleteAlertShown"
+        >
+            <v-btn value="save-image" @click="saveAndClearImage">
+                <span>Save image</span>
+                <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+            <v-btn value="basic">
+                <span>Basic</span>
+                <v-icon>mdi-move-resize</v-icon>
+            </v-btn>
+
+            <v-btn value="filter">
+                <span>Filters</span>
+
+                <v-icon>mdi-image-filter-vintage</v-icon>
+            </v-btn>
+
+            <v-btn value="other">
+                <span>Other</span>
+                <v-icon>mdi-map-marker</v-icon>
+            </v-btn>
+            <v-btn value="remove-image" @click="removeAndClearImage">
+                <span>Remove image</span>
+                <v-icon>mdi-delete</v-icon>
+            </v-btn>
+        </v-bottom-navigation>
     </div>
 </template>
 
@@ -318,12 +316,14 @@
         max-width: 100%;
         width: 100%;
         margin: auto;
-        position: fixed;
         bottom: 0;
-        z-index: 999
+        left: 0;
+        z-index: 999;
+        position: absolute;
+        background-color: rgba(	247, 230, 201, 0.3);
     }
     #editor {
-        max-width: 80%;
         margin: auto;
+
     }
 </style>
