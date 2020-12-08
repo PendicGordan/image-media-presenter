@@ -152,7 +152,7 @@
             }
         },
         mounted() {
-            this.currentSlideId = this.activeSlide.text;
+            this.currentSlideId = this.activeSlide ? this.activeSlide.text : null;
         }
     };
 </script>

@@ -3,6 +3,10 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 import {uuid} from 'vue-uuid';
 
+let createUUID = () => {
+	return uuid.v4();
+};
+
 export default new Vuex.Store({
 	strict: false,
 	state: {
@@ -28,7 +32,6 @@ export default new Vuex.Store({
 			state.presentations = '';
 		},
 		async saveSlide({state}, slide) {
-
 			state.slides.push(slide);
 		},
 		async setActiveImage({commit}, data) {
@@ -54,6 +57,9 @@ export default new Vuex.Store({
 		},
 		async saveImage({commit}, data) {
 			commit('saveImage', data);
+		},
+		async restructureActiveSlide({commit}, data) {
+			commit('restructureActiveSlide', data);
 		}
 	},
 	mutations: {
@@ -81,20 +87,12 @@ export default new Vuex.Store({
 			}
 		},
 		changeActiveSlide(state, data) {
-			console.log('slideId', data);
-			console.log(state.slides);
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === data) {
-					console.log('fffffffffffff');
 					state.activeSlide = state.slides[i];
-					console.log('nnnnnnnnnnnnnn');
 					break;
 				}
 			}
-			//const slideId = data;
-			/*state.activeSlide = state.slides.filter(slide => slide.text === slideId)[0];
-			console.log(state.slides);
-			console.log(state.activeSlide);*/
 		},
 		createNewSlide(state) {
 			const nextSlideId = state.slides.length + 1;
@@ -130,6 +128,87 @@ export default new Vuex.Store({
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === data.slideId) {
 					state.slides[i].images[data.uuid] = data;
+					break;
+				}
+			}
+		},
+		restructureActiveSlide(state, data) {
+			console.log(state.activeSlide.maxX);
+			console.log(state.activeSlide.maxY);
+			for(let i = state.activeSlide.maxX; i < data.columns; ++i) {
+				for(let j = 0; j < data.rows; ++j) {
+					const imageUuid = createUUID();
+					state.activeSlide.images[imageUuid] = {
+						uuid: imageUuid,
+						src: null,
+						width: "250",
+						x: i,
+						y: j,
+						rotation: 0,
+						positionX: null,
+						positionY: null,
+						roundFactor: 0,
+						blurringLevel: 0,
+						sepiaLevel: 0,
+						saturationLevel: 1,
+						invertLevel: 0,
+						opacityLevel: 100,
+						brightnessLevel: 100,
+						contrastLevel: 100,
+						isBackgroundImage: null
+					};
+				}
+			}
+
+			for(let i = state.activeSlide.maxY; i < data.rows; ++i) {
+				for(let j = 0; j < data.columns; ++j) {
+					let isDuplicate = false;
+					const imageUuid = createUUID();
+					let activeSlideImagesArray = Object.values(state.activeSlide.images);
+					for(let k = 0; k < activeSlideImagesArray.length; ++k) {
+						if(activeSlideImagesArray[k].x === j && activeSlideImagesArray[k].y === i) {
+							isDuplicate = true;
+							break;
+						}
+					}
+					if(isDuplicate) continue;
+					state.activeSlide.images[imageUuid] = {
+						uuid: imageUuid,
+						src: null,
+						width: "250",
+						x: j,
+						y: i,
+						rotation: 0,
+						positionX: null,
+						positionY: null,
+						roundFactor: 0,
+						blurringLevel: 0,
+						sepiaLevel: 0,
+						saturationLevel: 1,
+						invertLevel: 0,
+						opacityLevel: 100,
+						brightnessLevel: 100,
+						contrastLevel: 100,
+						isBackgroundImage: null
+					};
+				}
+			}
+			//console.log('aaa', state.activeSlide.images);
+			let restructuredActiveSlide = Object.values(state.activeSlide.images);
+			restructuredActiveSlide.forEach(image => {
+				if(image.x > data.columns - 1 || image.y > data.rows - 1) {
+					console.log('qqq', image.uuid, image.x, image.y);
+					delete state.activeSlide.images[image.uuid];
+				}
+			});
+			//console.log('bbb', state.activeSlide.images);
+
+			state.activeSlide.maxX = data.columns;
+			state.activeSlide.maxY = data.rows;
+
+			for(let i = 0; i < state.slides.length; ++i) {
+				if(state.activeSlide.text === state.slides[i].text) {
+					state.slides[i] = state.activeSlide;
 					break;
 				}
 			}
