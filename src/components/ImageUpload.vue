@@ -157,11 +157,11 @@
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
 
-                console.log('wrapperElement bottom right top left', wrapperElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
-                    wrapperElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
-                console.log('draggableElement bottom right top left', draggableElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
-                                                draggableElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
-                console.log('client left top', event.clientX, event.clientY);
+                // console.log('wrapperElement bottom right top left', wrapperElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
+                //     wrapperElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
+                // console.log('draggableElement bottom right top left', draggableElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
+                //                                 draggableElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
+                // console.log('client left top', event.clientX, event.clientY);
 
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;

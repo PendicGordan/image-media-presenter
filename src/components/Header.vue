@@ -143,11 +143,13 @@
             },
             ...mapActions([
                 'changeActiveSlide',
-                'createNewSlide'
+                'createNewSlide',
+                'setActiveImage'
             ])
         },
         watch: {
             activeSlide(newValue) {
+                this.setActiveImage(null);
                 this.currentSlideId = newValue.text;
             }
         },

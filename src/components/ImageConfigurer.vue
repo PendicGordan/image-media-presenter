@@ -27,7 +27,7 @@
             </v-alert>
         </div>
         <div id="editor" v-if="!saveAlertShown && !deleteAlertShown">
-            <v-row cols="1" v-if="value === 'basic'">
+            <v-row cols="1" v-if="value === 'basic'" class="section">
                 <v-col md>
                     <v-slider
                             v-model="activeImage.width"
@@ -35,53 +35,39 @@
                             min="0"
                             max="500"
                             step="1"
+                            append-icon="mdi-magnify-plus-outline"
+                            prepend-icon="mdi-magnify-minus-outline"
+                            @click:append="zoomIn"
+                            @click:prepend="zoomOut"
                     ></v-slider>
-                    <v-btn @click="rotateLeft"
-                           fab
-                           dark
-                           color="primary">
-                        <v-icon dark>
-                            mdi-rotate-right
-                        </v-icon>
-                    </v-btn>
-                    <v-btn @click="rotateRight"
-                           fab
-                           dark
-                           color="primary">
-                        <v-icon dark>
-                            mdi-rotate-left
-                        </v-icon>
-                    </v-btn>
-                    <v-slider
-                            v-model="activeImage.rotation"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="360"
-                            step="1"
-                            :thumb-size="24"
-                            thumb-label="always"
-                    >
-                    </v-slider>
+                    <div>
+                        <v-slider
+                                v-model="activeImage.rotation"
+                                class="align-self-stretch slider-width"
+                                min="0"
+                                max="360"
+                                step="1"
+                                :thumb-size="24"
+                                thumb-label="always"
+                                append-icon="mdi-rotate-left"
+                                prepend-icon="mdi-rotate-right"
+                                @click:append="rotateRight"
+                                @click:prepend="rotateLeft"
+                        >
+                        </v-slider >
+                    </div>
                     <v-slider
                             v-model="activeImage.roundFactor"
                             class="align-self-stretch slider-width"
                             min="0"
                             max="50"
                             step="1"
+                            label="Border"
                     >
                     </v-slider>
                 </v-col>
-                <v-col md>
-
-                </v-col>
-                <v-col md>
-
-                </v-col>
-                <v-col md>
-
-                </v-col>
             </v-row>
-            <v-row cols="2" v-else-if="value === 'filter'">
+            <v-row cols="2" v-else-if="value === 'filter'" class="section">
                 <v-col md>
                     <v-slider
                             v-model="activeImage.blurringLevel"
@@ -89,6 +75,7 @@
                             min="0"
                             max="100"
                             step="1"
+                            label="Blur"
                     >
                     </v-slider>
                     <v-slider
@@ -97,14 +84,7 @@
                             min="0"
                             max="100"
                             step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="activeImage.saturationLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
+                            label="Sepia"
                     >
                     </v-slider>
                     <v-slider
@@ -113,14 +93,7 @@
                             min="0"
                             max="100"
                             step="1"
-                    >
-                    </v-slider>
-                    <v-slider
-                            v-model="activeImage.opacityLevel"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="100"
-                            step="1"
+                            label="Invert"
                     >
                     </v-slider>
                 </v-col>
@@ -131,6 +104,7 @@
                             min="0"
                             max="100"
                             step="1"
+                            label="Brightness"
                     >
                     </v-slider>
                     <v-slider
@@ -139,6 +113,27 @@
                             min="0"
                             max="100"
                             step="1"
+                            label="Contrast"
+                    >
+                    </v-slider>
+                    <v-slider
+                            v-model="activeImage.saturationLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                            label="Saturation"
+                    >
+                    </v-slider>
+                </v-col>
+                <v-col md>
+                    <v-slider
+                            v-model="activeImage.opacityLevel"
+                            class="align-self-stretch slider-width"
+                            min="0"
+                            max="100"
+                            step="1"
+                            label="Opacity"
                     >
                     </v-slider>
                 </v-col>
@@ -303,6 +298,12 @@
                     }, 4000);
                 }
             },
+            zoomOut () {
+                this.activeImage.width = (this.activeImage.width - 5) || 0
+            },
+            zoomIn () {
+                this.activeImage.width = (this.activeImage.width + 5) || 500
+            },
             clearConfigurer() {
                 this.saveAlertShown = false;
                 this.deleteAlertShown = false;
@@ -324,6 +325,10 @@
     }
     #editor {
         margin: auto;
-
+    }
+    .section {
+        padding-right: 1%;
+        padding-left: 1%;
+        padding-top: 1%;
     }
 </style>
