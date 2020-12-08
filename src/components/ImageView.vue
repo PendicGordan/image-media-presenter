@@ -92,7 +92,8 @@
     mounted() {
       EventBus.$on('CHANGE_LAYOUT', async payload => {
         this.restructureActiveSlide({ columns: payload.columns, rows: payload.rows });
-        this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
+        if (this.activeSlide())
+          this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
 
         let images = Object.values(this.activeSlide.images);
         this.layout = [];

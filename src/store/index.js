@@ -69,7 +69,32 @@ export default new Vuex.Store({
 			state.backgroundImageData[data.uuid] = data;
 		},
         deleteActiveImageData(state, data) {
-            delete state.backgroundImageData[data.uuid];
+            state.activeSlide.images[data.uuid] = {
+				src: null,
+				width: "250",
+				rotation: 0,
+				positionX: null,
+				positionY: null,
+				slideId: -1,
+				roundFactor: 0,
+				x: 0,
+				y: 0,
+				blurringLevel: 0,
+				sepiaLevel: 0,
+				saturationLevel: 1,
+				invertLevel: 0,
+				opacityLevel: 100,
+				brightnessLevel: 100,
+				contrastLevel: 100,
+				isBackgroundImage: null
+			};
+
+            for(let i = 0; i < state.slides.length; ++i) {
+				if(state.slides[i].text === state.activeSlide.text) {
+					state.slides[i] = state.activeSlide;
+					break;
+				}
+			}
         },
         setBackgroundImage(state, data) {
             state.backgroundImageData = data;
