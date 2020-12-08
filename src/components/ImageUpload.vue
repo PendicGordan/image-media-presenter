@@ -129,7 +129,6 @@
                     const src = e.target.result;
                     this.imageData.src = src;
                     this.$emit('loaded', { src, file });
-                    console.log('ggg');
                     this.saveImage(this.imageData);
                 };
             },
