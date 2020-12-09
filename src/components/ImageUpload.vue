@@ -87,7 +87,21 @@
             uuid: String,
             x: Number,
             y: Number,
-            src: String
+            src: String,
+            width: String,
+            rotation: Number,
+            positionX: Number,
+            positionY: Number,
+            slideId: Number,
+            roundFactor: Number,
+            blurringLevel: Number,
+            sepiaLevel: Number,
+            saturationLevel: Number,
+            invertLevel: Number,
+            opacityLevel: Number,
+            brightnessLevel: Number,
+            contrastLevel: Number,
+            isBackgroundImage: Boolean
         },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
@@ -124,7 +138,41 @@
             this.imageData.x = this.x;
             this.imageData.y = this.y;
             this.imageData.src = this.src;
-            //this.assignImageToTheSlide(this.imageData);
+            this.imageData.width = this.width ? this.width : "250";
+            this.imageData.rotation = this.rotation;
+            this.imageData.positionX = this.positionX;
+            this.imageData.positionY = this.positionY;
+            this.imageData.slideId = this.slideId;
+            console.log(this.imageData.slideId);
+            this.imageData.roundFactor = this.roundFactor;
+            this.imageData.blurringLevel = this.blurringLevel;
+            this.imageData.sepiaLevel = this.sepiaLevel;
+            this.imageData.saturationLevel = this.saturationLevel;
+            this.imageData.invertLevel = this.invertLevel;
+            this.imageData.opacityLevel = this.opacityLevel;
+            this.imageData.brightnessLevel = this.brightnessLevel;
+            this.imageData.contrastLevel = this.contrastLevel;
+            this.imageData.isBackgroundImage = this.isBackgroundImage;
+
+            // if(!this.imageData.src) {
+            //     this.imageData.positionY = this.$refs.draggableContainer.parentElement.style.top;
+            //     this.imageData.positionX = this.$refs.draggableContainer.parentElement.style.left;
+            //     this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.parentElement.style.top;
+            //     this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.parentElement.style.left;
+            // }
+
+            // console.log(this.src);
+            // console.log(this.width);
+            // console.log(this.rotation);
+            // console.log(this.positionX);
+            // console.log(this.positionY);
+            // console.log(this.rotation);
+            // console.log(this.slideId);
+            // console.log(this.roundFactor);
+            // console.log(this.blurringLevel);
+            // console.log(this.sepiaLevel);
+            // console.log(this.saturationLevel);
+            this.assignImageToTheSlide(this.imageData);
         },
         methods: {
             onChange(e) {
@@ -168,8 +216,10 @@
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
 
-                this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px';
-                this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px';
+                this.positions.movementY = this.$refs.draggableContainer.offsetTop - this.positions.movementY;
+                this.positions.movementX = this.$refs.draggableContainer.offsetLeft - this.positions.movementX;
+                this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
 
                 let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
                 let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
@@ -182,22 +232,22 @@
                 let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
 
                 if(imageHeaderRight < draggableHeaderRight) {
-                    this.$refs.draggableContainer.style.left =  wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width + 'px';
                     this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                 }
 
                 if(imageHeaderBottom < draggableHeaderBottom) {
-                    this.$refs.draggableContainer.style.top =  wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height + 'px';
                     this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
 
                 if(imageHeaderLeft > draggableHeaderLeft) {
-                    this.$refs.draggableContainer.style.left = 0 + 'px';
                     this.positions.movementX = 0;
+                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                 }
                 if(imageHeaderTop > draggableHeaderTop) {
-                    this.$refs.draggableContainer.style.top = 0 + 'px';
                     this.positions.movementY = 0;
+                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
             },
             closeDragElement () {
@@ -255,11 +305,16 @@
                     movementY: 0,
                     isDragging: false
                 };
+                this.imageData.positionY = this.$refs.draggableContainer.parentElement.style.top;
+                this.imageData.positionX = this.$refs.draggableContainer.parentElement.style.left;
                 this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.parentElement.style.top;
                 this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.parentElement.style.left;
             }
         },
         watch: {
+            'imageData.width'() {
+                console.log('ttt');
+            },
             activeImage(newValue) {
                 if(newValue && newValue.uuid !== this.imageData.uuid) return;
                 this.imageData.width = newValue && newValue.width ? newValue.width : this.imageData.width;
@@ -272,6 +327,7 @@
                 this.imageData.opacityLevel = newValue && newValue.opacityLevel ? newValue.opacityLevel : this.imageData.opacityLevel;
                 this.imageData.brightnessLevel = newValue && newValue.brightnessLevel ? newValue.brightnessLevel : this.imageData.brightnessLevel;
                 this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage ? newValue.isBackgroundImage : null;
+                console.log('bbb');
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;

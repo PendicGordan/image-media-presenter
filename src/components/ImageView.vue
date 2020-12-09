@@ -25,7 +25,28 @@
                      :margin="[0, 0]"
                      class="height-parent"
           >
-            <ImageUpload :key="item.i" :uuid="item.i" :x="item.x" :y="item.y" :src="item.src" class="height-child">
+            <ImageUpload
+                    :key="item.i"
+                    :uuid="item.i"
+                    :x="item.x"
+                    :y="item.y"
+                    :src="item.src"
+                    :width="item.width"
+                    :rotation="item.rotation"
+                    :positionX="item.positionX"
+                    :positionY="item.positionY"
+                    :slideId="item.slideId"
+                    :roundFactor="item.roundFactor"
+                    :blurringLevel="item.blurringLevel"
+                    :sepiaLevel="item.sepiaLevel"
+                    :saturationLevel="item.saturationLevel"
+                    :invertLevel="item.invertLevel"
+                    :opacityLevel="item.opacityLevel"
+                    :brightnessLevel="item.brightnessLevel"
+                    :contrastLevel="item.contrastLevel"
+                    :isBackgroundImage="item.isBackgroundImage"
+                    class="height-child"
+            >
             </ImageUpload>
           </grid-item>
         </grid-layout>
@@ -77,9 +98,30 @@
         this.layout = [];
         this.columnHeight = window.innerHeight / newSlide.maxY - 35;
         let images = Object.values(newSlide.images);
-
+        console.log(newSlide);
         images.forEach(image => {
-          this.layout.push({"x": image.x, "y": image.y, "w": 1, "h": 1, "i": image.uuid, src: image.src});
+          this.layout.push({
+            "x": image.x,
+            "y": image.y,
+            "w": 1,
+            "h": 1,
+            "i": image.uuid,
+            src: image.src,
+            width: image.width + '',
+            rotation: image.rotation,
+            positionX: image.positionX,
+            positionY: image.positionY,
+            slideId: newSlide.text,
+            roundFactor: image.roundFactor,
+            blurringLevel: image.blurringLevel,
+            sepiaLevel: image.sepiaLevel,
+            saturationLevel: image.saturationLevel,
+            invertLevel: image.invertLevel,
+            opacityLevel: image.opacityLevel,
+            brightnessLevel: image.brightnessLevel,
+            contrastLevel: image.contrastLevel,
+            isBackgroundImage: image.isBackgroundImage
+          });
         });
       }
     },
@@ -98,7 +140,28 @@
         let images = Object.values(this.activeSlide.images);
         this.layout = [];
         images.forEach(image => {
-          this.layout.push({"x": image.x, "y": image.y, "w": 1, "h": 1, "i": image.uuid, src: image.src});
+          this.layout.push({
+            "x": image.x,
+            "y": image.y,
+            "w": 1,
+            "h": 1,
+            "i": image.uuid,
+            src: image.src,
+            width: image.width + '',
+            rotation: image.rotation,
+            positionX: image.positionX,
+            positionY: image.positionY,
+            slideId: this.activeSlide.text,
+            roundFactor: image.roundFactor,
+            blurringLevel: image.blurringLevel,
+            sepiaLevel: image.sepiaLevel,
+            saturationLevel: image.saturationLevel,
+            invertLevel: image.invertLevel,
+            opacityLevel: image.opacityLevel,
+            brightnessLevel: image.brightnessLevel,
+            contrastLevel: image.contrastLevel,
+            isBackgroundImage: image.isBackgroundImage
+          });
         });
       });
       EventBus.$on('TOGGLE_ACTION_MENU', payload => {

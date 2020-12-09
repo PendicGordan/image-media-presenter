@@ -149,6 +149,7 @@
         },
         watch: {
             activeSlide(newValue) {
+                console.log(newValue);
                 this.setActiveImage(null);
                 this.currentSlideId = newValue.text;
             }
