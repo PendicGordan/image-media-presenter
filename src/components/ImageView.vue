@@ -98,7 +98,6 @@
         this.layout = [];
         this.columnHeight = window.innerHeight / newSlide.maxY - 35;
         let images = Object.values(newSlide.images);
-        console.log(newSlide);
         images.forEach(image => {
           this.layout.push({
             "x": image.x,
@@ -134,7 +133,7 @@
     mounted() {
       EventBus.$on('CHANGE_LAYOUT', async payload => {
         this.restructureActiveSlide({ columns: payload.columns, rows: payload.rows });
-        if (this.activeSlide())
+        if (this.activeSlide)
           this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
 
         let images = Object.values(this.activeSlide.images);

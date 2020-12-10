@@ -70,6 +70,7 @@ export default new Vuex.Store({
 		},
         deleteActiveImageData(state, data) {
             state.activeSlide.images[data.uuid] = {
+				uuid: data.uuid,
 				src: null,
 				width: "250",
 				rotation: 0,
@@ -77,8 +78,8 @@ export default new Vuex.Store({
 				positionY: null,
 				slideId: -1,
 				roundFactor: 0,
-				x: 0,
-				y: 0,
+				x: data.x,
+				y: data.y,
 				blurringLevel: 0,
 				sepiaLevel: 0,
 				saturationLevel: 1,
@@ -108,7 +109,6 @@ export default new Vuex.Store({
 			}
 		},
 		changeActiveSlide(state, data) {
-			console.log('ffff', state.activeSlide);
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === state.activeSlide.text) {
 					state.slides[i] = state.activeSlide;
@@ -118,8 +118,6 @@ export default new Vuex.Store({
 
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === data) {
-					console.log('s');
-					console.log(state.activeSlide);
 					state.activeSlide = state.slides[i];
 					break;
 				}
@@ -157,7 +155,6 @@ export default new Vuex.Store({
 		saveImage(state, data) {
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === data.slideId) {
-					console.log('nnnnnnnnn');
 					state.slides[i].images[data.uuid] = data;
 					state.activeSlide.images[data.uuid] = data;
 					break;

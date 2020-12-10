@@ -143,7 +143,6 @@
             this.imageData.positionX = this.positionX;
             this.imageData.positionY = this.positionY;
             this.imageData.slideId = this.slideId;
-            console.log(this.imageData.slideId);
             this.imageData.roundFactor = this.roundFactor;
             this.imageData.blurringLevel = this.blurringLevel;
             this.imageData.sepiaLevel = this.sepiaLevel;
@@ -283,8 +282,8 @@
                     uuid: this.imageData.uuid,
                     src: null,
                     width: "250",
-                    x: 0,
-                    y: 0,
+                    x: this.imageData.x,
+                    y: this.imageData.y,
                     rotation: 0,
                     positionX: null,
                     positionY: null,
@@ -305,16 +304,9 @@
                     movementY: 0,
                     isDragging: false
                 };
-                this.imageData.positionY = this.$refs.draggableContainer.parentElement.style.top;
-                this.imageData.positionX = this.$refs.draggableContainer.parentElement.style.left;
-                this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.parentElement.style.top;
-                this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.parentElement.style.left;
             }
         },
         watch: {
-            'imageData.width'() {
-                console.log('ttt');
-            },
             activeImage(newValue) {
                 if(newValue && newValue.uuid !== this.imageData.uuid) return;
                 this.imageData.width = newValue && newValue.width ? newValue.width : this.imageData.width;
@@ -327,7 +319,6 @@
                 this.imageData.opacityLevel = newValue && newValue.opacityLevel ? newValue.opacityLevel : this.imageData.opacityLevel;
                 this.imageData.brightnessLevel = newValue && newValue.brightnessLevel ? newValue.brightnessLevel : this.imageData.brightnessLevel;
                 this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage ? newValue.isBackgroundImage : null;
-                console.log('bbb');
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;
