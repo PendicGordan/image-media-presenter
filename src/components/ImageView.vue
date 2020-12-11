@@ -88,6 +88,7 @@
     methods: {
       handleResize() {
         this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
+        EventBus.$emit("HANDLE_RESIZE", { amountOfRows: this.activeSlide.maxY, amountOfColumns: this.activeSlide.maxX });
       },
       ...mapActions({
         restructureActiveSlide: 'restructureActiveSlide'

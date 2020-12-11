@@ -132,6 +132,45 @@
                 }
                 this.removeImage();
             });
+            EventBus.$on('HANDLE_RESIZE', () => {
+                if(!this.imageData.src) return;
+                console.log(this.imageData.positionY);
+
+                let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
+                let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
+                let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
+                let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
+                let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
+                let imageHeaderRight = wrapperElement.getBoundingClientRect().right;
+
+                let draggableHeaderBottom = draggableElement.getBoundingClientRect().bottom;
+                let draggableHeaderLeft = draggableElement.getBoundingClientRect().left;
+                let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
+                let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
+
+                if(imageHeaderRight < draggableHeaderRight) {
+                    this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                    this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
+                }
+
+                if(imageHeaderBottom < draggableHeaderBottom) {
+                    this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                    this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                }
+
+                if(imageHeaderLeft > draggableHeaderLeft) {
+                    this.positions.movementX = 0;
+                    this.imageData.positionX = 0;
+                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
+                }
+                if(imageHeaderTop > draggableHeaderTop) {
+                    this.positions.movementY = 0;
+                    this.imageData.positionY = 0;
+                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                }
+            });
 
             this.imageData.uuid = this.uuid;
             this.imageData.slideId = this.activeSlide.text;
@@ -152,8 +191,6 @@
             this.imageData.brightnessLevel = this.brightnessLevel;
             this.imageData.contrastLevel = this.contrastLevel;
             this.imageData.isBackgroundImage = this.isBackgroundImage;
-
-            console.log(this.imageData.positionX);
 
             if(this.imageData.src) {
                 // this.positions.movementY = this.positionY;
