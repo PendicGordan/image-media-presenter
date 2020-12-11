@@ -1,6 +1,6 @@
 <template>
     <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;;">
-        <div id="draggable-container" ref="draggableContainer">
+        <div id="draggable-container" ref="draggableContainer" class="draggable-container">
             <div :id="'draggable-header' + imageData.uuid" @mousedown="dragMouseDown">
                 <div v-if="!imageData.src" class="">
                     <div class="file-upload upload-image">
@@ -153,12 +153,14 @@
             this.imageData.contrastLevel = this.contrastLevel;
             this.imageData.isBackgroundImage = this.isBackgroundImage;
 
-            // if(!this.imageData.src) {
-            //     this.imageData.positionY = this.$refs.draggableContainer.parentElement.style.top;
-            //     this.imageData.positionX = this.$refs.draggableContainer.parentElement.style.left;
-            //     this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.parentElement.style.top;
-            //     this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.parentElement.style.left;
-            // }
+            console.log(this.imageData.positionX);
+
+            if(this.imageData.src) {
+                // this.positions.movementY = this.positionY;
+                // this.positions.movementX = this.positionX;
+                // this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.offsetTop - this.positions.movementY + 'px';
+                // this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.offsetLeft - this.positions.movementX + 'px';
+            }
 
             // console.log(this.src);
             // console.log(this.width);
@@ -171,6 +173,9 @@
             // console.log(this.blurringLevel);
             // console.log(this.sepiaLevel);
             // console.log(this.saturationLevel);
+
+            this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
+            this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
             this.assignImageToTheSlide(this.imageData);
         },
         methods: {
@@ -184,7 +189,11 @@
                 reader.onload = e => {
                     const src = e.target.result;
                     this.imageData.src = src;
+                    let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
                     this.$emit('loaded', { src, file });
+                    //console.log(draggableElement.getBoundingClientRect().y);
+                    this.imageData.positionX = draggableElement.getBoundingClientRect().x;
+                    this.imageData.positionY = draggableElement.getBoundingClientRect().y;
                     this.saveImage(this.imageData);
                 };
             },
@@ -220,6 +229,9 @@
                 this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
 
+                this.imageData.positionY = this.positions.movementY;
+                this.imageData.positionX = this.positions.movementX;
+
                 let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
                 let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
                 let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
@@ -232,22 +244,28 @@
 
                 if(imageHeaderRight < draggableHeaderRight) {
                     this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                    this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                     this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                 }
 
                 if(imageHeaderBottom < draggableHeaderBottom) {
                     this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                    this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
 
                 if(imageHeaderLeft > draggableHeaderLeft) {
                     this.positions.movementX = 0;
+                    this.imageData.positionX = 0;
                     this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                 }
                 if(imageHeaderTop > draggableHeaderTop) {
                     this.positions.movementY = 0;
+                    this.imageData.positionY = 0;
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
+
+                this.setActiveImage(this.imageData)
             },
             closeDragElement () {
                 if(!this.imageData.src) return;
@@ -364,5 +382,8 @@
     }
     .upload-image > input {
         display: none;
+    }
+    .draggable-container {
+        border: 2px solid #10ff35;
     }
 </style>
