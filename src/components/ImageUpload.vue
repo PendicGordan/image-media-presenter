@@ -134,7 +134,6 @@
             });
             EventBus.$on('HANDLE_RESIZE', () => {
                 if(!this.imageData.src) return;
-                console.log(this.imageData.positionY);
 
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
@@ -210,7 +209,7 @@
             // console.log(this.blurringLevel);
             // console.log(this.sepiaLevel);
             // console.log(this.saturationLevel);
-
+            console.log();
             this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
             this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
             this.assignImageToTheSlide(this.imageData);
@@ -231,6 +230,7 @@
                     //console.log(draggableElement.getBoundingClientRect().y);
                     this.imageData.positionX = draggableElement.getBoundingClientRect().x;
                     this.imageData.positionY = draggableElement.getBoundingClientRect().y;
+                    console.log(this.$refs.draggableContainer.style);
                     this.saveImage(this.imageData);
                 };
             },
@@ -337,8 +337,8 @@
                     uuid: this.imageData.uuid,
                     src: null,
                     width: "250",
-                    x: this.imageData.x,
-                    y: this.imageData.y,
+                    x: 0,
+                    y: 0,
                     rotation: 0,
                     positionX: null,
                     positionY: null,
@@ -359,6 +359,12 @@
                     movementY: 0,
                     isDragging: false
                 };
+                console.log(this.$refs.draggableContainer.style);
+                if(this.$refs.draggableContainer.style) {
+                    this.$refs.draggableContainer.style.top = '';
+                    this.$refs.draggableContainer.style.left = '';
+                }
+                this.setActiveImage(this.imageData)
             }
         },
         watch: {
@@ -386,12 +392,11 @@
 <style scoped>
     #draggable-container {
         position: absolute;
-        z-index: 9;
+        z-index: 9
     }
     #draggable-header {
         z-index: 10;
     }
-
     .image-upload {
         border: 4px solid #db263b;
         padding: 0;
