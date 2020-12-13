@@ -2,19 +2,6 @@
     <div id="ImageConfigurer">
         <div>
             <v-alert
-                    v-if="saveAlertShown"
-                    dense
-                    text
-                    type="success"
-                    transition="fade-transition"
-                    dismissible
-                    @input="closeSaveAlert"
-            >
-                The image has been saved!
-            </v-alert>
-        </div>
-        <div>
-            <v-alert
                     v-if="deleteAlertShown"
                     dense
                     text
@@ -26,7 +13,7 @@
                 The image has been deleted!
             </v-alert>
         </div>
-        <div id="editor" v-if="!saveAlertShown && !deleteAlertShown">
+        <div id="editor" v-if="!deleteAlertShown">
             <v-row cols="1" v-if="value === 'basic'" class="section">
                 <v-col md>
                     <v-slider
@@ -162,12 +149,8 @@
                 color="primary"
                 horizontal
                 shift
-                v-if="!saveAlertShown && !deleteAlertShown"
+                v-if="!deleteAlertShown"
         >
-            <v-btn value="save-image" @click="saveAndClearImage">
-                <span>Save image</span>
-                <v-icon>mdi-content-save</v-icon>
-            </v-btn>
             <v-btn value="basic">
                 <span>Basic</span>
                 <v-icon>mdi-move-resize</v-icon>
@@ -187,6 +170,10 @@
                 <span>Remove image</span>
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
+            <v-btn value="close-configurer" @click="closeConfigurer">
+                <span>Close configurer</span>
+                <v-icon>mdi-window-close</v-icon>
+            </v-btn>
         </v-bottom-navigation>
     </div>
 </template>
@@ -198,7 +185,6 @@
     export default {
         data: () => ({
             value: 'basic',
-            saveAlertShown: false,
             deleteAlertShown: false,
             saveAlertTimeout: null,
             deleteAlertTimeout: null,
@@ -235,14 +221,9 @@
             ...mapActions([
                 'setActiveImage',
                 'setBackgroundImage',
-                'saveActiveImageData',
                 'deleteActiveImageData'
             ]),
-            saveAndClearImage () {
-                this.saveActiveImageData(this.activeImage);
-                this.saveAlertShown = true;
-                this.closeSaveAlert(true);
-            },
+
             removeAndClearImage() {
                 this.closeDeleteAlert(true);
                 this.deleteActiveImageData(this.activeImage);
@@ -270,26 +251,12 @@
                     isEnabled: e
                 });
             },
-            closeSaveAlert(methodCalled) {
-                if(this.saveAlertTimeout !== null) {
-                    clearTimeout(this.saveAlertTimeout);
-                }
-                if(methodCalled === false) {
-                    EventBus.$emit(this.imageManipulateAction.SAVED_IMAGE);
-                    this.clearConfigurer();
-                } else {
-                    EventBus.$emit(this.imageManipulateAction.SAVED_IMAGE);
-                    this.saveAlertTimeout = setTimeout(() => {
-                        this.clearConfigurer();
-                    }, 4000);
-                }
-            },
             closeDeleteAlert(methodCalled) {
                 if(this.deleteAlertTimeout !== null) {
                     clearTimeout(this.deleteAlertTimeout );
                 }
                 if(methodCalled === false) {
-                    EventBus.$emit(this.imageManipulateAction.DELETED_IMAGE, this.activeImage);
+                    //EventBus.$emit(this.imageManipulateAction.DELETED_IMAGE, this.activeImage);
                     this.clearConfigurer();
                 } else {
                     EventBus.$emit(this.imageManipulateAction.DELETED_IMAGE, this.activeImage);
@@ -305,8 +272,10 @@
                 this.activeImage.width = (this.activeImage.width + 5) || 500
             },
             clearConfigurer() {
-                this.saveAlertShown = false;
                 this.deleteAlertShown = false;
+                this.setActiveImage(null);
+            },
+            closeConfigurer() {
                 this.setActiveImage(null);
             }
         }

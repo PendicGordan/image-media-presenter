@@ -302,7 +302,7 @@
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
 
-                this.setActiveImage(this.imageData)
+                this.saveImage(this.imageData)
             },
             closeDragElement () {
                 if(!this.imageData.src) return;
@@ -364,7 +364,7 @@
                     this.$refs.draggableContainer.style.top = '';
                     this.$refs.draggableContainer.style.left = '';
                 }
-                this.setActiveImage(this.imageData)
+                this.set(this.imageData)
             }
         },
         watch: {
