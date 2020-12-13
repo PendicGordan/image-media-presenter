@@ -189,7 +189,7 @@
             saveAlertTimeout: null,
             deleteAlertTimeout: null,
             imageManipulateAction: {
-                SAVED_IMAGE: 'SAVED_IMAGE',
+                CONFIGURER_EXITED: 'CONFIGURER_EXITED',
                 DELETED_IMAGE: 'DELETED_IMAGE'
             }
         }),
@@ -242,14 +242,15 @@
                 EventBus.$emit('ANIMATE_IMAGE', { uuid: this.activeImage.uuid });
             },
             handleImageBackground(e) {
-                this.setBackgroundImage({
+                console.log(e);
+                /*this.setBackgroundImage({
                     isEnabled: e,
                     backgroundImage: this.activeImage.src
                 });
                 EventBus.$emit('BACKGROUND_IMAGE_SET', {
                     uuid: this.activeImage.uuid,
                     isEnabled: e
-                });
+                });*/
             },
             closeDeleteAlert(methodCalled) {
                 if(this.deleteAlertTimeout !== null) {
@@ -277,6 +278,7 @@
             },
             closeConfigurer() {
                 this.setActiveImage(null);
+                EventBus.$emit(this.imageManipulateAction.CONFIGURER_EXITED);
             }
         }
     };
