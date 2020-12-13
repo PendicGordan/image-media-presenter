@@ -201,7 +201,9 @@
             ])
         },
         watch: {
-
+            'activeImage.isBackgroundImage'(newData) {
+                this.activeImage.isBackgroundImage = newData;
+            }
         },
         created() {
             EventBus.$on('IMAGE_CLICKED', () => {
@@ -243,14 +245,16 @@
             },
             handleImageBackground(e) {
                 console.log(e);
-                /*this.setBackgroundImage({
+                this.setBackgroundImage({
                     isEnabled: e,
-                    backgroundImage: this.activeImage.src
+                    src: this.activeImage.src,
+                    uuid: this.activeImage.uuid,
                 });
                 EventBus.$emit('BACKGROUND_IMAGE_SET', {
                     uuid: this.activeImage.uuid,
-                    isEnabled: e
-                });*/
+                    isEnabled: e,
+                    src: this.activeImage.src
+                });
             },
             closeDeleteAlert(methodCalled) {
                 if(this.deleteAlertTimeout !== null) {

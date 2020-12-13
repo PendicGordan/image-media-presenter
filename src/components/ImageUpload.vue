@@ -101,7 +101,7 @@
             opacityLevel: Number,
             brightnessLevel: Number,
             contrastLevel: Number,
-            isBackgroundImage: Boolean
+            isBackgroundImage: String
         },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
@@ -114,9 +114,14 @@
                 if(payload.uuid !== this.imageData.uuid || !el) return;
                 this.activateFilterAnimation();
             });
-            EventBus.$on('BACKGROUND_IMAGE_SET', (payload) => {
-                if(payload.uuid !== this.imageData.uuid && payload.isEnabled) this.imageData.isBackgroundImage = false;
-                else if (payload.uuid === this.imageData.uuid) this.imageData.isBackgroundImage = payload.isEnabled;
+            EventBus.$on('BACKGROUND_IMAGE_SET', payload => {
+                if(payload.uuid !== this.imageData.uuid && payload.isEnabled) {
+                    this.imageData.isBackgroundImage = null;
+                } else if (payload.uuid === this.imageData.uuid) {
+                    this.imageData.isBackgroundImage = payload.isEnabled;
+                    this.setActiveImage(this.imageData);
+                }
+                //this.saveImage(this.imageData);
             });
             EventBus.$on('CONFIGURER_EXITED', () => {
                 const el = document.getElementById(this.imageData.uuid);
@@ -147,24 +152,24 @@
                 let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
                 let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
 
-                if(imageHeaderRight < draggableHeaderRight) {
+                if(imageHeaderRight < draggableHeaderRight && this.$refs.draggableContainer) {
                     this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                     this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                     this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                 }
 
-                if(imageHeaderBottom < draggableHeaderBottom) {
+                if(imageHeaderBottom < draggableHeaderBottom && this.$refs.draggableContainer) {
                     this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                     this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
 
-                if(imageHeaderLeft > draggableHeaderLeft) {
+                if(imageHeaderLeft > draggableHeaderLeft && this.$refs.draggableContainer) {
                     this.positions.movementX = 0;
                     this.imageData.positionX = 0;
                     this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                 }
-                if(imageHeaderTop > draggableHeaderTop) {
+                if(imageHeaderTop > draggableHeaderTop && this.$refs.draggableContainer) {
                     this.positions.movementY = 0;
                     this.imageData.positionY = 0;
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
@@ -209,9 +214,8 @@
             // console.log(this.blurringLevel);
             // console.log(this.sepiaLevel);
             // console.log(this.saturationLevel);
-            console.log();
-            this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
-            this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
+            /*this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
+            this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';*/
             this.assignImageToTheSlide(this.imageData);
         },
         methods: {
@@ -302,7 +306,7 @@
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 }
 
-                this.saveImage(this.imageData)
+                this.saveImage(this.imageData);
             },
             closeDragElement () {
                 if(!this.imageData.src) return;
@@ -364,7 +368,6 @@
                     this.$refs.draggableContainer.style.top = '';
                     this.$refs.draggableContainer.style.left = '';
                 }
-                this.set(this.imageData)
             }
         },
         watch: {
