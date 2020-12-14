@@ -139,7 +139,7 @@
                 EventBus.$emit('TOGGLE_ACTION_MENU', this.toggleActionMenu)
             },
             saveCurrentSlide() {
-                console.log(this.activeSlide);
+
             },
             ...mapActions([
                 'changeActiveSlide',

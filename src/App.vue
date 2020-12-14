@@ -32,7 +32,7 @@ export default {
         '-webkit-background-size': 'cover',
         '-moz-background-size': 'cover',
         '-o-background-size': 'cover',
-        'background-size': 'cover'
+        'background-size': `${this.backgroundImageData.backgroundSize}`
       };
     },
     ...mapState([
@@ -41,8 +41,7 @@ export default {
   },
   mounted() {
     EventBus.$on('BACKGROUND_IMAGE_SET', (data) => {
-      console.log(data);
-      this.imageSrc = data.isEnabled ?' data.src' : '';
+      this.imageSrc = data.isEnabled ? data.src : '';
     });
   },
   created() {

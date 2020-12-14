@@ -134,13 +134,22 @@
                         <v-icon>mdi-animation</v-icon>
                     </v-btn>
                     <v-checkbox
-                            v-model="activeImage.isBackgroundImage"
+                            v-model="activeImage.isBackgroundImage.isEnabled"
                             label="Set as background"
                             color="primary"
                             value="primary"
                             hide-details
                             @change="handleImageBackground"
                     ></v-checkbox>
+                    <v-radio-group v-model="backgroundSize" @change="changeRadio">
+                        <v-radio
+                                v-for="bs in backgroundSizes"
+                                :key="bs"
+                                :label="`Radio ${bs}`"
+                                :value="bs"
+                                :disabled="!activeImage.isBackgroundImage.isEnabled"
+                        ></v-radio>
+                    </v-radio-group>
                 </v-col>
             </v-row>
         </div>
@@ -186,32 +195,35 @@
         data: () => ({
             value: 'basic',
             deleteAlertShown: false,
-            saveAlertTimeout: null,
             deleteAlertTimeout: null,
             imageManipulateAction: {
                 CONFIGURER_EXITED: 'CONFIGURER_EXITED',
                 DELETED_IMAGE: 'DELETED_IMAGE'
-            }
+            },
+            background: {
+                isEnabled: null,
+                src: '',
+                uuid: null,
+                backgroundSize: 'cover' // cover|contain|initial
+            },
+            backgroundSizes: ['cover', 'contain', 'initial'],
+            backgroundSize: 'cover'
         }),
         props: {
         },
         computed: {
             ...mapState([
-                'activeImage'
+                'activeImage',
+                'backgroundImageData'
             ])
         },
         watch: {
-            'activeImage.isBackgroundImage'(newData) {
-                this.activeImage.isBackgroundImage = newData;
+            'activeImage.isBackgroundImage'() {
+                //this.activeImage.isBackgroundImage = newData;
             }
         },
         created() {
             EventBus.$on('IMAGE_CLICKED', () => {
-                if(this.saveAlertTimeout !== null) {
-                    clearTimeout(this.saveAlertTimeout);
-                    this.clearConfigurer();
-                    this.value = 'basic';
-                }
                 if(this.deleteAlertTimeout !== null) {
                     clearTimeout(this.deleteAlertTimeout);
                     this.clearConfigurer();
@@ -219,11 +231,21 @@
                 }
             });
         },
+        mounted() {
+            this.background = this.backgroundImageData;
+            if (this.backgroundImageData.uuid === this.activeImage.uuid) {
+                this.activeImage.isBackgroundImage = { isEnabled: this.background.isEnabled, backgroundSize: this.background.backgroundSize };
+                this.setActiveImage(this.activeImage);
+            }
+
+            this.backgroundSize = this.activeImage.isBackgroundImage.backgroundSize;
+        },
         methods: {
             ...mapActions([
                 'setActiveImage',
                 'setBackgroundImage',
-                'deleteActiveImageData'
+                'deleteActiveImageData',
+                'saveImage'
             ]),
 
             removeAndClearImage() {
@@ -244,17 +266,18 @@
                 EventBus.$emit('ANIMATE_IMAGE', { uuid: this.activeImage.uuid });
             },
             handleImageBackground(e) {
-                console.log(e);
-                this.setBackgroundImage({
+                this.background = {
                     isEnabled: e,
                     src: this.activeImage.src,
                     uuid: this.activeImage.uuid,
-                });
-                EventBus.$emit('BACKGROUND_IMAGE_SET', {
-                    uuid: this.activeImage.uuid,
-                    isEnabled: e,
-                    src: this.activeImage.src
-                });
+                    backgroundSize: this.backgroundSize
+                };
+                this.setBackgroundImage(this.background);//
+                EventBus.$emit('BACKGROUND_IMAGE_SET', this.background);
+                //this.activeImage.isBackgroundImage.isEnabled = this.background.isEnabled;
+                this.activeImage.isBackgroundImage.isEnabled = e;
+                this.setActiveImage(this.activeImage);
+                this.saveImage(this.activeImage);
             },
             closeDeleteAlert(methodCalled) {
                 if(this.deleteAlertTimeout !== null) {
@@ -281,8 +304,17 @@
                 this.setActiveImage(null);
             },
             closeConfigurer() {
+                this.saveImage(this.activeImage);
                 this.setActiveImage(null);
                 EventBus.$emit(this.imageManipulateAction.CONFIGURER_EXITED);
+            },
+            changeRadio() {
+                this.background.backgroundSize = this.backgroundSize;
+                this.setBackgroundImage(this.background);//
+                EventBus.$emit('BACKGROUND_IMAGE_SET', this.background);
+                this.activeImage.isBackgroundImage.backgroundSize = this.backgroundSize;
+                this.setActiveImage(this.activeImage);
+                this.saveImage(this.activeImage);
             }
         }
     };

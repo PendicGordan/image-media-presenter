@@ -61,7 +61,7 @@
                   opacityLevel: 100,
                   brightnessLevel: 100,
                   contrastLevel: 100,
-                  isBackgroundImage: null
+                  isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
               },
               positions: {
                   clientX: null,
@@ -101,7 +101,7 @@
             opacityLevel: Number,
             brightnessLevel: Number,
             contrastLevel: Number,
-            isBackgroundImage: String
+            isBackgroundImage: Object
         },
         mounted () {
             EventBus.$on('IMAGE_SELECTED', (payload) => {
@@ -116,12 +116,12 @@
             });
             EventBus.$on('BACKGROUND_IMAGE_SET', payload => {
                 if(payload.uuid !== this.imageData.uuid && payload.isEnabled) {
-                    this.imageData.isBackgroundImage = null;
+                    this.imageData.isBackgroundImage = { isEnabled: null, backgroundSize: 'cover' };
                 } else if (payload.uuid === this.imageData.uuid) {
-                    this.imageData.isBackgroundImage = payload.isEnabled;
+
+                    this.imageData.isBackgroundImage = { isEnabled: payload.isEnabled, backgroundSize: payload.backgroundSize };
                     this.setActiveImage(this.imageData);
                 }
-                //this.saveImage(this.imageData);
             });
             EventBus.$on('CONFIGURER_EXITED', () => {
                 const el = document.getElementById(this.imageData.uuid);
@@ -185,7 +185,7 @@
             this.imageData.rotation = this.rotation;
             this.imageData.positionX = this.positionX;
             this.imageData.positionY = this.positionY;
-            this.imageData.slideId = this.slideId;
+            //this.imageData.slideId = this.slideId;
             this.imageData.roundFactor = this.roundFactor;
             this.imageData.blurringLevel = this.blurringLevel;
             this.imageData.sepiaLevel = this.sepiaLevel;
@@ -231,10 +231,8 @@
                     this.imageData.src = src;
                     //let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
                     this.$emit('loaded', { src, file });
-                    //console.log(draggableElement.getBoundingClientRect().y);
                     this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
                     this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
-                    console.log(this.$refs.draggableContainer.style);
                     this.saveImage(this.imageData);
                 };
             },
@@ -242,7 +240,6 @@
                 if(!this.imageData.src) return;
                 event.preventDefault();
                 // get the mouse cursor position at startup:
-                console.log(event);
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
                 document.onmousemove = this.elementDrag;
@@ -322,11 +319,13 @@
                 EventBus.$emit('IMAGE_CLICKED', {});
                 const el = document.getElementById(this.imageData.uuid);
                 if(el.classList.contains("border")) {
+                    //this.saveImage(this.imageData);
                     await this.setActiveImage(null);
                     return el.classList.remove("border");
                 }
                 EventBus.$emit('IMAGE_SELECTED', {uuid: this.imageData.uuid});
                 el.classList.add("border");
+                //this.saveImage(this.imageData);
                 await this.setActiveImage(this.imageData);
             },
             ...mapActions({
@@ -355,7 +354,7 @@
                     opacityLevel: 100,
                     brightnessLevel: 100,
                     contrastLevel: 100,
-                    isBackgroundImage: null
+                    isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
                 };
                 this.positions = {
                     clientX: null,
@@ -364,7 +363,6 @@
                     movementY: 0,
                     isDragging: false
                 };
-                console.log(this.$refs.draggableContainer.style);
                 if(this.$refs.draggableContainer.style) {
                     this.$refs.draggableContainer.style.top = '';
                     this.$refs.draggableContainer.style.left = '';
@@ -383,7 +381,7 @@
                 this.imageData.invertLevel = newValue && newValue.invertLevel ? newValue.invertLevel : this.imageData.invertLevel;
                 this.imageData.opacityLevel = newValue && newValue.opacityLevel ? newValue.opacityLevel : this.imageData.opacityLevel;
                 this.imageData.brightnessLevel = newValue && newValue.brightnessLevel ? newValue.brightnessLevel : this.imageData.brightnessLevel;
-                this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage ? newValue.isBackgroundImage : null;
+                this.imageData.isBackgroundImage = newValue && newValue.isBackgroundImage ? newValue.isBackgroundImage : { isEnabled: null, backgroundSize: 'cover' };
                 if(newValue && newValue.rotation === 0) {
                     setTimeout(() => {
                         this.imageData.rotation = 0;

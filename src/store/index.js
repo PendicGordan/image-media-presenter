@@ -36,9 +36,6 @@ export default new Vuex.Store({
 		async setBackgroundImage({commit}, data) {
 			commit('setBackgroundImage', data);
 		},
-        async saveActiveImageData({commit}, data) {
-            commit('saveActiveImageData', data);
-        },
         async deleteActiveImageData({commit}, data) {
             commit('deleteActiveImageData', data);
         },
@@ -65,9 +62,6 @@ export default new Vuex.Store({
 		setActiveImage(state, data) {
 			state.activeImage = data;
 		},
-        saveActiveImageData(state, data) {
-			state.backgroundImageData[data.uuid] = data;
-		},
         deleteActiveImageData(state, data) {
             state.activeSlide.images[data.uuid] = {
 				uuid: data.uuid,
@@ -87,7 +81,7 @@ export default new Vuex.Store({
 				opacityLevel: 100,
 				brightnessLevel: 100,
 				contrastLevel: 100,
-				isBackgroundImage: null
+				isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
 			};
 
             for(let i = 0; i < state.slides.length; ++i) {
@@ -146,7 +140,7 @@ export default new Vuex.Store({
 						opacityLevel: 100,
 						brightnessLevel: 100,
 						contrastLevel: 100,
-						isBackgroundImage: null
+						isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
 					}
 				}
 			}
@@ -182,7 +176,7 @@ export default new Vuex.Store({
 						opacityLevel: 100,
 						brightnessLevel: 100,
 						contrastLevel: 100,
-						isBackgroundImage: null
+						isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
 					};
 				}
 			}
@@ -216,7 +210,7 @@ export default new Vuex.Store({
 						opacityLevel: 100,
 						brightnessLevel: 100,
 						contrastLevel: 100,
-						isBackgroundImage: null
+						isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
 					};
 				}
 			}
