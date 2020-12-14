@@ -214,8 +214,8 @@
             // console.log(this.blurringLevel);
             // console.log(this.sepiaLevel);
             // console.log(this.saturationLevel);
-            /*this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
-            this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';*/
+            this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
+            this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
             this.assignImageToTheSlide(this.imageData);
         },
         methods: {
@@ -229,11 +229,11 @@
                 reader.onload = e => {
                     const src = e.target.result;
                     this.imageData.src = src;
-                    let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
+                    //let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
                     this.$emit('loaded', { src, file });
                     //console.log(draggableElement.getBoundingClientRect().y);
-                    this.imageData.positionX = draggableElement.getBoundingClientRect().x;
-                    this.imageData.positionY = draggableElement.getBoundingClientRect().y;
+                    this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
+                    this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
                     console.log(this.$refs.draggableContainer.style);
                     this.saveImage(this.imageData);
                 };
@@ -242,6 +242,7 @@
                 if(!this.imageData.src) return;
                 event.preventDefault();
                 // get the mouse cursor position at startup:
+                console.log(event);
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
                 document.onmousemove = this.elementDrag;
