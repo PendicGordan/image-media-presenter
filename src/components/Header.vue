@@ -11,10 +11,18 @@
 
         <v-spacer></v-spacer>
         <div>
-            <audio id="audio" src="../assets/audio/audio.mp3" preload="auto"></audio>
-            <v-btn depressed color="primary" @click="playSound">Play Sound</v-btn>
-            <v-btn depressed color="primary" @click="stopSound">Stop Sound</v-btn>
-            <v-btn depressed color="primary" @click="pauseSound">Pause Sound</v-btn>
+            <v-select
+                    :items="audios"
+                    label="Audio Name"
+                    @change="changeAudio"
+                    v-model="currentAudio"
+            >
+            </v-select>
+        </div>
+        <div>
+            <v-btn depressed color="primary" @click="playSound" :disabled="audio == null">Play Sound</v-btn>
+            <v-btn depressed color="primary" @click="stopSound" :disabled="audio == null">Stop Sound</v-btn>
+            <v-btn depressed color="primary" @click="pauseSound" :disabled="audio == null">Pause Sound</v-btn>
         </div>
         <div>
             <v-btn
@@ -114,7 +122,10 @@
                 hoverLayout: [1, 2],
                 showLayout: false,
                 toggleActionMenu: false,
-                currentSlideId: 1
+                currentSlideId: 1,
+                audios: ['audio_1', 'audio_2'],
+                currentAudio: '',
+                audio: null
             };
         },
         computed: {
@@ -140,6 +151,13 @@
             changeSlide(e) {
                 this.changeActiveSlide(e);
             },
+            changeAudio(e) {
+                this.currentAudio = e;
+                if(this.audio)
+                    this.audio.pause();
+                this.audio = null;
+                this.audio = new Audio(require('./../assets/audio/' + this.currentAudio + '.mp3'));
+            },
             toggleManagementMenu() {
                 this.toggleActionMenu = !this.toggleActionMenu;
                 EventBus.$emit('TOGGLE_ACTION_MENU', this.toggleActionMenu)
@@ -153,14 +171,14 @@
                 'setActiveImage'
             ]),
             playSound() {
-                document.getElementById('audio').play();
+                this.audio.play();
             },
             pauseSound() {
-                document.getElementById('audio').pause();
+                this.audio.pause();
             },
             stopSound() {
-                document.getElementById('audio').pause();
-                document.getElementById('audio').currentTime = 0;
+                this.audio.pause();
+                this.audio.currentTime = 0;
             }
         },
         watch: {
