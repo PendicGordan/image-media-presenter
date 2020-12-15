@@ -11,6 +11,12 @@
 
         <v-spacer></v-spacer>
         <div>
+            <audio id="audio" src="../assets/audio/audio.mp3" preload="auto"></audio>
+            <v-btn depressed color="primary" @click="playSound">Play Sound</v-btn>
+            <v-btn depressed color="primary" @click="stopSound">Stop Sound</v-btn>
+            <v-btn depressed color="primary" @click="pauseSound">Pause Sound</v-btn>
+        </div>
+        <div>
             <v-btn
                     depressed
                     color="primary"
@@ -145,7 +151,17 @@
                 'changeActiveSlide',
                 'createNewSlide',
                 'setActiveImage'
-            ])
+            ]),
+            playSound() {
+                document.getElementById('audio').play();
+            },
+            pauseSound() {
+                document.getElementById('audio').pause();
+            },
+            stopSound() {
+                document.getElementById('audio').pause();
+                document.getElementById('audio').currentTime = 0;
+            }
         },
         watch: {
             activeSlide(newValue) {
