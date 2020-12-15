@@ -14,7 +14,8 @@ export default new Vuex.Store({
 			isEnabled: false,
 			backgroundImage: 'none'
 		},
-        savedImages: {}
+        savedImages: {},
+		presentationAudio: null
 	},
 	getters: {
 		presentations: state => state.presentations,
@@ -53,6 +54,9 @@ export default new Vuex.Store({
 		},
 		async restructureActiveSlide({commit}, data) {
 			commit('restructureActiveSlide', data);
+		},
+		async setPresentationAudio({commit}, data) {
+			commit('setPresentationAudio', data);
 		}
 	},
 	mutations: {
@@ -231,6 +235,9 @@ export default new Vuex.Store({
 					break;
 				}
 			}
+		},
+		setPresentationAudio(state, data) {
+			state.presentationAudio = data;
 		}
 	}
 });

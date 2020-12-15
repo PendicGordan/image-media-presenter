@@ -95,19 +95,6 @@
                 </tr>
             </table>
         </div>
-        <div>
-            <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    color="teal"
-                    @click="toggleManagementMenu"
-            >
-                <v-icon dark>
-                    mdi-format-list-bulleted-square
-                </v-icon>
-            </v-btn>
-        </div>
     </v-app-bar>
 </template>
 
@@ -131,7 +118,8 @@
         computed: {
             ...mapState([
                 'slides',
-                'activeSlide'
+                'activeSlide',
+                'presentationAudio'
             ])
         },
         methods: {
@@ -156,19 +144,17 @@
                 if(this.audio)
                     this.audio.pause();
                 this.audio = null;
+                this.setPresentationAudio(this.currentAudio);
                 this.audio = new Audio(require('./../assets/audio/' + this.currentAudio + '.mp3'));
             },
-            toggleManagementMenu() {
-                this.toggleActionMenu = !this.toggleActionMenu;
-                EventBus.$emit('TOGGLE_ACTION_MENU', this.toggleActionMenu)
-            },
             saveCurrentSlide() {
-
+                console.log('console current slide');
             },
             ...mapActions([
                 'changeActiveSlide',
                 'createNewSlide',
-                'setActiveImage'
+                'setActiveImage',
+                'setPresentationAudio'
             ]),
             playSound() {
                 this.audio.play();
@@ -189,6 +175,7 @@
         },
         mounted() {
             this.currentSlideId = this.activeSlide ? this.activeSlide.text : null;
+            this.currentAudio = this.presentationAudio;
         }
     };
 </script>
