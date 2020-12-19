@@ -127,12 +127,6 @@
             </v-row>
             <v-row v-else-if="value === 'other'">
                 <v-col md>
-                    <v-btn @click="activateFilterAnimation"
-                           fab
-                           dark
-                           color="primary">
-                        <v-icon>mdi-animation</v-icon>
-                    </v-btn>
                     <v-checkbox
                             v-model="activeImage.isBackgroundImage.isEnabled"
                             label="Set as background"
@@ -145,11 +139,18 @@
                         <v-radio
                                 v-for="bs in backgroundSizes"
                                 :key="bs"
-                                :label="`Radio ${bs}`"
+                                :label="`Mode ${bs}`"
                                 :value="bs"
                                 :disabled="!activeImage.isBackgroundImage.isEnabled"
                         ></v-radio>
                     </v-radio-group>
+                </v-col>
+                <v-col md>
+                    <v-select
+                            :items="gridItems"
+                            label="Exchange the image with"
+                            @change="changeWithSlide"
+                    ></v-select>
                 </v-col>
             </v-row>
         </div>
@@ -207,14 +208,16 @@
                 backgroundSize: 'cover' // cover|contain|initial
             },
             backgroundSizes: ['cover', 'contain', 'initial'],
-            backgroundSize: 'cover'
+            backgroundSize: 'cover',
+            gridItems: []
         }),
         props: {
         },
         computed: {
             ...mapState([
                 'activeImage',
-                'backgroundImageData'
+                'backgroundImageData',
+                'activeSlide'
             ])
         },
         watch: {
@@ -239,6 +242,19 @@
             }
 
             this.backgroundSize = this.activeImage.isBackgroundImage.backgroundSize;
+            console.log(this.activeSlide.maxX, this.activeSlide.images);
+            for(const uuid in this.activeSlide.images) {
+                console.log(this.activeSlide.images[uuid]);
+                const image = this.activeSlide.images[uuid];
+                if(image.src && (this.activeImage.x + 1) + 'x' + (this.activeImage.y + 1) !== (image.x + 1) + 'x' + (image.y + 1)) {
+                    this.gridItems.push((image.x + 1) + 'x' + (image.y + 1));
+                }
+                //this.gridItems.push((j + 1) + "x" + (i + 1));
+            }
+            // for(let i = 0; i < this.activeSlide.maxY; ++i)
+            //     for(let j = 0; j < this.activeSlide.maxX; ++j) {
+            //
+            //     }
         },
         methods: {
             ...mapActions([
@@ -315,6 +331,11 @@
                 this.activeImage.isBackgroundImage.backgroundSize = this.backgroundSize;
                 this.setActiveImage(this.activeImage);
                 this.saveImage(this.activeImage);
+            },
+            changeWithSlide(e) {
+                console.log(e);
+                console.log(this.activeImage.x + 'x' + this.activeImage.y);
+                if(e === (this.activeImage.x + 1) + 'x' + (this.activeImage.y + 1)) window.alert('same image');
             }
         }
     };

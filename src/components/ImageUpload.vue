@@ -176,6 +176,25 @@
                 }
             });
 
+            EventBus.$on('CHANGE_LAYOUT', async () => {
+                const el = document.getElementById(this.imageData.uuid);
+                if(el && el.classList.contains("border")) {
+                    //this.saveImage(this.imageData);
+                    await this.setActiveImage(null);
+                    return el.classList.remove("border");
+                }
+            });
+
+            EventBus.$on('HANDLE_UPLOAD', async () => {
+                const el = document.getElementById(this.imageData.uuid);
+                if(el && el.classList.contains("border")) {
+                    //this.saveImage(this.imageData);
+                    await this.setActiveImage(null);
+                    return el.classList.remove("border");
+                }
+                await this.setActiveImage(null);
+            });
+
             this.imageData.uuid = this.uuid;
             this.imageData.slideId = this.activeSlide.text;
             this.imageData.x = this.x;
@@ -226,11 +245,12 @@
                 let reader = new FileReader();
                 reader.readAsDataURL(file);
 
-                reader.onload = e => {
+                reader.onload = async e => {
                     const src = e.target.result;
                     this.imageData.src = src;
                     //let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
                     this.$emit('loaded', { src, file });
+                    EventBus.$emit('HANDLE_UPLOAD');
                     this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
                     this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
                     this.saveImage(this.imageData);

@@ -93,7 +93,8 @@
         }
       },
       ...mapActions({
-        restructureActiveSlide: 'restructureActiveSlide'
+        restructureActiveSlide: 'restructureActiveSlide',
+          setActiveImage: 'setActiveImage',
       })
     },
     watch: {
