@@ -149,7 +149,7 @@
                     <v-select
                             :items="gridItems"
                             label="Exchange the image with"
-                            @change="changeWithSlide"
+                            @change="exchangeWithSlide"
                     ></v-select>
                 </v-col>
             </v-row>
@@ -242,9 +242,9 @@
             }
 
             this.backgroundSize = this.activeImage.isBackgroundImage.backgroundSize;
-            console.log(this.activeSlide.maxX, this.activeSlide.images);
             for(const uuid in this.activeSlide.images) {
-                console.log(this.activeSlide.images[uuid]);
+                // console.log('activeSlideImage', this.activeSlide.images[uuid]);
+                // console.log('activeImage', this.activeImage);
                 const image = this.activeSlide.images[uuid];
                 if(image.src && (this.activeImage.x + 1) + 'x' + (this.activeImage.y + 1) !== (image.x + 1) + 'x' + (image.y + 1)) {
                     this.gridItems.push((image.x + 1) + 'x' + (image.y + 1));
@@ -256,7 +256,8 @@
                 'setActiveImage',
                 'setBackgroundImage',
                 'deleteActiveImageData',
-                'saveImage'
+                'saveImage',
+                'exchangeImages'
             ]),
 
             removeAndClearImage() {
@@ -327,10 +328,9 @@
                 this.setActiveImage(this.activeImage);
                 this.saveImage(this.activeImage);
             },
-            changeWithSlide(e) {
-                console.log(e);
-                console.log(this.activeImage.x + 'x' + this.activeImage.y);
-                if(e === (this.activeImage.x + 1) + 'x' + (this.activeImage.y + 1)) window.alert('same image');
+            exchangeWithSlide(e) {
+                this.exchangeImages({ imageCoordinateToExchangeWithX: e.split("x")[0], imageCoordinateToExchangeWithY: e.split("x")[1] });
+                EventBus.$emit("IMAGE_EXCHANGE");
             }
         }
     };

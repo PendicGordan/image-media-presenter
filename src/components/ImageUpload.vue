@@ -177,21 +177,14 @@
             });
 
             EventBus.$on('CHANGE_LAYOUT', async () => {
-                const el = document.getElementById(this.imageData.uuid);
-                if(el && el.classList.contains("border")) {
-                    //this.saveImage(this.imageData);
-                    await this.setActiveImage(null);
-                    return el.classList.remove("border");
-                }
+                this.removeBorder();
+            });
+            EventBus.$on('IMAGE_EXCHANGE', async () => {
+                this.removeBorder();
             });
 
             EventBus.$on('HANDLE_UPLOAD', async () => {
-                const el = document.getElementById(this.imageData.uuid);
-                if(el && el.classList.contains("border")) {
-                    //this.saveImage(this.imageData);
-                    await this.setActiveImage(null);
-                    return el.classList.remove("border");
-                }
+                this.removeBorder();
                 await this.setActiveImage(null);
             });
 
@@ -248,6 +241,7 @@
                 reader.onload = async e => {
                     const src = e.target.result;
                     this.imageData.src = src;
+                    // this.imageData.slideId = this.activeSlide.text;
                     //let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
                     this.$emit('loaded', { src, file });
                     EventBus.$emit('HANDLE_UPLOAD');
@@ -361,8 +355,9 @@
                     uuid: this.imageData.uuid,
                     src: null,
                     width: "250",
-                    x: 0,
-                    y: 0,
+                    x: this.imageData.x,
+                    y: this.imageData.y,
+                    slideId: this.imageData.slideId,
                     rotation: 0,
                     positionX: null,
                     positionY: null,
@@ -386,6 +381,14 @@
                 if(this.$refs.draggableContainer.style) {
                     this.$refs.draggableContainer.style.top = '';
                     this.$refs.draggableContainer.style.left = '';
+                }
+            },
+            async removeBorder() {
+                const el = document.getElementById(this.imageData.uuid);
+                if(el && el.classList.contains("border")) {
+                    //this.saveImage(this.imageData);
+                    await this.setActiveImage(null);
+                    return el.classList.remove("border");
                 }
             }
         },

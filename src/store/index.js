@@ -57,8 +57,39 @@ export default new Vuex.Store({
 		},
 		async setPresentationAudio({commit}, data) {
 			commit('setPresentationAudio', data);
-		}
-	},
+		},
+        async exchangeImages({state}, data) {
+            for(let uuid in state.activeSlide.images) {
+                let currentImage = state.activeSlide.images[uuid];
+                if(currentImage.x === data.imageCoordinateToExchangeWithX - 1 && currentImage.y === data.imageCoordinateToExchangeWithY - 1) {
+                    currentImage.blurringLevel = [state.activeImage.blurringLevel, state.activeImage.blurringLevel = currentImage.blurringLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].blurringLevel = state.activeImage.blurringLevel;
+                    currentImage.brightnessLevel = [state.activeImage.brightnessLevel, state.activeImage.brightnessLevel = currentImage.brightnessLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].brightnessLevel = state.activeImage.brightnessLevel;
+                    currentImage.contrastLevel = [state.activeImage.contrastLevel, state.activeImage.contrastLevel = currentImage.contrastLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].contrastLevel = state.activeImage.contrastLevel;
+                    currentImage.invertLevel = [state.activeImage.invertLevel, state.activeImage.invertLevel = currentImage.invertLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].invertLevel = state.activeImage.invertLevel;
+                    currentImage.isBackgroundImage = [state.activeImage.isBackgroundImage, state.activeImage.isBackgroundImage = currentImage.isBackgroundImage][0];
+                    state.activeSlide.images[state.activeImage.uuid].isBackgroundImage = state.activeImage.isBackgroundImage;
+                    currentImage.opacityLevel = [state.activeImage.opacityLevel, state.activeImage.opacityLevel = currentImage.opacityLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].opacityLevel = state.activeImage.opacityLevel;
+                    currentImage.rotation = [state.activeImage.rotation, state.activeImage.rotation = currentImage.rotation][0];
+                    state.activeSlide.images[state.activeImage.uuid].rotation = state.activeImage.rotation;
+                    currentImage.roundFactor = [state.activeImage.roundFactor, state.activeImage.roundFactor = currentImage.roundFactor][0];
+                    state.activeSlide.images[state.activeImage.uuid].roundFactor = state.activeImage.roundFactor;
+                    currentImage.saturationLevel = [state.activeImage.saturationLevel, state.activeImage.saturationLevel = currentImage.saturationLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].saturationLevel = state.activeImage.saturationLevel;
+                    currentImage.sepiaLevel = [state.activeImage.sepiaLevel, state.activeImage.sepiaLevel = currentImage.sepiaLevel][0];
+                    state.activeSlide.images[state.activeImage.uuid].sepiaLevel = state.activeImage.sepiaLevel;
+                    currentImage.width = [state.activeImage.width, state.activeImage.width = currentImage.width][0];
+                    state.activeSlide.images[state.activeImage.uuid].width = state.activeImage.width;
+                    currentImage.src = [state.activeImage.src, state.activeImage.src = currentImage.src][0];
+                    state.activeSlide.images[state.activeImage.uuid].src = state.activeImage.src;
+                }
+            }
+        }
+    },
 	mutations: {
 		setPresentations(state, data) {
 			state.presentations = data;
