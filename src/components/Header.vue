@@ -37,9 +37,9 @@
             <v-btn
                     depressed
                     color="primary"
-                    @click="saveCurrentSlide"
+                    @click="savePresentation"
             >
-                Save slide
+                Save presentation
             </v-btn>
         </div>
         <div>
@@ -154,7 +154,8 @@
                 'changeActiveSlide',
                 'createNewSlide',
                 'setActiveImage',
-                'setPresentationAudio'
+                'setPresentationAudio',
+                'savePresentation'
             ]),
             playSound() {
                 this.audio.play();

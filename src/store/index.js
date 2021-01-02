@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex);
 import {uuid} from 'vue-uuid';
+import { getNewFileHandle, writeFile } from '../helpers/fileSystemHelpers';
 
 export default new Vuex.Store({
 	strict: false,
@@ -25,11 +26,18 @@ export default new Vuex.Store({
 		slides: state => state.slides
 	},
 	actions: {
-		async fetchPresentations({state}) {
-			state.presentations = '';
-		},
 		async saveSlide({state}, slide) {
-			state.slides.push(slide);
+			for(let i = 0; i < state.slides.length; ++i) {
+				if(slide.text === state.slides[i].text) {
+					state.slides[i] = slide;
+					return;
+				}
+			}
+			slide.slides.push(slide);
+		},
+		async savePresentation() {
+			const handler =  await getNewFileHandle();
+			await writeFile(handler, JSON.stringify({json: 'test'}));
 		},
 		async setActiveImage({commit}, data) {
 			commit('setActiveImage', data);
@@ -91,9 +99,6 @@ export default new Vuex.Store({
         }
     },
 	mutations: {
-		setPresentations(state, data) {
-			state.presentations = data;
-		},
 		setActiveImage(state, data) {
 			state.activeImage = data;
 		},
@@ -269,6 +274,9 @@ export default new Vuex.Store({
 		},
 		setPresentationAudio(state, data) {
 			state.presentationAudio = data;
+		},
+		saveSlide(state, data) {
+			state.presentations[data.id] = data;
 		}
 	}
 });
