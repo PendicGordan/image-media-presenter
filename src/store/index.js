@@ -108,6 +108,16 @@ export default new Vuex.Store({
 		},
 		saveCurrentPresentationOnTheDevice() {
 
+		},
+		async loadPresentation({state, commit}, presentation) {
+			const slides = JSON.parse(presentation[2]);
+			await commit('setSlides', slides);
+
+			if(slides && slides[0])
+				state.activeSlide = slides[0];
+
+			commit('setPresentationAudio', JSON.parse(presentation[3]));
+			commit('setBackgroundImageData', JSON.parse(presentation[4]));
 		}
     },
 	mutations: {
@@ -299,8 +309,6 @@ export default new Vuex.Store({
 				{ label: 'Audio', value: 'audio' },
 				{ label: 'Background', value: 'background' },
 			];
-
-			console.log(state.backgroundImageData);
 			const content = [
 				{
 					id: presentationUuid,
@@ -321,11 +329,17 @@ export default new Vuex.Store({
 
 			xlsx(columns, content, settings, download) // Will download the excel file
 		},
-		pickRandomlyPresentationId({state}) {
+		pickRandomlyPresentationId(state) {
 			state.presentationId = uuid.v4();
 		},
-		setPresentationName({state}, name) {
+		setPresentationName(state, name) {
 			state.presentationName = name;
+		},
+		setBackgroundImageData(state, data) {
+			state.backgroundImageData = data;
+		},
+		setSlides(state, data) {
+			state.slides = data;
 		}
 	}
 });
