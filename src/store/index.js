@@ -2,12 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex);
 import {uuid} from 'vue-uuid';
-import { getNewFileHandle, writeFile } from '../helpers/fileSystemHelpers';
+//import { getNewFileHandle, writeFile } from '../helpers/fileSystemHelpers';
+//import ExcelJS from 'exceljs';
+import * as xlsx from 'json-as-xlsx';
 
 export default new Vuex.Store({
 	strict: false,
 	state: {
-		presentations: [],
+		presentationId: null,
+		presentationName: '',
 		slides: [],
 		activeSlide: null, // {text: 1, images: {}, maxX: 2, maxY: 2},
 		activeImage: null,
@@ -23,7 +26,8 @@ export default new Vuex.Store({
 		activeSlide: state => state.activeSlide,
 		activeImage: state => state.activeImage,
 		backgroundImageData: state => state.backgroundImageData,
-		slides: state => state.slides
+		slides: state => state.slides,
+		presentationId: state => state.presentationId
 	},
 	actions: {
 		async saveSlide({state}, slide) {
@@ -35,9 +39,8 @@ export default new Vuex.Store({
 			}
 			slide.slides.push(slide);
 		},
-		async savePresentation() {
-			const handler =  await getNewFileHandle();
-			await writeFile(handler, JSON.stringify({json: 'test'}));
+		async savePresentation({commit}) {
+			commit('savePresentation');
 		},
 		async setActiveImage({commit}, data) {
 			commit('setActiveImage', data);
@@ -96,7 +99,16 @@ export default new Vuex.Store({
                     state.activeSlide.images[state.activeImage.uuid].src = state.activeImage.src;
                 }
             }
-        }
+        },
+		pickRandomlyPresentationId({commit}) {
+			commit('pickRandomlyPresentationId');
+		},
+		setPresentationName({commit}, name) {
+			commit('setPresentationName', name);
+		},
+		saveCurrentPresentationOnTheDevice() {
+
+		}
     },
 	mutations: {
 		setActiveImage(state, data) {
@@ -277,6 +289,43 @@ export default new Vuex.Store({
 		},
 		saveSlide(state, data) {
 			state.presentations[data.id] = data;
+		},
+		savePresentation(state) {
+			const presentationUuid = uuid.v4();
+			const columns = [
+				{ label: 'Id', value: 'id' },
+				{ label: 'Name', value: 'name' },// Top level data
+				{ label: 'Content', value: 'content' },
+				{ label: 'Audio', value: 'audio' },
+				{ label: 'Background', value: 'background' },
+			];
+
+			console.log(state.backgroundImageData);
+			const content = [
+				{
+					id: presentationUuid,
+					name: `presentation-${presentationUuid}`,
+					content: JSON.stringify(state.slides),
+					background: JSON.stringify(state.backgroundImageData),
+					audio: JSON.stringify(state.presentationAudio)
+				}];
+
+			const settings = {
+				sheetName: 'Presentation sheet', // The name of the sheet
+				fileName: `${state.presentationName}-${presentationUuid}`, // The name of the spreadsheet
+				extraLength: 3, // A bigger number means that columns should be wider
+				writeOptions: {} // Style options from https://github.com/SheetJS/sheetjs#writing-options
+			};
+
+			const download = true; // If true will download the xlsx file, otherwise will return a buffer
+
+			xlsx(columns, content, settings, download) // Will download the excel file
+		},
+		pickRandomlyPresentationId({state}) {
+			state.presentationId = uuid.v4();
+		},
+		setPresentationName({state}, name) {
+			state.presentationName = name;
 		}
 	}
 });

@@ -43,6 +43,18 @@
             </v-btn>
         </div>
         <div>
+            <v-btn
+                    depressed
+                    color="primary"
+                    @click="loadPresentation"
+            >
+                Load presentation
+            </v-btn>
+        </div>
+        <div>
+            <input type="file" id="import-presentation" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sh" @change="onChange">
+        </div>
+        <div>
             <v-select
                     :items="slides"
                     label="Slide No."
@@ -101,6 +113,8 @@
 <script>
     import EventBus from "../helpers/eventBus";
     import { mapState, mapActions } from 'vuex';
+    //import * as xlsx from 'json-as-xlsx';
+    import readXlsxFile from 'read-excel-file'
 
     export default {
         name: 'Header',
@@ -166,6 +180,32 @@
             stopSound() {
                 this.audio.pause();
                 this.audio.currentTime = 0;
+            },
+            onChange(e) {
+                if (!e.target.files.length) return;
+
+                let file = e.target.files[0];
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = async () => {
+                    //const src = e.target.result;
+
+                    const input = document.getElementById('import-presentation');
+                    readXlsxFile(input.files[0]).then((rows) => {
+                        // `rows` is an array of rows
+                        // each row being an array of cells.
+                        console.log(rows);
+                    });
+
+                    /*console.log(src);
+                    const buf = Buffer.from(src, 'base64');
+                    const sheet = xlsx.read(buf, { type: 'buffer' });
+                    console.log(sheet);*/
+                };
+            },
+            loadPresentation() {
+                console.log('hh');
             }
         },
         watch: {

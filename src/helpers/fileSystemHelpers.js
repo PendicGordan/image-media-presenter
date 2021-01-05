@@ -43,8 +43,8 @@ export const getNewFileHandle = () => {
     if ('showSaveFilePicker' in window) {
         const opts = {
             types: [{
-                description: '.json',
-                accept: {'application/json': ['.json']},
+                description: '.xls',
+                accept: {'application/xls': ['.xls']},
             }],
         };
         return window.showSaveFilePicker(opts);
@@ -53,9 +53,9 @@ export const getNewFileHandle = () => {
     const opts = {
         type: 'save-file',
         accepts: [{
-            description: '.json',
-            extensions: ['json'],
-            mimeTypes: ['application/json'],
+            description: '.xls',
+            extensions: ['xls'],
+            mimeTypes: ['application/xls'],
         }],
     };
     return window.chooseFileSystemEntries(opts);
