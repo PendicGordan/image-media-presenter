@@ -93,6 +93,7 @@
       ...mapActions({
         restructureActiveSlide: 'restructureActiveSlide',
           setActiveImage: 'setActiveImage',
+          createNewSlide: 'createNewSlide'
       }),
       composeLayout() {
         if (this.activeSlide)
@@ -163,6 +164,9 @@
       ])
     },
     mounted() {
+      if(this.$route.query.new)
+        this.createNewSlide();
+
       this.composeLayout();
 
       EventBus.$on('CHANGE_LAYOUT', async payload => {

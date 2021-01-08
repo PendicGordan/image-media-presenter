@@ -2,8 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex);
 import {uuid} from 'vue-uuid';
-//import { getNewFileHandle, writeFile } from '../helpers/fileSystemHelpers';
-//import ExcelJS from 'exceljs';
 import * as xlsx from 'json-as-xlsx';
 
 export default new Vuex.Store({
@@ -112,8 +110,6 @@ export default new Vuex.Store({
 		async loadPresentation({state, commit}, presentation) {
 			const slides = JSON.parse(presentation[2]);
 			await commit('setSlides', slides);
-
-			console.log(slides);
 
 			if(slides && slides[0])
 				state.activeSlide = slides[0];

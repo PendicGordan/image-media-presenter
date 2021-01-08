@@ -44,9 +44,6 @@ export default {
     });
   },
   created() {
-    // TODO load presentations
-    // TODO extract slides
-    // TODO set active slide
   },
 };
 </script>
