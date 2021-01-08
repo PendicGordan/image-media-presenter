@@ -1,29 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import PresentationConfigurer from '../views/PresentationConfigurer.vue'
+import Welcome from "../components/Welcome";
+import ImageView from "../components/ImageView";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'PresentationConfigurer',
-    component: PresentationConfigurer
+    name: 'Welcome',
+    component: Welcome
   },
   {
-    path: '/about',
-    name: 'About',
+    path: '/editor',
+    name: 'ImageView',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: ImageView
   }
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
 
 export default router

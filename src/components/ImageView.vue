@@ -1,6 +1,5 @@
 <template>
   <div style="width: 99.15%; margin-left: 0.40%;" id="image-view">
-    <ActionMenu v-if="toggleActionMenu" />
     <v-row>
       <div style="width:100%;margin-top: 0.25%;height:100%;" v-if="activeSlide">
         <grid-layout :layout.sync="layout"
@@ -60,14 +59,13 @@
   import ImageUpload from './ImageUpload';
   import {mapState, mapActions} from 'vuex';
   import EventBus from "../helpers/eventBus";
-  import ActionMenu from "./ActionMenu";
 
   export default {
+    name: "ImageView",
     components: {
       GridLayout,
       GridItem,
-      ImageUpload,
-      ActionMenu
+      ImageUpload
     },
     data() {
       return {
@@ -95,7 +93,37 @@
       ...mapActions({
         restructureActiveSlide: 'restructureActiveSlide',
           setActiveImage: 'setActiveImage',
-      })
+      }),
+      composeLayout() {
+        if (this.activeSlide)
+          this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
+        let images = Object.values(this.activeSlide.images);
+        this.layout = [];
+        images.forEach(image => {
+          this.layout.push({
+            "x": image.x,
+            "y": image.y,
+            "w": 1,
+            "h": 1,
+            "i": image.uuid,
+            src: image.src,
+            width: image.width + '',
+            rotation: image.rotation,
+            positionX: image.positionX,
+            positionY: image.positionY,
+            slideId: this.activeSlide.text,
+            roundFactor: image.roundFactor,
+            blurringLevel: image.blurringLevel,
+            sepiaLevel: image.sepiaLevel,
+            saturationLevel: image.saturationLevel,
+            invertLevel: image.invertLevel,
+            opacityLevel: image.opacityLevel,
+            brightnessLevel: image.brightnessLevel,
+            contrastLevel: image.contrastLevel,
+            isBackgroundImage: image.isBackgroundImage
+          });
+        });
+      }
     },
     watch: {
       activeSlide(newSlide) {
@@ -135,37 +163,11 @@
       ])
     },
     mounted() {
+      this.composeLayout();
+
       EventBus.$on('CHANGE_LAYOUT', async payload => {
         this.restructureActiveSlide({ columns: payload.columns, rows: payload.rows });
-        if (this.activeSlide)
-          this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
-
-        let images = Object.values(this.activeSlide.images);
-        this.layout = [];
-        images.forEach(image => {
-          this.layout.push({
-            "x": image.x,
-            "y": image.y,
-            "w": 1,
-            "h": 1,
-            "i": image.uuid,
-            src: image.src,
-            width: image.width + '',
-            rotation: image.rotation,
-            positionX: image.positionX,
-            positionY: image.positionY,
-            slideId: this.activeSlide.text,
-            roundFactor: image.roundFactor,
-            blurringLevel: image.blurringLevel,
-            sepiaLevel: image.sepiaLevel,
-            saturationLevel: image.saturationLevel,
-            invertLevel: image.invertLevel,
-            opacityLevel: image.opacityLevel,
-            brightnessLevel: image.brightnessLevel,
-            contrastLevel: image.contrastLevel,
-            isBackgroundImage: image.isBackgroundImage
-          });
-        });
+        this.composeLayout();
       });
       EventBus.$on('TOGGLE_ACTION_MENU', payload => {
         this.toggleActionMenu = payload;

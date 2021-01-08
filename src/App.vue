@@ -1,15 +1,14 @@
 <template>
   <v-app id="app" :style="[backgroundImage]">
     <Header />
-
     <v-main>
-      <ImageView />
+      <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import ImageView from './components/ImageView';
+//import ImageView from './components/ImageView';
 import Header from "./components/Header";
 import { mapState } from 'vuex';
 import EventBus from './helpers/eventBus';
@@ -18,7 +17,7 @@ export default {
   name: 'App',
   components: {
     Header,
-    ImageView
+    //ImageView
   },
   data() {
     return {

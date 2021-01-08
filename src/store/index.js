@@ -113,6 +113,8 @@ export default new Vuex.Store({
 			const slides = JSON.parse(presentation[2]);
 			await commit('setSlides', slides);
 
+			console.log(slides);
+
 			if(slides && slides[0])
 				state.activeSlide = slides[0];
 
