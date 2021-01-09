@@ -4,6 +4,8 @@
     <v-main>
       <router-view />
     </v-main>
+    <v-btn depressed color="primary" @click="goInFullscreen">Play Presentation</v-btn>
+    <v-btn depressed color="primary" @click="goOutFullscreen">Stop Presentation</v-btn>
   </v-app>
 </template>
 
@@ -39,12 +41,39 @@ export default {
     ])
   },
   mounted() {
+    document.addEventListener('keydown', (event) => {
+      console.log(event.code === 'AltLeft');
+      console.log(event);
+      console.log('ggggggggggggggggg');
+    });
     EventBus.$on('BACKGROUND_IMAGE_SET', (data) => {
       this.imageSrc = data.isEnabled ? data.src : '';
     });
   },
-  created() {
-  },
+  methods: {
+    /* Get into full screen */
+    goInFullscreen() {
+      const element = document.getElementById('app');
+      if (element.requestFullscreen)
+        element.requestFullscreen();
+      else if (element.mozRequestFullScreen)
+        element.mozRequestFullScreen();
+      else if (element.webkitRequestFullscreen)
+        element.webkitRequestFullscreen();
+      else if (element.msRequestFullscreen)
+        element.msRequestFullscreen();
+    },
+    goOutFullscreen() {
+      if (document.exitFullscreen)
+        document.exitFullscreen();
+      else if (document.mozCancelFullScreen)
+        document.mozCancelFullScreen();
+      else if (document.webkitExitFullscreen)
+        document.webkitExitFullscreen();
+      else if (document.msExitFullscreen)
+        document.msExitFullscreen();
+    }
+  }
 };
 </script>
 <style scoped>
