@@ -17,15 +17,16 @@ export default new Vuex.Store({
 			backgroundImage: 'none'
 		},
         savedImages: {},
-		presentationAudio: null
+		presentationAudio: null,
+		presentationModeActive: false
 	},
 	getters: {
-		presentations: state => state.presentations,
 		activeSlide: state => state.activeSlide,
 		activeImage: state => state.activeImage,
 		backgroundImageData: state => state.backgroundImageData,
 		slides: state => state.slides,
-		presentationId: state => state.presentationId
+		presentationId: state => state.presentationId,
+		presentationModeActive: state => state.presentationModeActive
 	},
 	actions: {
 		async saveSlide({state}, slide) {
@@ -116,6 +117,9 @@ export default new Vuex.Store({
 
 			commit('setPresentationAudio', JSON.parse(presentation[3]));
 			commit('setBackgroundImageData', JSON.parse(presentation[4]));
+		},
+		togglePresentationMode({commit}) {
+			commit('togglePresentationMode');
 		}
     },
 	mutations: {
@@ -162,7 +166,9 @@ export default new Vuex.Store({
 				}
 			}
 		},
-		changeActiveSlide(state, data) {
+		changeActiveSlide(state, slideId) {
+			if(slideId < 1 || slideId > state.slides.length) return;
+			console.log(slideId);
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === state.activeSlide.text) {
 					state.slides[i] = state.activeSlide;
@@ -171,7 +177,7 @@ export default new Vuex.Store({
 			}
 
 			for(let i = 0; i < state.slides.length; ++i) {
-				if(state.slides[i].text === data) {
+				if(state.slides[i].text === slideId) {
 					state.activeSlide = state.slides[i];
 					break;
 				}
@@ -338,6 +344,9 @@ export default new Vuex.Store({
 		},
 		setSlides(state, data) {
 			state.slides = data;
+		},
+		togglePresentationMode(state) {
+			state.presentationModeActive = !state.presentationModeActive;
 		}
 	}
 });

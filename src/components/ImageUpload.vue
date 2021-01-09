@@ -2,7 +2,7 @@
     <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;;">
         <div id="draggable-container" ref="draggableContainer" class="draggable-container">
             <div :id="'draggable-header' + imageData.uuid" @mousedown="dragMouseDown">
-                <div v-if="!imageData.src" class="">
+                <div v-if="!imageData.src && !presentationModeActive" class="">
                     <div class="file-upload upload-image">
                         <label :for="'file-input' + imageData.uuid">
                             <img src="../../public/img/uploader.jpg" alt="uploader" class="image-uploader" />
@@ -78,7 +78,8 @@
         computed: {
             ...mapState([
                 'activeImage',
-                'activeSlide'
+                'activeSlide',
+                'presentationModeActive'
             ])
         },
         props: {
@@ -188,6 +189,11 @@
                 await this.setActiveImage(null);
             });
 
+            EventBus.$on('DESELECT_IMAGES', async () => {
+                this.removeBorder();
+                await this.setActiveImage(null);
+            });
+
             this.imageData.uuid = this.uuid;
             this.imageData.slideId = this.activeSlide.text;
             this.imageData.x = this.x;
@@ -207,25 +213,6 @@
             this.imageData.brightnessLevel = this.brightnessLevel;
             this.imageData.contrastLevel = this.contrastLevel;
             this.imageData.isBackgroundImage = this.isBackgroundImage;
-
-            if(this.imageData.src) {
-                // this.positions.movementY = this.positionY;
-                // this.positions.movementX = this.positionX;
-                // this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.offsetTop - this.positions.movementY + 'px';
-                // this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.offsetLeft - this.positions.movementX + 'px';
-            }
-
-            // console.log(this.src);
-            // console.log(this.width);
-            // console.log(this.rotation);
-            // console.log(this.positionX);
-            // console.log(this.positionY);
-            // console.log(this.rotation);
-            // console.log(this.slideId);
-            // console.log(this.roundFactor);
-            // console.log(this.blurringLevel);
-            // console.log(this.sepiaLevel);
-            // console.log(this.saturationLevel);
             this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
             this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
             this.assignImageToTheSlide(this.imageData);
@@ -251,7 +238,7 @@
                 };
             },
             dragMouseDown (event) {
-                if(!this.imageData.src) return;
+                if(!this.imageData.src || this.presentationModeActive) return;
                 event.preventDefault();
                 // get the mouse cursor position at startup:
                 this.positions.clientX = event.clientX;
@@ -260,7 +247,7 @@
                 document.onmouseup = this.closeDragElement;
             },
             elementDrag (event) {
-                if(!this.imageData.src) return;
+                if(!this.imageData.src || this.presentationModeActive) return;
                 this.positions.isDragging = true;
                 event.preventDefault();
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
@@ -329,18 +316,19 @@
                 }, 100);
             },
             async selectImage () {
-                if(this.positions.isDragging) return;
+                if(this.positions.isDragging || this.presentationModeActive) return;
                 EventBus.$emit('IMAGE_CLICKED', {});
+                this.toggleBorder();
+                await this.setActiveImage(this.imageData);
+            },
+            async toggleBorder() {
                 const el = document.getElementById(this.imageData.uuid);
                 if(el.classList.contains("border")) {
-                    //this.saveImage(this.imageData);
                     await this.setActiveImage(null);
                     return el.classList.remove("border");
                 }
                 EventBus.$emit('IMAGE_SELECTED', {uuid: this.imageData.uuid});
                 el.classList.add("border");
-                //this.saveImage(this.imageData);
-                await this.setActiveImage(this.imageData);
             },
             ...mapActions({
                 setActiveImage: 'setActiveImage',

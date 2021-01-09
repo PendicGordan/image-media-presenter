@@ -4,9 +4,10 @@
             color="primary"
             dark
             id="header"
+            v-if="!presentationModeActive"
     >
-        <div class="d-flex align-center">
-
+        <div class="">
+            <v-btn depressed color="primary" @click="goInFullscreen">Play Presentation</v-btn>
         </div>
 
         <v-spacer></v-spacer>
@@ -119,7 +120,8 @@
             ...mapState([
                 'slides',
                 'activeSlide',
-                'presentationAudio'
+                'presentationAudio',
+                'presentationModeActive'
             ])
         },
         methods: {
@@ -156,7 +158,8 @@
                 'setActiveImage',
                 'setPresentationAudio',
                 'savePresentation',
-                'loadPresentation'
+                'loadPresentation',
+                'togglePresentationMode'
             ]),
             playSound() {
                 this.audio.play();
@@ -167,6 +170,19 @@
             stopSound() {
                 this.audio.pause();
                 this.audio.currentTime = 0;
+            },
+            async goInFullscreen() {
+                this.togglePresentationMode();
+                EventBus.$emit('DESELECT_IMAGES');
+                const element = document.getElementById('app');
+                if (element.requestFullscreen)
+                    element.requestFullscreen();
+                else if (element.mozRequestFullScreen)
+                    element.mozRequestFullScreen();
+                else if (element.webkitRequestFullscreen)
+                    element.webkitRequestFullscreen();
+                else if (element.msRequestFullscreen)
+                    element.msRequestFullscreen();
             }
         },
         watch: {

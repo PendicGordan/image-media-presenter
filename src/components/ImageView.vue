@@ -12,6 +12,7 @@
                      :use-css-transforms="true"
                      :margin="[0, 0]"
                      :autoSize="true"
+
         >
           <grid-item v-for="item in layout"
                      :static="item.static"

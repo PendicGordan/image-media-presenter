@@ -4,15 +4,13 @@
     <v-main>
       <router-view />
     </v-main>
-    <v-btn depressed color="primary" @click="goInFullscreen">Play Presentation</v-btn>
-    <v-btn depressed color="primary" @click="goOutFullscreen">Stop Presentation</v-btn>
   </v-app>
 </template>
 
 <script>
 //import ImageView from './components/ImageView';
 import Header from "./components/Header";
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import EventBus from './helpers/eventBus';
 
 export default {
@@ -37,42 +35,54 @@ export default {
       };
     },
     ...mapState([
-      'backgroundImageData'
+      'backgroundImageData',
+      'presentationModeActive',
+      'slides',
+      'activeSlide'
     ])
   },
   mounted() {
     document.addEventListener('keydown', (event) => {
-      console.log(event.code === 'AltLeft');
-      console.log(event);
-      console.log('ggggggggggggggggg');
+      if(this.presentationModeActive) {
+        if(event.code === 'ArrowLeft') {
+          console.log('ArrowLeft');
+          this.changeActiveSlide((this.activeSlide.text - 1) % (this.slides.length + 2));
+        } else if(event.code === 'ArrowRight' || event.code === 'Space') {
+          console.log('ArrowRight');
+          this.changeActiveSlide((this.activeSlide.text + 1) % (this.slides.length + 2));
+        }
+      }
     });
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+        this.togglePresentationMode();
+      }
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+      if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+        this.togglePresentationMode();
+      }
+    });
+    document.addEventListener('mozfullscreenchange', () => {
+      if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+        this.togglePresentationMode();
+      }
+    });
+    document.addEventListener('MSFullscreenChange', () => {
+      if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+        this.togglePresentationMode();
+      }
+    });
+
     EventBus.$on('BACKGROUND_IMAGE_SET', (data) => {
       this.imageSrc = data.isEnabled ? data.src : '';
     });
   },
   methods: {
-    /* Get into full screen */
-    goInFullscreen() {
-      const element = document.getElementById('app');
-      if (element.requestFullscreen)
-        element.requestFullscreen();
-      else if (element.mozRequestFullScreen)
-        element.mozRequestFullScreen();
-      else if (element.webkitRequestFullscreen)
-        element.webkitRequestFullscreen();
-      else if (element.msRequestFullscreen)
-        element.msRequestFullscreen();
-    },
-    goOutFullscreen() {
-      if (document.exitFullscreen)
-        document.exitFullscreen();
-      else if (document.mozCancelFullScreen)
-        document.mozCancelFullScreen();
-      else if (document.webkitExitFullscreen)
-        document.webkitExitFullscreen();
-      else if (document.msExitFullscreen)
-        document.msExitFullscreen();
-    }
+    ...mapActions([
+      'togglePresentationMode',
+      'changeActiveSlide'
+    ])
   }
 };
 </script>
