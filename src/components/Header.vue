@@ -9,7 +9,24 @@
         <div class="">
             <v-btn depressed color="primary" @click="goInFullscreen">Play Presentation</v-btn>
         </div>
-
+        <div class="">
+            <v-select
+                    :items="autosliding.timeLengthsInSeconds"
+                    label="Time length"
+                    @change="changeSlideTimer"
+                    v-model="autosliding.currentTimeLengthInSeconds"
+                    :disabled="!autosliding.autoslideEnabled"
+            >
+            </v-select>
+        </div>
+        <div>
+            <v-checkbox
+                    v-model="autosliding.autoslideEnabled"
+                    label="Autoslide"
+                    color="indigo"
+                    hide-details
+            ></v-checkbox>
+        </div>
         <v-spacer></v-spacer>
         <div>
             <v-select
@@ -113,7 +130,14 @@
                 currentSlideId: 1,
                 audios: ['audio_1', 'audio_2'],
                 currentAudio: '',
-                audio: null
+                audio: null,
+                autosliding: {
+                    timeLengthsInSeconds: [
+                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+                    ],
+                    currentTimeLengthInSeconds: 1,
+                    autoslideEnabled: false
+                }
             };
         },
         computed: {
@@ -172,6 +196,8 @@
                 this.audio.currentTime = 0;
             },
             async goInFullscreen() {
+                // TODO: update autoslide and time length of the slide in the store and play the presentation with the time slot if the autoslide is enabled
+                // TODO: make reverse mode in auto sliding mode of the slides
                 this.togglePresentationMode();
                 EventBus.$emit('DESELECT_IMAGES');
                 const element = document.getElementById('app');
@@ -183,6 +209,9 @@
                     element.webkitRequestFullscreen();
                 else if (element.msRequestFullscreen)
                     element.msRequestFullscreen();
+            },
+            changeSlideTimer(e) {
+                this.autosliding.currentTimeLengthInSeconds = e;
             }
         },
         watch: {
