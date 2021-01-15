@@ -38,39 +38,48 @@ export default {
       'backgroundImageData',
       'presentationModeActive',
       'slides',
-      'activeSlide'
+      'activeSlide',
+      'autosliding'
     ])
   },
   mounted() {
     document.addEventListener('keydown', (event) => {
       if(this.presentationModeActive) {
-        if(event.code === 'ArrowLeft') {
-          console.log('ArrowLeft');
-          this.changeActiveSlide((this.activeSlide.text - 1) % (this.slides.length + 2));
-        } else if(event.code === 'ArrowRight' || event.code === 'Space') {
-          console.log('ArrowRight');
-          this.changeActiveSlide((this.activeSlide.text + 1) % (this.slides.length + 2));
+        if(this.autosliding.autoslideEnabled) {
+          console.log(this.autosliding.autoslideEnabled);
+        } else {
+          if (event.code === 'ArrowLeft') {
+            console.log('ArrowLeft');
+            this.changeActiveSlide((this.activeSlide.text - 1) % (this.slides.length + 2));
+          } else if (event.code === 'ArrowRight' || event.code === 'Space') {
+            console.log('ArrowRight');
+            this.changeActiveSlide((this.activeSlide.text + 1) % (this.slides.length + 2));
+          }
         }
       }
     });
     document.addEventListener('fullscreenchange', () => {
       if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
         this.togglePresentationMode();
+        EventBus.$emit('PRESENTATION_FINISHED');
       }
     });
     document.addEventListener('webkitfullscreenchange', () => {
       if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
         this.togglePresentationMode();
+        EventBus.$emit('PRESENTATION_FINISHED');
       }
     });
     document.addEventListener('mozfullscreenchange', () => {
       if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
         this.togglePresentationMode();
+        EventBus.$emit('PRESENTATION_FINISHED');
       }
     });
     document.addEventListener('MSFullscreenChange', () => {
       if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
         this.togglePresentationMode();
+        EventBus.$emit('PRESENTATION_FINISHED');
       }
     });
 

@@ -27,6 +27,15 @@
                     hide-details
             ></v-checkbox>
         </div>
+        <div>
+            <v-checkbox
+                    v-model="autosliding.reverse"
+                    label="Reverse autosliding"
+                    color="indigo"
+                    hide-details
+                    :disabled="!autosliding.autoslideEnabled"
+            ></v-checkbox>
+        </div>
         <v-spacer></v-spacer>
         <div>
             <v-select
@@ -131,13 +140,7 @@
                 audios: ['audio_1', 'audio_2'],
                 currentAudio: '',
                 audio: null,
-                autosliding: {
-                    timeLengthsInSeconds: [
-                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-                    ],
-                    currentTimeLengthInSeconds: 1,
-                    autoslideEnabled: false
-                }
+                autoslidingInterval: null
             };
         },
         computed: {
@@ -145,7 +148,9 @@
                 'slides',
                 'activeSlide',
                 'presentationAudio',
-                'presentationModeActive'
+                'presentationModeActive',
+                'autosliding',
+                'setReverse'
             ])
         },
         methods: {
@@ -183,7 +188,9 @@
                 'setPresentationAudio',
                 'savePresentation',
                 'loadPresentation',
-                'togglePresentationMode'
+                'togglePresentationMode',
+                'setCurrentTimeLengthInSeconds',
+                'setAutoslideEnabled'
             ]),
             playSound() {
                 this.audio.play();
@@ -199,6 +206,17 @@
                 // TODO: update autoslide and time length of the slide in the store and play the presentation with the time slot if the autoslide is enabled
                 // TODO: make reverse mode in auto sliding mode of the slides
                 this.togglePresentationMode();
+                if(this.autosliding.autoslideEnabled) {
+                    const reversePresentationMode = this.autosliding.reverse;
+                    document.getElementById('header').dispatchEvent(new KeyboardEvent('keydown',{'key':'ArrowRight'}));
+                    this.autoslidingInterval = setInterval(() => {
+                        if(reversePresentationMode) {
+                            this.changeActiveSlide((this.activeSlide.text - 1) % (this.slides.length + 2));
+                        } else {
+                            this.changeActiveSlide((this.activeSlide.text + 1) % (this.slides.length + 2));
+                        }
+                    }, this.autosliding.currentTimeLengthInSeconds * 1000)
+                }
                 EventBus.$emit('DESELECT_IMAGES');
                 const element = document.getElementById('app');
                 if (element.requestFullscreen)
@@ -211,16 +229,23 @@
                     element.msRequestFullscreen();
             },
             changeSlideTimer(e) {
-                this.autosliding.currentTimeLengthInSeconds = e;
+                this.setCurrentTimeLengthInSeconds(e);
             }
         },
         watch: {
             activeSlide(newValue) {
                 this.setActiveImage(null);
                 this.currentSlideId = newValue.text;
+            },
+            'autosliding.autoslideEnabled'(newValue) {
+                this.setAutoslideEnabled(newValue);
             }
         },
         mounted() {
+            EventBus.$on('PRESENTATION_FINISHED', () => {
+                console.log('finsih');
+                if(this.autoslidingInterval) clearInterval(this.autoslidingInterval);
+            });
             this.currentSlideId = this.activeSlide ? this.activeSlide.text : null;
             this.currentAudio = this.presentationAudio;
         }

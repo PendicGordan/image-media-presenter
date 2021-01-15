@@ -18,7 +18,15 @@ export default new Vuex.Store({
 		},
         savedImages: {},
 		presentationAudio: null,
-		presentationModeActive: false
+		presentationModeActive: false,
+		autosliding: {
+			timeLengthsInSeconds: [
+				1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+			],
+			currentTimeLengthInSeconds: 1,
+			autoslideEnabled: false,
+			reverse: false
+		}
 	},
 	getters: {
 		activeSlide: state => state.activeSlide,
@@ -26,7 +34,8 @@ export default new Vuex.Store({
 		backgroundImageData: state => state.backgroundImageData,
 		slides: state => state.slides,
 		presentationId: state => state.presentationId,
-		presentationModeActive: state => state.presentationModeActive
+		presentationModeActive: state => state.presentationModeActive,
+		autosliding: state => state.autosliding
 	},
 	actions: {
 		async saveSlide({state}, slide) {
@@ -120,6 +129,15 @@ export default new Vuex.Store({
 		},
 		togglePresentationMode({commit}) {
 			commit('togglePresentationMode');
+		},
+		setCurrentTimeLengthInSeconds({commit}, data) {
+			commit('setCurrentTimeLengthInSeconds', data);
+		},
+		setAutoslideEnabled({commit}, data) {
+			commit('setAutoslideEnabled', data);
+		},
+		setReverse({commit}, data) {
+			commit('setReverse', data);
 		}
     },
 	mutations: {
@@ -347,6 +365,15 @@ export default new Vuex.Store({
 		},
 		togglePresentationMode(state) {
 			state.presentationModeActive = !state.presentationModeActive;
+		},
+		setCurrentTimeLengthInSeconds(state, currentTimeLengthInSeconds) {
+			state.autosliding.currentTimeLengthInSeconds = currentTimeLengthInSeconds;
+		},
+		setAutoslideEnabled(state, autoslideEnabled) {
+			state.autosliding.autoslideEnabled = autoslideEnabled;
+		},
+		setReverse(state, reverse) {
+			state.autosliding.autoslideEnabled = reverse;
 		}
 	}
 });
