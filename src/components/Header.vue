@@ -260,6 +260,9 @@
             },
             'autosliding.playMusic'(newValue) {
                 this.setPlayMusic(newValue);
+            },
+            presentationAudio(newValue) {
+                this.currentAudio = newValue;
             }
         },
         mounted() {

@@ -78,6 +78,9 @@ export default new Vuex.Store({
 		async setPresentationAudio({commit}, data) {
 			commit('setPresentationAudio', data);
 		},
+		async setAutosliding({commit}, data) {
+			commit('setAutosliding', data);
+		},
         async exchangeImages({state}, data) {
             for(let uuid in state.activeSlide.images) {
                 let currentImage = state.activeSlide.images[uuid];
@@ -127,6 +130,7 @@ export default new Vuex.Store({
 
 			commit('setPresentationAudio', JSON.parse(presentation[3]));
 			commit('setBackgroundImageData', JSON.parse(presentation[4]));
+			commit('setAutosliding', JSON.parse(presentation[5]))
 		},
 		togglePresentationMode({commit}) {
 			commit('togglePresentationMode');
@@ -334,6 +338,7 @@ export default new Vuex.Store({
 				{ label: 'Content', value: 'content' },
 				{ label: 'Audio', value: 'audio' },
 				{ label: 'Background', value: 'background' },
+				{ label: 'Presentation Mode', value: 'presentationMode' }
 			];
 			const content = [
 				{
@@ -341,7 +346,8 @@ export default new Vuex.Store({
 					name: `presentation-${presentationUuid}`,
 					content: JSON.stringify(state.slides),
 					background: JSON.stringify(state.backgroundImageData),
-					audio: JSON.stringify(state.presentationAudio)
+					audio: JSON.stringify(state.presentationAudio),
+					presentationMode: JSON.stringify(state.autosliding)
 				}];
 
 			const settings = {
@@ -381,6 +387,9 @@ export default new Vuex.Store({
 		},
 		setPlayMusic(state, playMusic) {
 			state.autosliding.playMusic = playMusic;
-		}
+		},
+		async setAutosliding(state, autosliding) {
+			state.autosliding = autosliding;
+		},
 	}
 });
