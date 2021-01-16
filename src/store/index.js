@@ -373,7 +373,7 @@ export default new Vuex.Store({
 			state.autosliding.autoslideEnabled = autoslideEnabled;
 		},
 		setReverse(state, reverse) {
-			state.autosliding.autoslideEnabled = reverse;
+			state.autosliding.reverse = reverse;
 		}
 	}
 });

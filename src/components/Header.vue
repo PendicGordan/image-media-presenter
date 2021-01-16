@@ -149,8 +149,7 @@
                 'activeSlide',
                 'presentationAudio',
                 'presentationModeActive',
-                'autosliding',
-                'setReverse'
+                'autosliding'
             ])
         },
         methods: {
@@ -190,7 +189,8 @@
                 'loadPresentation',
                 'togglePresentationMode',
                 'setCurrentTimeLengthInSeconds',
-                'setAutoslideEnabled'
+                'setAutoslideEnabled',
+                'setReverse'
             ]),
             playSound() {
                 this.audio.play();
@@ -207,14 +207,16 @@
                 // TODO: make reverse mode in auto sliding mode of the slides
                 this.togglePresentationMode();
                 if(this.autosliding.autoslideEnabled) {
-                    const reversePresentationMode = this.autosliding.reverse;
                     document.getElementById('header').dispatchEvent(new KeyboardEvent('keydown',{'key':'ArrowRight'}));
                     this.autoslidingInterval = setInterval(() => {
+                        const reversePresentationMode = this.autosliding.reverse;
                         if(reversePresentationMode) {
                             this.changeActiveSlide((this.activeSlide.text - 1) % (this.slides.length + 2));
                         } else {
                             this.changeActiveSlide((this.activeSlide.text + 1) % (this.slides.length + 2));
                         }
+                        if(this.activeSlide.text === 1) this.setReverse(false);
+                        if(this.activeSlide.text === this.slides.length) this.setReverse(true);
                     }, this.autosliding.currentTimeLengthInSeconds * 1000)
                 }
                 EventBus.$emit('DESELECT_IMAGES');

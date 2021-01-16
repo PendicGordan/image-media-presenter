@@ -319,7 +319,6 @@
                 if(this.positions.isDragging || this.presentationModeActive) return;
                 EventBus.$emit('IMAGE_CLICKED', {});
                 this.toggleBorder();
-                await this.setActiveImage(this.imageData);
             },
             async toggleBorder() {
                 const el = document.getElementById(this.imageData.uuid);
@@ -328,6 +327,7 @@
                     return el.classList.remove("border");
                 }
                 EventBus.$emit('IMAGE_SELECTED', {uuid: this.imageData.uuid});
+                await this.setActiveImage(this.imageData);
                 el.classList.add("border");
             },
             ...mapActions({
