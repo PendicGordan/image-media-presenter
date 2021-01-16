@@ -36,6 +36,14 @@
                     :disabled="!autosliding.autoslideEnabled"
             ></v-checkbox>
         </div>
+        <div>
+            <v-checkbox
+                    v-model="autosliding.playMusic"
+                    label="Play music"
+                    color="indigo"
+                    hide-details
+            ></v-checkbox>
+        </div>
         <v-spacer></v-spacer>
         <div>
             <v-select
@@ -137,7 +145,7 @@
                 showLayout: false,
                 toggleActionMenu: false,
                 currentSlideId: 1,
-                audios: ['audio_1', 'audio_2'],
+                audios: ['audio_1', 'audio_2', 'audio_3'],
                 currentAudio: '',
                 audio: null,
                 autoslidingInterval: null
@@ -190,7 +198,8 @@
                 'togglePresentationMode',
                 'setCurrentTimeLengthInSeconds',
                 'setAutoslideEnabled',
-                'setReverse'
+                'setReverse',
+                'setPlayMusic'
             ]),
             playSound() {
                 this.audio.play();
@@ -206,6 +215,10 @@
                 // TODO: update autoslide and time length of the slide in the store and play the presentation with the time slot if the autoslide is enabled
                 // TODO: make reverse mode in auto sliding mode of the slides
                 this.togglePresentationMode();
+                if(this.autosliding.playMusic && this.presentationAudio) {
+                    this.changeAudio(this.presentationAudio);
+                    this.playSound();
+                }
                 if(this.autosliding.autoslideEnabled) {
                     document.getElementById('header').dispatchEvent(new KeyboardEvent('keydown',{'key':'ArrowRight'}));
                     this.autoslidingInterval = setInterval(() => {
@@ -241,12 +254,19 @@
             },
             'autosliding.autoslideEnabled'(newValue) {
                 this.setAutoslideEnabled(newValue);
+            },
+            'autosliding.reverse'(newValue) {
+                this.setReverse(newValue);
+            },
+            'autosliding.playMusic'(newValue) {
+                this.setPlayMusic(newValue);
             }
         },
         mounted() {
             EventBus.$on('PRESENTATION_FINISHED', () => {
-                console.log('finsih');
                 if(this.autoslidingInterval) clearInterval(this.autoslidingInterval);
+                if(this.audio)
+                    this.stopSound();
             });
             this.currentSlideId = this.activeSlide ? this.activeSlide.text : null;
             this.currentAudio = this.presentationAudio;

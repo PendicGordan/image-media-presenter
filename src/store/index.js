@@ -25,7 +25,8 @@ export default new Vuex.Store({
 			],
 			currentTimeLengthInSeconds: 1,
 			autoslideEnabled: false,
-			reverse: false
+			reverse: false,
+			playMusic: false
 		}
 	},
 	getters: {
@@ -138,6 +139,9 @@ export default new Vuex.Store({
 		},
 		setReverse({commit}, data) {
 			commit('setReverse', data);
+		},
+		setPlayMusic({commit}, data) {
+			commit('setPlayMusic', data);
 		}
     },
 	mutations: {
@@ -374,6 +378,9 @@ export default new Vuex.Store({
 		},
 		setReverse(state, reverse) {
 			state.autosliding.reverse = reverse;
+		},
+		setPlayMusic(state, playMusic) {
+			state.autosliding.playMusic = playMusic;
 		}
 	}
 });
