@@ -65,7 +65,8 @@
                     color="primary"
                     @click="createNewSlide"
             >
-                New slide
+                <v-icon>mdi-shape-square-plus</v-icon>
+                 new slide
             </v-btn>
         </div>
         <div>
@@ -74,6 +75,7 @@
                     color="primary"
                     @click="savePresentation"
             >
+                <v-icon>mdi-content-save</v-icon>
                 Save presentation
             </v-btn>
         </div>

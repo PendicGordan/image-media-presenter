@@ -122,6 +122,7 @@ export default new Vuex.Store({
 
 		},
 		async loadPresentation({state, commit}, presentation) {
+			commit('setPresentationName', presentation[1]);
 			const slides = JSON.parse(presentation[2]);
 			await commit('setSlides', slides);
 
@@ -343,7 +344,7 @@ export default new Vuex.Store({
 			const content = [
 				{
 					id: presentationUuid,
-					name: `presentation-${presentationUuid}`,
+					name: state.presentationName,
 					content: JSON.stringify(state.slides),
 					background: JSON.stringify(state.backgroundImageData),
 					audio: JSON.stringify(state.presentationAudio),

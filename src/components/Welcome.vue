@@ -1,53 +1,74 @@
 <template>
     <div id="welcome">
-        <div>
-            <label for="import-presentation" class="btn" style>Load presentation</label>
-        </div>
-        <input type="file" id="import-presentation" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sh" @change="onChange" style="visibility:hidden;">
-        <div>
-            <v-dialog
-                    v-model="dialog"
-                    :scrollable="false"
-                    max-width="300px"
+
+        <div id="center">
+            <v-img
+                    src="../../public/256x256.png"
+                    max-height="256"
+                    max-width="256"
+                    id="welcome-image"
+            ></v-img>
+            <v-btn
+                    color="primary"
+                    dark
+                    class="welcome-button"
+                    large
+                    style="width: 50%;"
             >
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                            color="primary"
-                            dark
-                            v-bind="attrs"
-                            v-on="on"
-                    >
-                        Open Dialog
-                    </v-btn>
-                </template>
-                <v-card>
-                    <v-card-text style="height: 67px;">
-                        <v-text-field
-                                label="Presentation name"
-                                solo
-                                style="margin-top: 10px; padding-top: 10px"
-                                v-model="presentationName"
-                        ></v-text-field>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions>
+                <label for="import-presentation" class="btn" style>Import presentation</label>
+                <v-icon>mdi-import</v-icon>
+            </v-btn>
+            <input type="file" id="import-presentation" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sh" @change="onChange" style="visibility:hidden;">
+            <div>
+                <v-dialog
+                        v-model="dialog"
+                        :scrollable="false"
+                        max-width="300px"
+                >
+                    <template v-slot:activator="{ on, attrs }">
                         <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="dialog = false"
+                                color="primary"
+                                dark
+                                v-bind="attrs"
+                                v-on="on"
+                                class="welcome-button"
+                                large
+                                style="width: 50%;"
                         >
-                            Close
+
+                            New presentation
+                            <v-icon>mdi-new-box</v-icon>
                         </v-btn>
-                        <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="createNewPresentation"
-                        >
-                            Save
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                    </template>
+                    <v-card>
+                        <v-card-text style="height: 67px;">
+                            <v-text-field
+                                    label="Presentation name"
+                                    solo
+                                    style="margin-top: 10px; padding-top: 10px"
+                                    v-model="presentationName"
+                            ></v-text-field>
+                        </v-card-text>
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="dialog = false"
+                            >
+                                Close
+                            </v-btn>
+                            <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="createNewPresentation"
+                            >
+                                Save
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </div>
         </div>
     </div>
 </template>
@@ -108,5 +129,22 @@
 </script>
 
 <style scoped>
+    #welcome {
 
+    }
+    #center {
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        margin-top: -75px;
+        margin-left: -100px;
+    }
+    .welcome-button {
+        margin-bottom: 1%;
+        margin-top: 5%;
+    }
+    #welcome-image {
+        margin-top: -15%;
+       margin-bottom: 10%;
+    }
 </style>
