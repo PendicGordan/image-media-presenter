@@ -1,6 +1,5 @@
 <template>
     <div id="welcome">
-
         <div id="center">
             <v-img
                     src="../../public/256x256.png"
@@ -146,5 +145,8 @@
     #welcome-image {
         margin-top: -15%;
        margin-bottom: 10%;
+    }
+    #welcome {
+        background-color: rgba(	247, 230, 201, 0.3);
     }
 </style>

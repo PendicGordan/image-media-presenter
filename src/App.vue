@@ -1,6 +1,6 @@
 <template>
   <v-app id="app" :style="[backgroundImage]">
-    <Header />
+    <Header v-if="slides.length !== 0"/>
     <v-main>
       <router-view />
     </v-main>
@@ -8,7 +8,6 @@
 </template>
 
 <script>
-//import ImageView from './components/ImageView';
 import Header from "./components/Header";
 import { mapState, mapActions } from 'vuex';
 import EventBus from './helpers/eventBus';
@@ -96,11 +95,5 @@ export default {
 };
 </script>
 <style scoped>
-  #app1 {
-    background: url("https://newevolutiondesigns.com/images/freebies/cool-wallpaper-1.jpg") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-  }
+
 </style>
