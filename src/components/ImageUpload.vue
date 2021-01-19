@@ -142,38 +142,40 @@
                 if(!this.imageData.src) return;
 
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
-                let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
-                let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
-                let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
-                let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
-                let imageHeaderRight = wrapperElement.getBoundingClientRect().right;
+                if(wrapperElement.getBoundingClientRect()) {
+                    let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
+                    let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
+                    let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
+                    let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
+                    let imageHeaderRight = wrapperElement.getBoundingClientRect().right;
 
-                let draggableHeaderBottom = draggableElement.getBoundingClientRect().bottom;
-                let draggableHeaderLeft = draggableElement.getBoundingClientRect().left;
-                let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
-                let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
+                    let draggableHeaderBottom = draggableElement.getBoundingClientRect().bottom;
+                    let draggableHeaderLeft = draggableElement.getBoundingClientRect().left;
+                    let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
+                    let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
 
-                if(imageHeaderRight < draggableHeaderRight && this.$refs.draggableContainer) {
-                    this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
-                    this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
-                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
-                }
+                    if(imageHeaderRight < draggableHeaderRight && this.$refs.draggableContainer) {
+                        this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                        this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
+                        this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
+                    }
 
-                if(imageHeaderBottom < draggableHeaderBottom && this.$refs.draggableContainer) {
-                    this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
-                    this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
-                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
-                }
+                    if(imageHeaderBottom < draggableHeaderBottom && this.$refs.draggableContainer) {
+                        this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                        this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
+                        this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                    }
 
-                if(imageHeaderLeft > draggableHeaderLeft && this.$refs.draggableContainer) {
-                    this.positions.movementX = 0;
-                    this.imageData.positionX = 0;
-                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
-                }
-                if(imageHeaderTop > draggableHeaderTop && this.$refs.draggableContainer) {
-                    this.positions.movementY = 0;
-                    this.imageData.positionY = 0;
-                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                    if(imageHeaderLeft > draggableHeaderLeft && this.$refs.draggableContainer) {
+                        this.positions.movementX = 0;
+                        this.imageData.positionX = 0;
+                        this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
+                    }
+                    if(imageHeaderTop > draggableHeaderTop && this.$refs.draggableContainer) {
+                        this.positions.movementY = 0;
+                        this.imageData.positionY = 0;
+                        this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                    }
                 }
             });
 
@@ -252,12 +254,6 @@
                 event.preventDefault();
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
-
-                // console.log('wrapperElement bottom right top left', wrapperElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
-                //     wrapperElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
-                // console.log('draggableElement bottom right top left', draggableElement.getBoundingClientRect().bottom, draggableElement.getBoundingClientRect().right,
-                //                                 draggableElement.getBoundingClientRect().top, draggableElement.getBoundingClientRect().left);
-                // console.log('client left top', event.clientX, event.clientY);
 
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;

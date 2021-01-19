@@ -9,7 +9,7 @@
         <div class="">
             <v-btn depressed color="primary" @click="goInFullscreen">Play Presentation</v-btn>
         </div>
-        <div class="">
+        <div>
             <v-select
                     :items="autosliding.timeLengthsInSeconds"
                     label="Time length"
@@ -36,7 +36,7 @@
                     :disabled="!autosliding.autoslideEnabled"
             ></v-checkbox>
         </div>
-        <div>
+        <div style="margin-right: 1%;" >
             <v-checkbox
                     v-model="autosliding.playMusic"
                     label="Play music"
@@ -44,8 +44,11 @@
                     hide-details
             ></v-checkbox>
         </div>
+        <v-divider
+                vertical
+        ></v-divider>
         <v-spacer></v-spacer>
-        <div>
+        <div style="margin-left: 1%;">
             <v-select
                     :items="audios"
                     label="Audio Name"
@@ -54,37 +57,43 @@
             >
             </v-select>
         </div>
-        <div>
-            <v-btn depressed color="primary" @click="playSound" :disabled="audio == null">Play Sound</v-btn>
-            <v-btn depressed color="primary" @click="stopSound" :disabled="audio == null">Stop Sound</v-btn>
-            <v-btn depressed color="primary" @click="pauseSound" :disabled="audio == null">Pause Sound</v-btn>
+        <div style="margin-right: 0.25%; margin-left: 0.5%">
+            <v-btn depressed color="primary" @click="playSound" :disabled="audio == null"><v-icon>mdi-play</v-icon></v-btn>
         </div>
-        <div>
+        <div style="margin-right: 0.25%;">
+            <v-btn depressed color="primary" @click="stopSound" :disabled="audio == null"><v-icon>mdi-stop</v-icon></v-btn>
+        </div>
+        <div style="margin-right: 1%;">
+            <v-btn depressed color="primary" @click="pauseSound" :disabled="audio == null"><v-icon>mdi-pause</v-icon></v-btn>
+        </div>
+        <v-divider
+                vertical
+        ></v-divider>
+        <div style="padding: 1%;">
             <v-btn
                     depressed
                     color="primary"
                     @click="createNewSlide"
             >
                 <v-icon>mdi-shape-square-plus</v-icon>
-                 new slide
             </v-btn>
         </div>
-        <div>
+        <div style="padding: 1%;">
             <v-btn
                     depressed
                     color="primary"
                     @click="savePresentation"
             >
                 <v-icon>mdi-content-save</v-icon>
-                Save presentation
             </v-btn>
         </div>
-        <div>
+        <div style="padding: 1%;">
             <v-select
                     :items="slides"
                     label="Slide No."
                     @change="changeSlide"
                     v-model="currentSlideId"
+                    class="margin: 1%;"
             >
             </v-select>
         </div>
@@ -281,6 +290,7 @@
 <style scoped>
     #header {
         z-index: 999;
+        padding-top: 1%;
     }
     #layoutTable {
         width: 200px;

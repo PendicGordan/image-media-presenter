@@ -190,7 +190,7 @@
   }
   .vue-grid-item:not(.vue-grid-placeholder) {
     //background: #ccc;
-    border: 1px solid black;
+    //border: 1px solid black;
   }
   .vue-grid-item .resizing {
     opacity: 0.9;
@@ -231,14 +231,14 @@
     cursor: pointer;
   }
   .height-parent {
-    border: 10px solid #FFbFFa;
+    //border: 10px solid #FFbFFa;
   }
   .height-child {
     /*display: table-caption;
     vertical-align: middle; !*Vertically centered*!
     text-align: center;*/
     height:100%;
-    border: 4px solid #adF4FF;/* Horizontally centered */
+    //border: 4px solid #adF4FF;/* Horizontally centered */
   }
   #action-menu {
     position: absolute;

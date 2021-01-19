@@ -1,6 +1,6 @@
 <template>
   <v-app id="app" :style="[backgroundImage]">
-    <Header v-if="slides.length !== 0"/>
+    <Header v-if="slides.length !== 0" style="height: 12%"/>
     <v-main>
       <router-view />
     </v-main>
