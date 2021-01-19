@@ -411,16 +411,16 @@
         z-index: 10;
     }
     .image-upload {
-        border: 4px solid #db263b;
+        //border: 4px solid #db263b;
         padding: 0;
         position: relative
     }
     .image-uploader {
         cursor: pointer;
-        border: 4px solid #2590EB;
+        //border: 4px solid #2590EB;
     }
     .wrapper .file-upload {
-        border: 4px solid #eb263b;
+        //border: 4px solid #eb263b;
         transition: all 1s;
         color: #FFFFFF;
         height: 100%;
@@ -439,6 +439,6 @@
         display: none;
     }
     .draggable-container {
-        border: 2px solid #10ff35;
+        //border: 2px solid #10ff35;
     }
 </style>
