@@ -6,31 +6,33 @@
             id="header"
             v-if="!presentationModeActive"
     >
-        <div class="">
-            <v-btn depressed color="primary" @click="goInFullscreen">Play Presentation</v-btn>
+        <div style="margin-right: 1%;">
+            <v-btn depressed color="primary" @click="goInFullscreen">
+                <v-icon>mdi-play-circle-outline</v-icon>
+            </v-btn>
         </div>
-        <div>
+        <div style="margin-right: 1%;">
             <v-select
                     :items="autosliding.timeLengthsInSeconds"
-                    label="Time length"
+                    label="Time length (s)"
                     @change="changeSlideTimer"
                     v-model="autosliding.currentTimeLengthInSeconds"
                     :disabled="!autosliding.autoslideEnabled"
             >
             </v-select>
         </div>
-        <div>
+        <div style="margin-right: 1%;">
             <v-checkbox
                     v-model="autosliding.autoslideEnabled"
-                    label="Autoslide"
+                    label="Automatic sliding"
                     color="indigo"
                     hide-details
             ></v-checkbox>
         </div>
-        <div>
+        <div style="margin-right: 1%;">
             <v-checkbox
                     v-model="autosliding.reverse"
-                    label="Reverse autosliding"
+                    label="Reverse sliding"
                     color="indigo"
                     hide-details
                     :disabled="!autosliding.autoslideEnabled"
@@ -39,7 +41,7 @@
         <div style="margin-right: 1%;" >
             <v-checkbox
                     v-model="autosliding.playMusic"
-                    label="Play music"
+                    label="Enable music"
                     color="indigo"
                     hide-details
             ></v-checkbox>
