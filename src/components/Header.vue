@@ -5,6 +5,7 @@
             dark
             id="header"
             v-if="!presentationModeActive"
+            :class="{visible: presentationModeActive}"
     >
         <div style="margin-right: 1%;">
             <v-btn depressed color="primary" @click="goInFullscreen">
@@ -99,7 +100,7 @@
             >
             </v-select>
         </div>
-        <div>
+        <div style="padding: 1%;">
             <v-btn
                     @click="toggleMenu"
                     text
@@ -142,6 +143,14 @@
                         @click="changeLayout(3,3)">3x3</td>
                 </tr>
             </table>
+        </div>
+        <div>
+            <v-btn
+                    @click="exitPresentation"
+                    text
+            >
+                <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
         </div>
     </v-app-bar>
 </template>
@@ -212,7 +221,8 @@
                 'setCurrentTimeLengthInSeconds',
                 'setAutoslideEnabled',
                 'setReverse',
-                'setPlayMusic'
+                'setPlayMusic',
+                'clearPresentationdata'
             ]),
             playSound() {
                 this.audio.play();
@@ -258,6 +268,11 @@
             },
             changeSlideTimer(e) {
                 this.setCurrentTimeLengthInSeconds(e);
+            },
+            exitPresentation() {
+                console.log('exitPresentation');
+                this.clearPresentationdata();
+                this.$router.push('/');
             }
         },
         watch: {
@@ -290,6 +305,9 @@
     };
 </script>
 <style scoped>
+    .visible {
+        visibility:hidden;
+    }
     #header {
         z-index: 999;
         padding-top: 1%;

@@ -102,20 +102,11 @@
             reader.readAsDataURL(file);
 
             reader.onload = async () => {
-                //const src = e.target.result;
-
                 const input = document.getElementById('import-presentation');
                 readXlsxFile(input.files[0]).then(async (rows) => {
-                    // `rows` is an array of rows
-                    // each row being an array of cells.
                     await this.loadPresentation(rows[1]);
                     this.$router.push({ path: 'editor', query: { new: false } });
                 });
-
-                /*console.log(src);
-                const buf = Buffer.from(src, 'base64');
-                const sheet = xlsx.read(buf, { type: 'buffer' });
-                console.log(sheet);*/
             };
         },
             createNewPresentation() {

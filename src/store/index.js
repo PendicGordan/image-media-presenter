@@ -147,6 +147,9 @@ export default new Vuex.Store({
 		},
 		setPlayMusic({commit}, data) {
 			commit('setPlayMusic', data);
+		},
+		clearPresentationdata({commit}) {
+			commit('clearPresentationdata');
 		}
     },
 	mutations: {
@@ -392,5 +395,26 @@ export default new Vuex.Store({
 		async setAutosliding(state, autosliding) {
 			state.autosliding = autosliding;
 		},
+		clearPresentationdata(state) {
+			state.presentationId = null;
+			state.presentationName = '';
+			state.slides = [];
+			state.activeSlide = null; // {text: 1, images: {}, maxX: 2, maxY: 2},
+			state.activeImage = null;
+			state.backgroundImageData = {
+				isEnabled: false,
+				backgroundImage: 'none'
+			};
+			state.presentationAudio = null;
+			state.autosliding = {
+				timeLengthsInSeconds: [
+					1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+				],
+					currentTimeLengthInSeconds: 1,
+					autoslideEnabled: false,
+					reverse: false,
+					playMusic: false
+			}
+		}
 	}
 });

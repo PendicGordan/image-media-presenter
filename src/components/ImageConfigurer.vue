@@ -49,7 +49,8 @@
                             min="0"
                             max="50"
                             step="1"
-                            label="Border"
+                            label=""
+                            prepend-icon="mdi-border-style"
                     >
                     </v-slider>
                 </v-col>
@@ -63,6 +64,7 @@
                             max="100"
                             step="1"
                             label="Blur"
+                            prepend-icon="mdi-blur"
                     >
                     </v-slider>
                     <v-slider
@@ -72,6 +74,7 @@
                             max="100"
                             step="1"
                             label="Sepia"
+                            prepend-icon="mdi-format-color-fill"
                     >
                     </v-slider>
                     <v-slider
@@ -81,6 +84,7 @@
                             max="100"
                             step="1"
                             label="Invert"
+                            prepend-icon="mdi-invert-colors"
                     >
                     </v-slider>
                 </v-col>
@@ -92,6 +96,7 @@
                             max="100"
                             step="1"
                             label="Brightness"
+                            prepend-icon="mdi-brightness-6"
                     >
                     </v-slider>
                     <v-slider
@@ -101,6 +106,7 @@
                             max="100"
                             step="1"
                             label="Contrast"
+                            prepend-icon="mdi-contrast-box"
                     >
                     </v-slider>
                     <v-slider
@@ -110,6 +116,7 @@
                             max="100"
                             step="1"
                             label="Saturation"
+                            prepend-icon="mdi-decagram"
                     >
                     </v-slider>
                 </v-col>
@@ -121,6 +128,7 @@
                             max="100"
                             step="1"
                             label="Opacity"
+                            prepend-icon="mdi-opacity"
                     >
                     </v-slider>
                 </v-col>

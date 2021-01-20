@@ -57,7 +57,7 @@
 
 <script>
   import { GridLayout, GridItem } from "vue-grid-layout";
-  import ImageUpload from './ImageUpload';
+  import ImageUpload from '../components/ImageUpload';
   import {mapState, mapActions} from 'vuex';
   import EventBus from "../helpers/eventBus";
 
@@ -178,7 +178,7 @@
         this.toggleActionMenu = payload;
       });
       window.addEventListener("resize", () => {
-        this.handleResize();
+          //this.handleResize();
       });
     }
   }

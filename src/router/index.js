@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Welcome from "../components/Welcome";
-import ImageView from "../components/ImageView";
+import Welcome from "../views/Welcome";
+import ImageView from "../views/ImageView";
 
 Vue.use(VueRouter);
 
