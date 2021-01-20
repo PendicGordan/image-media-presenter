@@ -165,8 +165,9 @@
       ])
     },
     mounted() {
-      if(this.$route.query.new)
+      if(this.$route.query.new === 'true') {
         this.createNewSlide();
+      }
 
       this.composeLayout();
 

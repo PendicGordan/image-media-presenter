@@ -1,5 +1,5 @@
 <template>
-    <div id="ImageConfigurer">
+    <div id="ImageConfigurer" style="padding-left: 1%; padding-right: 1%">
         <div>
             <v-alert
                     v-if="deleteAlertShown"

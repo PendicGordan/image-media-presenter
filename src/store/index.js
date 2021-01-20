@@ -57,7 +57,7 @@ export default new Vuex.Store({
 		async setBackgroundImage({commit}, data) {
 			commit('setBackgroundImage', data);
 		},
-        async deleteActiveImageData({commit}, data) {
+        async deleteActiveImagedata({commit}, data) {
             commit('deleteActiveImageData', data);
         },
 		async assignImageToTheSlide({commit}, data) {
@@ -68,6 +68,13 @@ export default new Vuex.Store({
 		},
 		async createNewSlide({commit}) {
 			commit('createNewSlide');
+		},
+		async deleteSlideFromStore({state, commit}, slideId) {
+			if(state.slides.length === 1) {
+				return commit('clearPresentationData');
+			}
+			commit('deleteSlideFromStore', slideId);
+			commit('setActiveImage', null);
 		},
 		async saveImage({commit}, data) {
 			commit('saveImage', data);
@@ -148,8 +155,8 @@ export default new Vuex.Store({
 		setPlayMusic({commit}, data) {
 			commit('setPlayMusic', data);
 		},
-		clearPresentationdata({commit}) {
-			commit('clearPresentationdata');
+		clearPresentationData({commit}) {
+			commit('clearPresentationData');
 		}
     },
 	mutations: {
@@ -241,6 +248,16 @@ export default new Vuex.Store({
 				}
 			}
 			state.activeSlide = state.slides[state.slides.length - 1];
+		},
+		deleteSlideFromStore(state, slideId) {
+			state.slides = state.slides.filter(slide => slide.text !== slideId);
+			let i = 1;
+			state.slides = state.slides.map(slide => {
+				slide.text = i;
+				i++;
+				return slide;
+			});
+			state.activeSlide = state.slides[slideId - 2] ? state.slides[slideId - 2] : state.slides[slideId - 1];
 		},
 		saveImage(state, data) {
 			for(let i = 0; i < state.slides.length; ++i) {
@@ -395,7 +412,7 @@ export default new Vuex.Store({
 		async setAutosliding(state, autosliding) {
 			state.autosliding = autosliding;
 		},
-		clearPresentationdata(state) {
+		clearPresentationData(state) {
 			state.presentationId = null;
 			state.presentationName = '';
 			state.slides = [];

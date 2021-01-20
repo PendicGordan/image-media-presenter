@@ -78,7 +78,7 @@
                     color="primary"
                     @click="createNewSlide"
             >
-                <v-icon>mdi-shape-square-plus</v-icon>
+                <v-icon>mdi-plus</v-icon>
             </v-btn>
         </div>
         <div style="padding: 1%;">
@@ -88,6 +88,15 @@
                     @click="savePresentation"
             >
                 <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+        </div>
+        <div style="padding: 1%;">
+            <v-btn
+                    depressed
+                    color="primary"
+                    @click="deleteSlide"
+            >
+                <v-icon>mdi-minus</v-icon>
             </v-btn>
         </div>
         <div style="padding: 1%;">
@@ -222,7 +231,8 @@
                 'setAutoslideEnabled',
                 'setReverse',
                 'setPlayMusic',
-                'clearPresentationdata'
+                'clearPresentationData',
+                'deleteSlideFromStore'
             ]),
             playSound() {
                 this.audio.play();
@@ -270,9 +280,13 @@
                 this.setCurrentTimeLengthInSeconds(e);
             },
             exitPresentation() {
-                console.log('exitPresentation');
-                this.clearPresentationdata();
+                this.clearPresentationData();
                 this.$router.push('/');
+            },
+            deleteSlide() {
+                console.log(this.activeSlide.text);
+                this.deleteSlideFromStore(this.activeSlide.text);
+                if(this.slides.length === 0) this.$router.push('/');
             }
         },
         watch: {
