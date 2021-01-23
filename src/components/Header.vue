@@ -176,7 +176,7 @@
                 showLayout: false,
                 toggleActionMenu: false,
                 currentSlideId: 1,
-                audios: ['audio_1', 'audio_2', 'audio_3', 'audio_4', 'audio_5', 'audio_6', 'audio_7', 'audio_8'],
+                audios: ['audio_1', 'audio_2', 'audio_3', 'audio_4', 'audio_5', 'audio_6', 'audio_7', 'audio_8', 'audio_9'],
                 currentAudio: '',
                 audio: null,
                 autoslidingInterval: null
