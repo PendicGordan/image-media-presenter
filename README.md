@@ -1,24 +1,23 @@
 # image-media-presenter
 
-## Project setup
+## To install dependencies needed for the local development:
 ```
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### To compile and hot-reload for development:
 ```
 yarn serve
 ```
 
-### Compiles and minifies for production
+### To compiles and minifies for production:
 ```
 yarn build
 ```
 
-### Lints and fixes files
+### To lint and fix files:
 ```
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+####Author: Gordan Pendic
