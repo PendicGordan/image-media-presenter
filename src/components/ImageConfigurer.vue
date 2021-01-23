@@ -170,19 +170,15 @@
                 v-if="!deleteAlertShown"
         >
             <v-btn value="basic">
-                <span>Basic</span>
                 <v-icon>mdi-move-resize</v-icon>
             </v-btn>
 
             <v-btn value="filter">
-                <span>Filters</span>
-
-                <v-icon>mdi-image-filter-vintage</v-icon>
+                <v-icon>mdi-filter</v-icon>
             </v-btn>
 
             <v-btn value="other">
-                <span>Other</span>
-                <v-icon>mdi-map-marker</v-icon>
+                <v-icon>mdi-image-area</v-icon>
             </v-btn>
             <v-btn value="remove-image" @click="removeAndClearImage">
                 <span>Remove image</span>

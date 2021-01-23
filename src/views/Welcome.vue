@@ -38,9 +38,6 @@
                             New presentation
                             <v-icon>mdi-new-box</v-icon>
                         </v-btn>
-                        <v-btn id="btnAdd">
-                            <label class="btn" style>Add to desktop</label>
-                        </v-btn>
                     </template>
                     <v-card>
                         <v-card-text style="height: 67px;">
@@ -71,6 +68,20 @@
                     </v-card>
                 </v-dialog>
             </div>
+        </div>
+        <div>
+            <v-btn
+                    class="mx-2 install-btn"
+                    fab
+                    dark
+                    large
+                    color="primary"
+                    id="btnAdd"
+            >
+                <v-icon dark>
+                    mdi-desktop-mac
+                </v-icon>
+            </v-btn>
         </div>
     </div>
 </template>
@@ -160,13 +171,19 @@
     }
     .welcome-button {
         margin-bottom: 1%;
-        margin-top: 5%;
+        margin-top: 4%;
     }
     #welcome-image {
         margin-top: -15%;
-       margin-bottom: 10%;
+        margin-bottom: 10%;
     }
     #welcome {
         background-color: rgba(	247, 230, 201, 0.3);
+    }
+    .install-btn {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin: 1%;
     }
 </style>

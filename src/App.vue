@@ -41,7 +41,7 @@ export default {
       'autosliding'
     ])
   },
-  mounted() {
+  async mounted() {
     document.addEventListener('keydown', (event) => {
       if(this.presentationModeActive) {
         if(this.autosliding.autoslideEnabled) {
@@ -113,6 +113,12 @@ export default {
     EventBus.$on('BACKGROUND_IMAGE_SET', (data) => {
       this.imageSrc = data.isEnabled ? data.src : '';
     });
+
+    if("getInstalledRelatedApps" in navigator) {
+      // then... you can call navigator.getInstalledRelatedApps()
+      const result = await navigator.getInstalledRelatedApps();
+      console.log(result);
+    }
   },
   methods: {
     ...mapActions([
