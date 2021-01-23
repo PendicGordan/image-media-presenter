@@ -82,6 +82,13 @@
                     mdi-desktop-mac
                 </v-icon>
             </v-btn>
+            <v-alert
+                    dense
+                    type="info"
+                    v-if="pwaAlreadyInstalled"
+            >
+                Application is already installed or your browser doesn't support progressive web applications.
+            </v-alert>
         </div>
     </div>
 </template>
@@ -95,7 +102,8 @@
         data() {
             return {
                 dialog: false,
-                presentationName: ''
+                presentationName: '',
+                pwaAlreadyInstalled: false
             };
         },
         methods: {
@@ -141,7 +149,12 @@
 
             let btnAdd = document.getElementById('btnAdd');
             btnAdd.addEventListener('click', () => {
-                btnAdd.style.display = 'none';
+                if(!deferredPrompt) {
+                    this.pwaAlreadyInstalled = true;
+                    return setTimeout(() => {
+                        this.pwaAlreadyInstalled = false;
+                    }, 4000);
+                }
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice
                     .then((choiceResult) => {
