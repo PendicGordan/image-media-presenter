@@ -222,9 +222,14 @@ export default new Vuex.Store({
 		},
 		createNewSlide(state) {
 			const nextSlideId = state.slides.length + 1;
-			state.slides.push({ text: nextSlideId, images: {}, maxX: 2, maxY: 2});
-			for(let i = 0; i < 2; ++i) {
-				for(let j = 0; j < 2; ++j) {
+			let maxX = 2, maxY = 2;
+			if(state.slides[state.slides.length - 1]) {
+				maxX = state.slides[state.slides.length - 1].maxX;
+				maxY = state.slides[state.slides.length - 1].maxY;
+			}
+			state.slides.push({ text: nextSlideId, images: {}, maxX, maxY});
+			for(let i = 0; i < maxX; ++i) {
+				for(let j = 0; j < maxY; ++j) {
 					const imageUuid = uuid.v4();
 					state.slides[state.slides.length - 1].images[imageUuid] = {
 						uuid: imageUuid,
