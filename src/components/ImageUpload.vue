@@ -2,12 +2,12 @@
     <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;;">
         <div id="draggable-container" ref="draggableContainer" class="draggable-container">
             <div :id="'draggable-header' + imageData.uuid" @mousedown="dragMouseDown">
-                <div v-if="!imageData.src && !presentationModeActive" class="">
+                <div v-if="!imageData.src && !presentationModeActive" class="" :id="'grid-ceil-' + uuid">
                     <div class="file-upload upload-image">
-                        <label :for="'file-input' + imageData.uuid">
+                        <label :for="'file-input' + uuid">
                             <img src="../../public/img/uploader.jpg" alt="uploader" class="image-uploader" />
                         </label>
-                        <input type="file" :id="'file-input' + imageData.uuid" accept="image/*" @change="onChange">
+                        <input type="file" :id="'file-input' + uuid" accept="image/*" @change="onChange">
                     </div>
                 </div>
                 <div v-else :style="`transform: rotate(${imageData.rotation}deg);`">
@@ -178,19 +178,16 @@
                     }
                 }
             });
-
             EventBus.$on('CHANGE_LAYOUT', async () => {
                 this.removeBorder();
             });
             EventBus.$on('IMAGE_EXCHANGE', async () => {
                 this.removeBorder();
             });
-
             EventBus.$on('HANDLE_UPLOAD', async () => {
                 this.removeBorder();
                 await this.setActiveImage(null);
             });
-
             EventBus.$on('DESELECT_IMAGES', async () => {
                 this.removeBorder();
                 await this.setActiveImage(null);
@@ -218,11 +215,48 @@
             this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
             this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
             this.assignImageToTheSlide(this.imageData);
+
+            let imageInput = document.getElementById('grid-ceil-' + this.imageData.uuid);
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                imageInput.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false)
+            });
+            ['dragenter', 'dragover'].forEach(eventName => {
+                imageInput.addEventListener(eventName, () => imageInput.classList.add('highlight'), false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                imageInput.addEventListener(eventName, () => imageInput.classList.remove('highlight'), false);
+            });
+
+            imageInput.addEventListener('drop', e => {
+                if(this.imageData.src) return;
+                let dt = e.dataTransfer;
+                let file = dt.files[0];
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = async e => {
+                    const src = e.target.result;
+                    this.imageData.src = src;
+                    // this.imageData.slideId = this.activeSlide.text;
+                    //let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
+                    this.$emit('loaded', { src, file });
+                    EventBus.$emit('HANDLE_UPLOAD');
+                    this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
+                    this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
+                    this.saveImage(this.imageData);
+                    let gridCell = document.getElementById('grid-ceil-' + this.imageData.uuid);
+                    if(gridCell && gridCell.classList.remove('highlight')) {
+                        gridCell.classList.remove('highlight');
+                    }
+                };
+            }, false);
         },
         methods: {
             onChange(e) {
                 if (! e.target.files.length) return;
-
                 let file = e.target.files[0];
                 let reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -436,5 +470,8 @@
     }
     .draggable-container {
         //border: 2px solid #10ff35;
+    }
+    .highlight {
+        opacity: 0.5;
     }
 </style>
