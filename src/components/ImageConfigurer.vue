@@ -176,9 +176,11 @@
             <v-btn value="filter">
                 <v-icon>mdi-filter</v-icon>
             </v-btn>
-
             <v-btn value="other">
                 <v-icon>mdi-image-area</v-icon>
+            </v-btn>
+            <v-btn value="exchange" @click="exchangeWithGrid">
+                <v-icon>mdi-format-horizontal-align-center</v-icon>
             </v-btn>
             <v-btn value="remove-image" @click="removeAndClearImage">
                 <span>Remove image</span>
@@ -261,7 +263,8 @@
                 'setBackgroundImage',
                 'deleteActiveImageData',
                 'saveImage',
-                'exchangeImages'
+                'exchangeImages',
+                'exchangeImageWithNeighbour'
             ]),
 
             removeAndClearImage() {
@@ -335,6 +338,11 @@
             exchangeWithSlide(e) {
                 this.exchangeImages({ imageCoordinateToExchangeWithX: e.split("x")[0], imageCoordinateToExchangeWithY: e.split("x")[1] });
                 EventBus.$emit("IMAGE_EXCHANGE");
+            },
+            exchangeWithGrid() {
+                this.exchangeImageWithNeighbour(this.activeImage.uuid);
+                this.setActiveImage(null);
+                EventBus.$emit(this.imageManipulateAction.CONFIGURER_EXITED);
             }
         }
     };
