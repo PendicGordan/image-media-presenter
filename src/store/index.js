@@ -158,8 +158,11 @@ export default new Vuex.Store({
 		clearPresentationData({commit}) {
 			commit('clearPresentationData');
 		},
-		exchangeImageWithNeighbour({commit}, imageId) {
-			commit('exchangeImageWithNeighbour', imageId);
+		exchangeImageWithNeighbourRow({commit}, imageId) {
+			commit('exchangeImageWithNeighbourRow', imageId);
+		},
+		exchangeImageWithNeighbourColumn({commit}, imageId) {
+			commit('exchangeImageWithNeighbourColumn', imageId);
 		}
     },
 	mutations: {
@@ -441,7 +444,7 @@ export default new Vuex.Store({
 					playMusic: false
 			}
 		},
-		exchangeImageWithNeighbour(state, imageId) {
+		exchangeImageWithNeighbourRow(state, imageId) {
 			let selectedImage = state.activeSlide.images[imageId];
 			for(const uuid in state.activeSlide.images) {
 				if(selectedImage.x + 1 === state.activeSlide.images[uuid].x && selectedImage.y === state.activeSlide.images[uuid].y) {
@@ -470,6 +473,58 @@ export default new Vuex.Store({
 
 			for(const uuid in state.activeSlide.images) {
 				if(selectedImage.x - 1 === state.activeSlide.images[uuid].x && selectedImage.y === state.activeSlide.images[uuid].y) {
+
+					state.activeSlide.images[uuid].blurringLevel = [state.activeSlide.images[imageId].blurringLevel, state.activeSlide.images[imageId].blurringLevel = state.activeSlide.images[uuid].blurringLevel][0];
+					state.activeSlide.images[uuid].brightnessLevel = [state.activeSlide.images[imageId].brightnessLevel, state.activeSlide.images[imageId].brightnessLevel = state.activeSlide.images[uuid].brightnessLevel][0];
+					state.activeSlide.images[uuid].contrastLevel = [state.activeSlide.images[imageId].contrastLevel, state.activeSlide.images[imageId].contrastLevel = state.activeSlide.images[uuid].contrastLevel][0];
+					state.activeSlide.images[uuid].invertLevel = [state.activeSlide.images[imageId].invertLevel, state.activeSlide.images[imageId].invertLevel = state.activeSlide.images[uuid].invertLevel][0];
+					state.activeSlide.images[uuid].isBackgroundImage = [state.activeSlide.images[imageId].isBackgroundImage, state.activeSlide.images[imageId].isBackgroundImage = state.activeSlide.images[uuid].isBackgroundImage][0];
+					state.activeSlide.images[uuid].opacityLevel = [state.activeSlide.images[imageId].opacityLevel, state.activeSlide.images[imageId].opacityLevel = state.activeSlide.images[uuid].opacityLevel][0];
+					state.activeSlide.images[uuid].rotation = [state.activeSlide.images[imageId].rotation, state.activeSlide.images[imageId].rotation = state.activeSlide.images[uuid].rotation][0];
+					state.activeSlide.images[uuid].roundFactor = [state.activeSlide.images[imageId].roundFactor, state.activeSlide.images[imageId].roundFactor = state.activeSlide.images[uuid].roundFactor][0];
+					state.activeSlide.images[uuid].saturationLevel = [state.activeSlide.images[imageId].saturationLevel, state.activeSlide.images[imageId].saturationLevel = state.activeSlide.images[uuid].saturationLevel][0];
+					state.activeSlide.images[uuid].sepiaLevel = [state.activeSlide.images[imageId].sepiaLevel, state.activeSlide.images[imageId].sepiaLevel = state.activeSlide.images[uuid].sepiaLevel][0];
+					state.activeSlide.images[uuid].width = [state.activeSlide.images[imageId].width, state.activeSlide.images[imageId].width = state.activeSlide.images[uuid].width][0];
+					state.activeSlide.images[uuid].src = [state.activeSlide.images[imageId].src, state.activeSlide.images[imageId].src = state.activeSlide.images[uuid].src][0];
+
+					for(let j = 0; j < state.slides.length; ++j) {
+						if(state.activeSlide.text === state.slides[j].text) {
+							state.slides[j] = state.activeSlide;
+							return;
+						}
+					}
+				}
+			}
+		},
+		exchangeImageWithNeighbourColumn(state, imageId) {
+			let selectedImage = state.activeSlide.images[imageId];
+			for(const uuid in state.activeSlide.images) {
+				if(selectedImage.y + 1 === state.activeSlide.images[uuid].y && selectedImage.x === state.activeSlide.images[uuid].x) {
+
+					state.activeSlide.images[uuid].blurringLevel = [state.activeSlide.images[imageId].blurringLevel, state.activeSlide.images[imageId].blurringLevel = state.activeSlide.images[uuid].blurringLevel][0];
+					state.activeSlide.images[uuid].brightnessLevel = [state.activeSlide.images[imageId].brightnessLevel, state.activeSlide.images[imageId].brightnessLevel = state.activeSlide.images[uuid].brightnessLevel][0];
+					state.activeSlide.images[uuid].contrastLevel = [state.activeSlide.images[imageId].contrastLevel, state.activeSlide.images[imageId].contrastLevel = state.activeSlide.images[uuid].contrastLevel][0];
+					state.activeSlide.images[uuid].invertLevel = [state.activeSlide.images[imageId].invertLevel, state.activeSlide.images[imageId].invertLevel = state.activeSlide.images[uuid].invertLevel][0];
+					state.activeSlide.images[uuid].isBackgroundImage = [state.activeSlide.images[imageId].isBackgroundImage, state.activeSlide.images[imageId].isBackgroundImage = state.activeSlide.images[uuid].isBackgroundImage][0];
+					state.activeSlide.images[uuid].opacityLevel = [state.activeSlide.images[imageId].opacityLevel, state.activeSlide.images[imageId].opacityLevel = state.activeSlide.images[uuid].opacityLevel][0];
+					state.activeSlide.images[uuid].rotation = [state.activeSlide.images[imageId].rotation, state.activeSlide.images[imageId].rotation = state.activeSlide.images[uuid].rotation][0];
+					state.activeSlide.images[uuid].roundFactor = [state.activeSlide.images[imageId].roundFactor, state.activeSlide.images[imageId].roundFactor = state.activeSlide.images[uuid].roundFactor][0];
+					state.activeSlide.images[uuid].saturationLevel = [state.activeSlide.images[imageId].saturationLevel, state.activeSlide.images[imageId].saturationLevel = state.activeSlide.images[uuid].saturationLevel][0];
+					state.activeSlide.images[uuid].sepiaLevel = [state.activeSlide.images[imageId].sepiaLevel, state.activeSlide.images[imageId].sepiaLevel = state.activeSlide.images[uuid].sepiaLevel][0];
+					state.activeSlide.images[uuid].width = [state.activeSlide.images[imageId].width, state.activeSlide.images[imageId].width = state.activeSlide.images[uuid].width][0];
+					state.activeSlide.images[uuid].src = [state.activeSlide.images[imageId].src, state.activeSlide.images[imageId].src = state.activeSlide.images[uuid].src][0];
+
+					for(let j = 0; j < state.slides.length; ++j) {
+						if(state.activeSlide.text === state.slides[j].text) {
+							state.slides[j] = state.activeSlide;
+							return;
+						}
+					}
+				}
+			}
+
+			for(const uuid in state.activeSlide.images) {
+				if(selectedImage.y - 1 === state.activeSlide.images[uuid].y && selectedImage.x === state.activeSlide.images[uuid].x) {
 
 					state.activeSlide.images[uuid].blurringLevel = [state.activeSlide.images[imageId].blurringLevel, state.activeSlide.images[imageId].blurringLevel = state.activeSlide.images[uuid].blurringLevel][0];
 					state.activeSlide.images[uuid].brightnessLevel = [state.activeSlide.images[imageId].brightnessLevel, state.activeSlide.images[imageId].brightnessLevel = state.activeSlide.images[uuid].brightnessLevel][0];

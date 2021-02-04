@@ -179,8 +179,11 @@
             <v-btn value="other">
                 <v-icon>mdi-image-area</v-icon>
             </v-btn>
-            <v-btn value="exchange" @click="exchangeWithGrid">
+            <v-btn value="exchange" @click="exchangePerRow">
                 <v-icon>mdi-format-horizontal-align-center</v-icon>
+            </v-btn>
+            <v-btn value="exchange" @click="exchangePerColumn">
+                <v-icon>mdi-format-vertical-align-center</v-icon>
             </v-btn>
             <v-btn value="remove-image" @click="removeAndClearImage">
                 <span>Remove image</span>
@@ -264,7 +267,8 @@
                 'deleteActiveImageData',
                 'saveImage',
                 'exchangeImages',
-                'exchangeImageWithNeighbour'
+                'exchangeImageWithNeighbourRow',
+                'exchangeImageWithNeighbourColumn'
             ]),
 
             removeAndClearImage() {
@@ -339,8 +343,13 @@
                 this.exchangeImages({ imageCoordinateToExchangeWithX: e.split("x")[0], imageCoordinateToExchangeWithY: e.split("x")[1] });
                 EventBus.$emit("IMAGE_EXCHANGE");
             },
-            exchangeWithGrid() {
-                this.exchangeImageWithNeighbour(this.activeImage.uuid);
+            exchangePerRow() {
+                this.exchangeImageWithNeighbourRow(this.activeImage.uuid);
+                this.setActiveImage(null);
+                EventBus.$emit(this.imageManipulateAction.CONFIGURER_EXITED);
+            },
+            exchangePerColumn() {
+                this.exchangeImageWithNeighbourColumn(this.activeImage.uuid);
                 this.setActiveImage(null);
                 EventBus.$emit(this.imageManipulateAction.CONFIGURER_EXITED);
             }
