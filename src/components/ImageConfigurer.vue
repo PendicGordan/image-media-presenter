@@ -20,7 +20,7 @@
                             v-model="activeImage.width"
                             class="align-self-stretch slider-width"
                             min="0"
-                            max="500"
+                            max="2000"
                             step="1"
                             append-icon="mdi-magnify-plus-outline"
                             prepend-icon="mdi-magnify-minus-outline"

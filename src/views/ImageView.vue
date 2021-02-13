@@ -71,7 +71,7 @@
     data() {
       return {
         numberOfColumns: 2,
-        numberOfRows: 2,
+        numberOfRows: 1,
         draggable: false,
         resizable: false,
         responsive: false,
