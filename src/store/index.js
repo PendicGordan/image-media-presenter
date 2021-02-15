@@ -228,7 +228,7 @@ export default new Vuex.Store({
 		},
 		createNewSlide(state) {
 			const nextSlideId = state.slides.length + 1;
-			let maxX = 2, maxY = 2;
+			let maxX = 2, maxY = 1;
 			if(state.slides[state.slides.length - 1]) {
 				maxX = state.slides[state.slides.length - 1].maxX;
 				maxY = state.slides[state.slides.length - 1].maxY;
@@ -383,13 +383,13 @@ export default new Vuex.Store({
 				}];
 
 			const settings = {
-				sheetName: 'Presentation sheet', // The name of the sheet
-				fileName: `${state.presentationName}-${presentationUuid}`, // The name of the spreadsheet
-				extraLength: 3, // A bigger number means that columns should be wider
-				writeOptions: {} // Style options from https://github.com/SheetJS/sheetjs#writing-options
+				sheetName: 'Presentation sheet',
+				fileName: `${state.presentationName}-${presentationUuid}`,
+				extraLength: 3,
+				writeOptions: {}
 			};
 
-			const download = true; // If true will download the xlsx file, otherwise will return a buffer
+			const download = true;
 
 			xlsx(columns, content, settings, download) // Will download the excel file
 		},
