@@ -1,7 +1,7 @@
 <template>
   <div style="width: 99.15%; margin-left: 0.40%;" id="image-view">
     <v-row>
-      <div style="width:100%;margin-top: 0.25%;height:100%;" v-if="activeSlide">
+      <div style="width:100%;margin-bottom: 0.25%;height:100%;" v-if="activeSlide">
         <grid-layout :layout.sync="layout"
                      :col-num="activeSlide.maxX"
                      :row-height="columnHeight"

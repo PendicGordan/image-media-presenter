@@ -42,6 +42,7 @@ export default {
     ])
   },
   async mounted() {
+    window.addEventListener('scroll', () => window.scrollTo(0, 0));
     document.addEventListener('keydown', (event) => {
       if(this.presentationModeActive) {
         if(this.autosliding.autoslideEnabled) {

@@ -1,5 +1,5 @@
 <template>
-    <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;;">
+    <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
         <div id="draggable-container" ref="draggableContainer" class="draggable-container">
             <div :id="'draggable-header' + imageData.uuid" @mousedown="dragMouseDown">
                 <div v-if="!imageData.src && !presentationModeActive" class="" :id="'grid-ceil-' + uuid">
@@ -46,7 +46,7 @@
               imageData: {
                   uuid: null,
                   src: null,
-                  width: "250",
+                  width: "500",
                   rotation: 0,
                   positionX: null,
                   positionY: null,
@@ -198,7 +198,7 @@
             this.imageData.x = this.x;
             this.imageData.y = this.y;
             this.imageData.src = this.src;
-            this.imageData.width = this.width ? this.width : "250";
+            this.imageData.width = this.width ? this.width : "500";
             this.imageData.rotation = this.rotation;
             this.imageData.positionX = this.positionX;
             this.imageData.positionY = this.positionY;
@@ -370,7 +370,7 @@
                 this.imageData = {
                     uuid: this.imageData.uuid,
                     src: null,
-                    width: "250",
+                    width: "500",
                     x: this.imageData.x,
                     y: this.imageData.y,
                     slideId: this.imageData.slideId,

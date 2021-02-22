@@ -245,8 +245,6 @@
                 this.audio.currentTime = 0;
             },
             async goInFullscreen() {
-                // TODO: update autoslide and time length of the slide in the store and play the presentation with the time slot if the autoslide is enabled
-                // TODO: make reverse mode in auto sliding mode of the slides
                 this.togglePresentationMode();
                 if(this.autosliding.playMusic && this.presentationAudio) {
                     this.changeAudio(this.presentationAudio);

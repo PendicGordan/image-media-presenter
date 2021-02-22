@@ -16,7 +16,6 @@ export default new Vuex.Store({
 			isEnabled: false,
 			backgroundImage: 'none'
 		},
-        savedImages: {},
 		presentationAudio: null,
 		presentationModeActive: false,
 		autosliding: {
@@ -173,7 +172,7 @@ export default new Vuex.Store({
             state.activeSlide.images[data.uuid] = {
 				uuid: data.uuid,
 				src: null,
-				width: "250",
+				width: "500",
 				rotation: 0,
 				positionX: null,
 				positionY: null,
@@ -240,7 +239,7 @@ export default new Vuex.Store({
 					state.slides[state.slides.length - 1].images[imageUuid] = {
 						uuid: imageUuid,
 						src: null,
-						width: "250",
+						width: "500",
 						x: i,
 						y: j,
 						rotation: 0,
@@ -286,7 +285,7 @@ export default new Vuex.Store({
 					state.activeSlide.images[imageUuid] = {
 						uuid: imageUuid,
 						src: null,
-						width: "250",
+						width: "500",
 						x: i,
 						y: j,
 						rotation: 0,
@@ -320,7 +319,7 @@ export default new Vuex.Store({
 					state.activeSlide.images[imageUuid] = {
 						uuid: imageUuid,
 						src: null,
-						width: "250",
+						width: "500",
 						x: j,
 						y: i,
 						rotation: 0,
@@ -391,7 +390,7 @@ export default new Vuex.Store({
 
 			const download = true;
 
-			xlsx(columns, content, settings, download) // Will download the excel file
+			xlsx(columns, content, settings, download);
 		},
 		pickRandomlyPresentationId(state) {
 			state.presentationId = uuid.v4();

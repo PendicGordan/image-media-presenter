@@ -252,8 +252,6 @@
 
             this.backgroundSize = this.activeImage.isBackgroundImage.backgroundSize;
             for(const uuid in this.activeSlide.images) {
-                // console.log('activeSlideImage', this.activeSlide.images[uuid]);
-                // console.log('activeImage', this.activeImage);
                 const image = this.activeSlide.images[uuid];
                 if(image.src && (this.activeImage.x + 1) + 'x' + (this.activeImage.y + 1) !== (image.x + 1) + 'x' + (image.y + 1)) {
                     this.gridItems.push((image.x + 1) + 'x' + (image.y + 1));
