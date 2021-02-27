@@ -32,7 +32,7 @@
                         </v-col>
                         <v-col cols="12" md="3" style="margin-top: -20px; padding-left: 10px">
                             <v-text-field
-                                    placeholder="Width"
+                                    placeholder="Width in %"
                                     v-model="computedWidth"
                             ></v-text-field>
                         </v-col>
