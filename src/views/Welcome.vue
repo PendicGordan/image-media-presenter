@@ -13,6 +13,7 @@
                     class="welcome-button"
                     large
                     style="width: 50%;"
+                    :loading="importLoading"
             >
                 <label for="import-presentation" class="btn" style>Import presentation</label>
                 <v-icon>mdi-import</v-icon>
@@ -103,7 +104,8 @@
             return {
                 dialog: false,
                 presentationName: '',
-                pwaAlreadyInstalled: false
+                pwaAlreadyInstalled: false,
+                importLoading: false
             };
         },
         methods: {
@@ -124,9 +126,11 @@
             reader.readAsDataURL(file);
 
             reader.onload = async () => {
+                this.importLoading = true;
                 const input = document.getElementById('import-presentation');
                 readXlsxFile(input.files[0]).then(async (rows) => {
                     await this.loadPresentation(rows[1]);
+                    this.importLoading = false;
                     this.$router.push({ path: 'editor', query: { new: false } });
                 });
             };
