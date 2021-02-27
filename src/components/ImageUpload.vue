@@ -262,12 +262,11 @@
                 reader.onload = async e => {
                     const src = e.target.result;
                     this.imageData.src = src;
-                    // this.imageData.slideId = this.activeSlide.text;
-                    //let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
                     this.$emit('loaded', { src, file });
                     EventBus.$emit('HANDLE_UPLOAD');
                     this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
                     this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
+                    this.imageData.width = document.getElementById('image-upload' + this.imageData.uuid).offsetWidth;
                     this.saveImage(this.imageData);
                 };
             },
