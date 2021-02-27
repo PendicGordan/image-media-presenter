@@ -26,7 +26,8 @@ export default new Vuex.Store({
 			autoslideEnabled: false,
 			reverse: false,
 			playMusic: false
-		}
+		},
+		globalMaxImageWidth: 800
 	},
 	getters: {
 		activeSlide: state => state.activeSlide,
@@ -35,7 +36,8 @@ export default new Vuex.Store({
 		slides: state => state.slides,
 		presentationId: state => state.presentationId,
 		presentationModeActive: state => state.presentationModeActive,
-		autosliding: state => state.autosliding
+		autosliding: state => state.autosliding,
+		globalMaxImageWidth: state => state.globalMaxImageWidth
 	},
 	actions: {
 		async saveSlide({state}, slide) {
@@ -162,9 +164,15 @@ export default new Vuex.Store({
 		},
 		exchangeImageWithNeighbourColumn({commit}, imageId) {
 			commit('exchangeImageWithNeighbourColumn', imageId);
-		}
+		},
+		setGlobalMaxImageWidth({commit}, data) {
+			commit('setGlobalMaxImageWidth', data);
+		},
     },
 	mutations: {
+		setGlobalMaxImageWidth(state, data) {
+			state.globalMaxImageWidth = data;
+		},
 		setActiveImage(state, data) {
 			state.activeImage = data;
 		},

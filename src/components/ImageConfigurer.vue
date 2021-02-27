@@ -22,7 +22,7 @@
                                     v-model="activeImage.width"
                                     class="align-self-stretch slider-width"
                                     min="0"
-                                    max="2000"
+                                    :max="maxImageWidth"
                                     step="1"
                                     append-icon="mdi-magnify-plus-outline"
                                     prepend-icon="mdi-magnify-minus-outline"
@@ -238,7 +238,8 @@
             },
             backgroundSizes: ['cover', 'contain', 'initial'],
             backgroundSize: 'cover',
-            gridItems: []
+            gridItems: [],
+            maxImageWidth: 800
         }),
         props: {
         },
@@ -246,10 +247,11 @@
             ...mapState([
                 'activeImage',
                 'backgroundImageData',
-                'activeSlide'
+                'activeSlide',
+                'globalMaxImageWidth'
             ]),
             computedWidth() {
-                return Math.round(this.activeImage.width / 2000 * 100 * 100) / 100;
+                return Math.round(this.activeImage.width / this.maxImageWidth * 100 * 100) / 100;
             }
         },
         watch: {
@@ -280,6 +282,7 @@
                     this.gridItems.push((image.x + 1) + 'x' + (image.y + 1));
                 }
             }
+            this.maxImageWidth = this.globalMaxImageWidth;
         },
         methods: {
             ...mapActions([

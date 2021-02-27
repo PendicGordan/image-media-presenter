@@ -252,6 +252,12 @@
                     }
                 };
             }, false);
+            setTimeout(()=> {
+                console.log(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);
+                this.setGlobalMaxImageWidth(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);
+            },2000);
+            /*console.log(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);
+            this.setGlobalMaxImageWidth(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);*/
         },
         methods: {
             onChange(e) {
@@ -361,7 +367,8 @@
             ...mapActions({
                 setActiveImage: 'setActiveImage',
                 assignImageToTheSlide: 'assignImageToTheSlide',
-                saveImage: 'saveImage'
+                saveImage: 'saveImage',
+                setGlobalMaxImageWidth: 'setGlobalMaxImageWidth'
             }),
             activateFilterAnimation() {
                 document.getElementById(this.imageData.uuid).classList.toggle('animated');
