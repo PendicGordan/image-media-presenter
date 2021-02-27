@@ -16,32 +16,52 @@
         <div id="editor" v-if="!deleteAlertShown">
             <v-row cols="1" v-if="value === 'basic'" class="section">
                 <v-col md>
-                    <v-slider
-                            v-model="activeImage.width"
-                            class="align-self-stretch slider-width"
-                            min="0"
-                            max="2000"
-                            step="1"
-                            append-icon="mdi-magnify-plus-outline"
-                            prepend-icon="mdi-magnify-minus-outline"
-                            @click:append="zoomIn"
-                            @click:prepend="zoomOut"
-                    ></v-slider>
+                    <v-row no-gutters>
+                        <v-col cols="12" md="9">
+                            <v-slider
+                                    v-model="activeImage.width"
+                                    class="align-self-stretch slider-width"
+                                    min="0"
+                                    max="2000"
+                                    step="1"
+                                    append-icon="mdi-magnify-plus-outline"
+                                    prepend-icon="mdi-magnify-minus-outline"
+                                    @click:append="zoomIn"
+                                    @click:prepend="zoomOut"
+                            ></v-slider>
+                        </v-col>
+                        <v-col cols="12" md="3" style="margin-top: -20px; padding-left: 10px">
+                            <v-text-field
+                                    placeholder="Width"
+                                    v-model="computedWidth"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
                     <div>
-                        <v-slider
-                                v-model="activeImage.rotation"
-                                class="align-self-stretch slider-width"
-                                min="0"
-                                max="360"
-                                step="1"
-                                :thumb-size="24"
-                                thumb-label="always"
-                                append-icon="mdi-rotate-left"
-                                prepend-icon="mdi-rotate-right"
-                                @click:append="rotateRight"
-                                @click:prepend="rotateLeft"
-                        >
-                        </v-slider >
+                        <v-row no-gutters>
+                        <v-col cols="12" md="9">
+                            <v-slider
+                                    v-model="activeImage.rotation"
+                                    class="align-self-stretch slider-width"
+                                    min="0"
+                                    max="360"
+                                    step="1"
+                                    :thumb-size="24"
+                                    thumb-label="always"
+                                    append-icon="mdi-rotate-left"
+                                    prepend-icon="mdi-rotate-right"
+                                    @click:append="rotateRight"
+                                    @click:prepend="rotateLeft"
+                            >
+                            </v-slider >
+                        </v-col>
+                        <v-col cols="12" md="3" style="margin-top: -20px; padding-left: 10px">
+                            <v-text-field
+                                    placeholder="Degrees"
+                                    v-model="activeImage.rotation"
+                            ></v-text-field>
+                        </v-col>
+                        </v-row>
                     </div>
                     <v-slider
                             v-model="activeImage.roundFactor"
@@ -227,7 +247,10 @@
                 'activeImage',
                 'backgroundImageData',
                 'activeSlide'
-            ])
+            ]),
+            computedWidth() {
+                return Math.round(this.activeImage.width / 2000 * 100 * 100) / 100;
+            }
         },
         watch: {
             'activeImage.isBackgroundImage'() {
