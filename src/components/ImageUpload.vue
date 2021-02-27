@@ -242,8 +242,9 @@
                     this.imageData.src = src;
                     this.$emit('loaded', { src, file });
                     EventBus.$emit('HANDLE_UPLOAD');
-                    this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
-                    this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
+                    this.imageData.positionX = this.$refs.draggableContainer.style.left;
+                    this.imageData.positionY = this.$refs.draggableContainer.style.top;
+                    this.imageData.width = document.getElementById('image-upload' + this.imageData.uuid).offsetWidth;
                     this.saveImage(this.imageData);
                     let gridCell = document.getElementById('grid-ceil-' + this.imageData.uuid);
                     if(gridCell && gridCell.classList.remove('highlight')) {
@@ -264,8 +265,8 @@
                     this.imageData.src = src;
                     this.$emit('loaded', { src, file });
                     EventBus.$emit('HANDLE_UPLOAD');
-                    this.imageData.positionX = this.$refs.draggableContainer.offsetLeft;
-                    this.imageData.positionY = this.$refs.draggableContainer.offsetTop;
+                    this.imageData.positionX = this.$refs.draggableContainer.style.left;
+                    this.imageData.positionY = this.$refs.draggableContainer.style.top;
                     this.imageData.width = document.getElementById('image-upload' + this.imageData.uuid).offsetWidth;
                     this.saveImage(this.imageData);
                 };
@@ -309,27 +310,27 @@
                 let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
                 let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
 
-                if(imageHeaderRight < draggableHeaderRight) {
+                if(imageHeaderRight + 200 < draggableHeaderRight) {
                     this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                     this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
-                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
+                    this.$refs.draggableContainer.style.left = this.positions.movementX + 200  + 'px';
                 }
 
-                if(imageHeaderBottom < draggableHeaderBottom) {
+                if(imageHeaderBottom + 200 < draggableHeaderBottom) {
                     this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                     this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
-                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                    this.$refs.draggableContainer.style.top = this.positions.movementY + 200 + 'px';
                 }
 
-                if(imageHeaderLeft > draggableHeaderLeft) {
+                if(imageHeaderLeft - 200 > draggableHeaderLeft) {
                     this.positions.movementX = 0;
-                    this.imageData.positionX = 0;
-                    this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
+                    this.imageData.positionX = this.positions.movementX - 200;
+                    this.$refs.draggableContainer.style.left = this.positions.movementX - 200 + 'px';
                 }
-                if(imageHeaderTop > draggableHeaderTop) {
+                if(imageHeaderTop - 200 > draggableHeaderTop) {
                     this.positions.movementY = 0;
-                    this.imageData.positionY = 0;
-                    this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
+                    this.imageData.positionY = this.positions.movementY - 200;
+                    this.$refs.draggableContainer.style.top = this.positions.movementY - 200 + 'px';
                 }
 
                 this.saveImage(this.imageData);
