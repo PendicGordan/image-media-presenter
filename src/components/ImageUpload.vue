@@ -119,7 +119,6 @@
                 if(payload.uuid !== this.imageData.uuid && payload.isEnabled) {
                     this.imageData.isBackgroundImage = { isEnabled: null, backgroundSize: 'cover' };
                 } else if (payload.uuid === this.imageData.uuid) {
-
                     this.imageData.isBackgroundImage = { isEnabled: payload.isEnabled, backgroundSize: payload.backgroundSize };
                     this.setActiveImage(this.imageData);
                 }
@@ -140,7 +139,6 @@
             });
             EventBus.$on('HANDLE_RESIZE', () => {
                 if(!this.imageData.src) return;
-
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 if(wrapperElement.getBoundingClientRect()) {
                     let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);

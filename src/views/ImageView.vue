@@ -86,14 +86,20 @@
         ],
         sizeOfTheScreen: null,
         width: null,
-        widthCalculated: false
+        widthCalculated: false,
+        ghost: 0
       }
     },
     methods: {
       handleResize() {
         if(this.activeSlide) {
           this.columnHeight = window.innerHeight / this.activeSlide.maxY - 35;
+          this.widthCalculated = false;
+          this.ghost++;
+          console.log('sss');
           EventBus.$emit("HANDLE_RESIZE", {amountOfRows: this.activeSlide.maxY, amountOfColumns: this.activeSlide.maxX});
+          setTimeout(() => {this.widthCalculated = true; this.ghost++;},100);
+
         }
       },
       ...mapActions({
@@ -169,7 +175,7 @@
               'activeSlide'
       ]),
       parentContainer() {
-        return document.getElementById('grid-layout') ? document.getElementById('grid-layout').offsetWidth + 'px' : '0';
+        return document.getElementById('grid-layout') ? document.getElementById('grid-layout').offsetWidth + this.ghost - this.ghost + 'px' : '0';
       }
     },
     mounted() {
@@ -183,16 +189,14 @@
       this.composeLayout();
 
       EventBus.$on('CHANGE_LAYOUT', async payload => {
-        this.widthCalculated = false;
         this.restructureActiveSlide({ columns: payload.columns, rows: payload.rows });
         this.composeLayout();
-        this.widthCalculated = true;
       });
       EventBus.$on('TOGGLE_ACTION_MENU', payload => {
         this.toggleActionMenu = payload;
       });
       window.addEventListener("resize", () => {
-          //this.handleResize();
+          this.handleResize();
       });
     }
   }
