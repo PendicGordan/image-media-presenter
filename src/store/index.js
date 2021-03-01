@@ -218,7 +218,6 @@ export default new Vuex.Store({
 		},
 		changeActiveSlide(state, slideId) {
 			if(slideId < 1 || slideId > state.slides.length) return;
-			console.log(slideId);
 			for(let i = 0; i < state.slides.length; ++i) {
 				if(state.slides[i].text === state.activeSlide.text) {
 					state.slides[i] = state.activeSlide;

@@ -1,7 +1,7 @@
 <template>
   <div style="width: 99.15%; margin-left: 0.40%;" id="image-view">
     <v-row>
-      <div style="width:100%;margin-bottom: 0.25%;height:100%;" v-if="activeSlide">
+      <div style="width:101%;margin-bottom: 0.25%;height:100%" v-if="activeSlide" id="grid-layout">
         <grid-layout :layout.sync="layout"
                      :col-num="activeSlide.maxX"
                      :row-height="columnHeight"
@@ -12,7 +12,9 @@
                      :use-css-transforms="true"
                      :margin="[0, 0]"
                      :autoSize="true"
-
+                     :preserveAspectRatio="true"
+                     :style="{width: parentContainer}"
+                     v-if="widthCalculated"
         >
           <grid-item v-for="item in layout"
                      :static="item.static"
@@ -81,7 +83,10 @@
         toggleActionMenu: false,
         layout: [
 
-        ]
+        ],
+        sizeOfTheScreen: null,
+        width: null,
+        widthCalculated: false
       }
     },
     methods: {
@@ -162,9 +167,15 @@
       ...mapState([
               'activeImage',
               'activeSlide'
-      ])
+      ]),
+      parentContainer() {
+        return document.getElementById('grid-layout') ? document.getElementById('grid-layout').offsetWidth + 'px' : '0';
+      }
     },
     mounted() {
+      setTimeout(() => {
+        this.widthCalculated = true;
+      }, 50);
       if(this.$route.query.new === 'true') {
         this.createNewSlide();
       }
@@ -172,8 +183,10 @@
       this.composeLayout();
 
       EventBus.$on('CHANGE_LAYOUT', async payload => {
+        this.widthCalculated = false;
         this.restructureActiveSlide({ columns: payload.columns, rows: payload.rows });
         this.composeLayout();
+        this.widthCalculated = true;
       });
       EventBus.$on('TOGGLE_ACTION_MENU', payload => {
         this.toggleActionMenu = payload;

@@ -2,7 +2,7 @@
     <div :id="'image-upload' + imageData.uuid" class="image-upload" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
         <div id="draggable-container" ref="draggableContainer" class="draggable-container">
             <div :id="'draggable-header' + imageData.uuid" @mousedown="dragMouseDown">
-                <div v-if="!imageData.src && !presentationModeActive" class="" :id="'grid-ceil-' + uuid">
+                <div v-if="!imageData.src && !presentationModeActive" :id="'grid-ceil-' + uuid">
                     <div class="file-upload upload-image">
                         <label :for="'file-input' + uuid">
                             <img src="../../public/img/uploader.jpg" alt="uploader" class="image-uploader" />
@@ -253,7 +253,6 @@
                 };
             }, false);
             setTimeout(()=> {
-                console.log(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);
                 this.setGlobalMaxImageWidth(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);
             },2000);
             /*console.log(document.getElementById('image-upload' + this.imageData.uuid).offsetWidth);

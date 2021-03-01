@@ -5,7 +5,6 @@
             dark
             id="header"
             v-if="!presentationModeActive"
-            :class="{visible: presentationModeActive}"
     >
         <div style="margin-right: 1%;">
             <v-btn depressed color="primary" @click="goInFullscreen">
@@ -282,7 +281,6 @@
                 this.$router.push('/');
             },
             deleteSlide() {
-                console.log(this.activeSlide.text);
                 this.deleteSlideFromStore(this.activeSlide.text);
                 if(this.slides.length === 0) this.$router.push('/');
             }
@@ -318,7 +316,7 @@
 </script>
 <style scoped>
     .visible {
-        visibility:hidden;
+        visibility: hidden;
     }
     #header {
         z-index: 999;
@@ -342,5 +340,17 @@
     .selectedLayout {
         box-shadow: 0 0 3px #ff932b;
         background-color: #bcbcbc;
+    }
+    body:fullscreen {
+        overflow: scroll !important;
+    }
+    body:-ms-fullscreen {
+        overflow: scroll !important;
+    }
+    body:-webkit-full-screen {
+        overflow: scroll !important;
+    }
+    body:-moz-full-screen {
+        overflow: scroll !important;
     }
 </style>
