@@ -216,7 +216,7 @@
                 this.audio = new Audio(require('./../assets/audio/' + this.currentAudio + '.mp3'));
             },
             saveCurrentSlide() {
-                console.log('console current slide');
+                console.log('console current slide.');
             },
             ...mapActions([
                 'changeActiveSlide',
