@@ -62,7 +62,6 @@
   import ImageUpload from '../components/ImageUpload';
   import {mapState, mapActions} from 'vuex';
   import EventBus from "../helpers/eventBus";
-
   export default {
     name: "ImageView",
     components: {
@@ -82,7 +81,6 @@
         //columnWidth: 0,
         toggleActionMenu: false,
         layout: [
-
         ],
         sizeOfTheScreen: null,
         width: null,
@@ -98,8 +96,8 @@
       },
       ...mapActions({
         restructureActiveSlide: 'restructureActiveSlide',
-          setActiveImage: 'setActiveImage',
-          createNewSlide: 'createNewSlide'
+        setActiveImage: 'setActiveImage',
+        createNewSlide: 'createNewSlide'
       }),
       composeLayout() {
         if (this.activeSlide)
@@ -165,8 +163,8 @@
     },
     computed: {
       ...mapState([
-              'activeImage',
-              'activeSlide'
+        'activeImage',
+        'activeSlide'
       ]),
       parentContainer() {
         return document.getElementById('grid-layout') ? document.getElementById('grid-layout').offsetWidth + 'px' : '0';
@@ -179,9 +177,7 @@
       if(this.$route.query.new === 'true') {
         this.createNewSlide();
       }
-
       this.composeLayout();
-
       EventBus.$on('CHANGE_LAYOUT', async payload => {
         this.widthCalculated = false;
         this.restructureActiveSlide({ columns: payload.columns, rows: payload.rows });
@@ -192,7 +188,7 @@
         this.toggleActionMenu = payload;
       });
       window.addEventListener("resize", () => {
-          //this.handleResize();
+        //this.handleResize();
       });
     }
   }
@@ -200,11 +196,11 @@
 
 <style scoped>
   .vue-grid-layout {
-    //background: #eee;
+  //background: #eee;
   }
   .vue-grid-item:not(.vue-grid-placeholder) {
-    //background: #ccc;
-    //border: 1px solid black;
+  //background: #ccc;
+  //border: 1px solid black;
   }
   .vue-grid-item .resizing {
     opacity: 0.9;
@@ -222,7 +218,6 @@
     margin: auto;
   }
   .vue-grid-item .no-drag {
-
   }
   .vue-grid-item .minMax {
     font-size: 12px;
@@ -245,14 +240,14 @@
     cursor: pointer;
   }
   .height-parent {
-    //border: 10px solid #FFbFFa;
+  //border: 10px solid #FFbFFa;
   }
   .height-child {
     /*display: table-caption;
     vertical-align: middle; !*Vertically centered*!
     text-align: center;*/
     height:100%;
-    //border: 4px solid #adF4FF;/* Horizontally centered */
+  //border: 4px solid #adF4FF;/* Horizontally centered */
   }
   #action-menu {
     position: absolute;

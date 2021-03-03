@@ -32,45 +32,44 @@
 
             </ImageConfigurer>
         </div>
-        </div>
+    </div>
 </template>
 
 <script>
     import { mapActions, mapState } from 'vuex';
     import EventBus from '../helpers/eventBus';
     import ImageConfigurer from './ImageConfigurer';
-
     export default {
         data: () => {
-          return {
-              imageData: {
-                  uuid: null,
-                  src: null,
-                  width: "500",
-                  rotation: 0,
-                  positionX: null,
-                  positionY: null,
-                  slideId: -1,
-                  roundFactor: 0,
-                  x: 0,
-                  y: 0,
-                  blurringLevel: 0,
-                  sepiaLevel: 0,
-                  saturationLevel: 1,
-                  invertLevel: 0,
-                  opacityLevel: 100,
-                  brightnessLevel: 100,
-                  contrastLevel: 100,
-                  isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
-              },
-              positions: {
-                  clientX: null,
-                  clientY: null,
-                  movementX: 0,
-                  movementY: 0,
-                  isDragging: false
-              }
-          }
+            return {
+                imageData: {
+                    uuid: null,
+                    src: null,
+                    width: "500",
+                    rotation: 0,
+                    positionX: null,
+                    positionY: null,
+                    slideId: -1,
+                    roundFactor: 0,
+                    x: 0,
+                    y: 0,
+                    blurringLevel: 0,
+                    sepiaLevel: 0,
+                    saturationLevel: 1,
+                    invertLevel: 0,
+                    opacityLevel: 100,
+                    brightnessLevel: 100,
+                    contrastLevel: 100,
+                    isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
+                },
+                positions: {
+                    clientX: null,
+                    clientY: null,
+                    movementX: 0,
+                    movementY: 0,
+                    isDragging: false
+                }
+            }
         },
         components: {
             ImageConfigurer
@@ -119,7 +118,6 @@
                 if(payload.uuid !== this.imageData.uuid && payload.isEnabled) {
                     this.imageData.isBackgroundImage = { isEnabled: null, backgroundSize: 'cover' };
                 } else if (payload.uuid === this.imageData.uuid) {
-
                     this.imageData.isBackgroundImage = { isEnabled: payload.isEnabled, backgroundSize: payload.backgroundSize };
                     this.setActiveImage(this.imageData);
                 }
@@ -140,7 +138,6 @@
             });
             EventBus.$on('HANDLE_RESIZE', () => {
                 if(!this.imageData.src) return;
-
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 if(wrapperElement.getBoundingClientRect()) {
                     let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
@@ -148,24 +145,20 @@
                     let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
                     let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
                     let imageHeaderRight = wrapperElement.getBoundingClientRect().right;
-
                     let draggableHeaderBottom = draggableElement.getBoundingClientRect().bottom;
                     let draggableHeaderLeft = draggableElement.getBoundingClientRect().left;
                     let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
                     let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
-
                     if(imageHeaderRight < draggableHeaderRight && this.$refs.draggableContainer) {
                         this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                         this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                         this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
                     }
-
                     if(imageHeaderBottom < draggableHeaderBottom && this.$refs.draggableContainer) {
                         this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                         this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                         this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                     }
-
                     if(imageHeaderLeft > draggableHeaderLeft && this.$refs.draggableContainer) {
                         this.positions.movementX = 0;
                         this.imageData.positionX = 0;
@@ -192,7 +185,6 @@
                 this.removeBorder();
                 await this.setActiveImage(null);
             });
-
             this.imageData.uuid = this.uuid;
             this.imageData.slideId = this.activeSlide.text;
             this.imageData.x = this.x;
@@ -215,7 +207,6 @@
             this.$refs.draggableContainer.style.left = this.imageData.positionX + 'px';
             this.$refs.draggableContainer.style.top = this.imageData.positionY + 'px';
             this.assignImageToTheSlide(this.imageData);
-
             let imageInput = document.getElementById('grid-ceil-' + this.imageData.uuid);
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 imageInput.addEventListener(eventName, e => {
@@ -229,14 +220,12 @@
             ['dragleave', 'drop'].forEach(eventName => {
                 imageInput.addEventListener(eventName, () => imageInput.classList.remove('highlight'), false);
             });
-
             imageInput.addEventListener('drop', e => {
                 if(this.imageData.src) return;
                 let dt = e.dataTransfer;
                 let file = dt.files[0];
                 let reader = new FileReader();
                 reader.readAsDataURL(file);
-
                 reader.onload = async e => {
                     const src = e.target.result;
                     this.imageData.src = src;
@@ -264,7 +253,6 @@
                 let file = e.target.files[0];
                 let reader = new FileReader();
                 reader.readAsDataURL(file);
-
                 reader.onload = async e => {
                     const src = e.target.result;
                     this.imageData.src = src;
@@ -291,42 +279,34 @@
                 event.preventDefault();
                 let wrapperElement = document.getElementById('image-upload' + this.imageData.uuid);
                 let draggableElement = document.getElementById('draggable-header' + this.imageData.uuid);
-
                 this.positions.movementX = this.positions.clientX - event.clientX;
                 this.positions.movementY = this.positions.clientY - event.clientY;
                 this.positions.clientX = event.clientX;
                 this.positions.clientY = event.clientY;
-
                 this.positions.movementY = this.$refs.draggableContainer.offsetTop - this.positions.movementY;
                 this.positions.movementX = this.$refs.draggableContainer.offsetLeft - this.positions.movementX;
                 this.$refs.draggableContainer.style.top = this.positions.movementY + 'px';
                 this.$refs.draggableContainer.style.left = this.positions.movementX + 'px';
-
                 this.imageData.positionY = this.positions.movementY;
                 this.imageData.positionX = this.positions.movementX;
-
                 let imageHeaderBottom = wrapperElement.getBoundingClientRect().bottom;
                 let imageHeaderLeft = wrapperElement.getBoundingClientRect().left;
                 let imageHeaderTop = wrapperElement.getBoundingClientRect().top;
                 let imageHeaderRight = wrapperElement.getBoundingClientRect().right;
-
                 let draggableHeaderBottom = draggableElement.getBoundingClientRect().bottom;
                 let draggableHeaderLeft = draggableElement.getBoundingClientRect().left;
                 let draggableHeaderTop = draggableElement.getBoundingClientRect().top;
                 let draggableHeaderRight = draggableElement.getBoundingClientRect().right;
-
                 if(imageHeaderRight + 200 < draggableHeaderRight) {
                     this.positions.movementX = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                     this.imageData.positionY = wrapperElement.getBoundingClientRect().width - draggableElement.getBoundingClientRect().width;
                     this.$refs.draggableContainer.style.left = this.positions.movementX + 200  + 'px';
                 }
-
                 if(imageHeaderBottom + 200 < draggableHeaderBottom) {
                     this.positions.movementY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                     this.imageData.positionY = wrapperElement.getBoundingClientRect().height - draggableElement.getBoundingClientRect().height;
                     this.$refs.draggableContainer.style.top = this.positions.movementY + 200 + 'px';
                 }
-
                 if(imageHeaderLeft - 200 > draggableHeaderLeft) {
                     this.positions.movementX = 0;
                     this.imageData.positionX = this.positions.movementX - 200;
@@ -337,7 +317,6 @@
                     this.imageData.positionY = this.positions.movementY - 200;
                     this.$refs.draggableContainer.style.top = this.positions.movementY - 200 + 'px';
                 }
-
                 this.saveImage(this.imageData);
             },
             closeDragElement () {
@@ -436,46 +415,3 @@
         }
     }
 </script>
-<style scoped>
-    #draggable-container {
-        position: absolute;
-        z-index: 9
-    }
-    #draggable-header {
-        z-index: 10;
-    }
-    .image-upload {
-        //border: 4px solid #db263b;
-        padding: 0;
-        position: relative
-    }
-    .image-uploader {
-        cursor: pointer;
-        //border: 4px solid #2590EB;
-    }
-    .wrapper .file-upload {
-        //border: 4px solid #eb263b;
-        transition: all 1s;
-        color: #FFFFFF;
-        height: 100%;
-    }
-    .wrapper .file-upload:hover {
-
-        //background-image: url("../../public/img/uploader.jpg");
-    }
-    .border {
-        border: 2px solid #555;
-    }
-    .animated {
-        -webkit-animation: filter-animation 5s infinite;
-    }
-    .upload-image > input {
-        display: none;
-    }
-    .draggable-container {
-        //border: 2px solid #10ff35;
-    }
-    .highlight {
-        opacity: 0.5;
-    }
-</style>
