@@ -415,3 +415,45 @@
         }
     }
 </script>
+<style scoped>
+    #draggable-container {
+        position: absolute;
+        z-index: 9
+    }
+    #draggable-header {
+        z-index: 10;
+    }
+    .image-upload {
+    //border: 4px solid #db263b;
+        padding: 0;
+        position: relative
+    }
+    .image-uploader {
+        cursor: pointer;
+    //border: 4px solid #2590EB;
+    }
+    .wrapper .file-upload {
+    //border: 4px solid #eb263b;
+        transition: all 1s;
+        color: #FFFFFF;
+        height: 100%;
+    }
+    .wrapper .file-upload:hover {
+    //background-image: url("../../public/img/uploader.jpg");
+    }
+    .border {
+        border: 2px solid #555;
+    }
+    .animated {
+        -webkit-animation: filter-animation 5s infinite;
+    }
+    .upload-image > input {
+        display: none;
+    }
+    .draggable-container {
+    //border: 2px solid #10ff35;
+    }
+    .highlight {
+        opacity: 0.5;
+    }
+</style>
