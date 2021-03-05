@@ -15,8 +15,7 @@ import EventBus from './helpers/eventBus';
 export default {
   name: 'App',
   components: {
-    Header,
-    //ImageView
+    Header
   },
   data() {
     return {
@@ -42,7 +41,7 @@ export default {
     ])
   },
   async mounted() {
-    window.addEventListener('scroll', () => window.scrollTo(0, 0));
+    //window.addEventListener('scroll', () => window.scrollTo(0, 0));
     document.addEventListener('keydown', (event) => {
       if(this.presentationModeActive) {
         if(this.autosliding.autoslideEnabled) {
