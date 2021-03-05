@@ -205,6 +205,9 @@
             <v-btn value="exchange" @click="exchangePerColumn">
                 <v-icon>mdi-format-vertical-align-center</v-icon>
             </v-btn>
+            <v-btn value="basic" @click="revertToPreviousPresentationState" :disabled="previousOperations.length === 0">
+                <v-icon>mdi-undo-variant</v-icon>
+            </v-btn>
             <v-btn value="remove-image" @click="removeAndClearImage">
                 <span>Remove image</span>
                 <v-icon>mdi-delete</v-icon>
@@ -239,7 +242,11 @@
             backgroundSizes: ['cover', 'contain', 'initial'],
             backgroundSize: 'cover',
             gridItems: [],
-            maxImageWidth: 800
+            maxImageWidth: 800,
+            previousOperations: [],
+            undoInProgress: false,
+            computedWidth: null,
+            computingWidth: false
         }),
         props: {
         },
@@ -249,14 +256,89 @@
                 'backgroundImageData',
                 'activeSlide',
                 'globalMaxImageWidth'
-            ]),
-            computedWidth() {
-                return Math.round(this.activeImage.width / this.maxImageWidth * 100 * 100) / 100;
-            }
+            ])
         },
         watch: {
+            computedWidth(newValue) {
+                this.computingWidth = true;
+                this.setWidthOnActiveImage(newValue / 10000 * 100 * this.maxImageWidth);
+                setTimeout(() => {
+                    this.computingWidth = false;
+                }, 50);
+            },
             'activeImage.isBackgroundImage'() {
                 //this.activeImage.isBackgroundImage = newData;
+            },
+            'activeImage.width'(newValue, oldValue) {
+                if(!this.undoInProgress && !this.computingWidth) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.width = oldValue;
+                    this.previousOperations.push({property: 'WIDTH', value: oldValue});
+                    this.computedWidth = Math.round(this.activeImage.width / this.maxImageWidth * 100 * 100) / 100;
+                }
+            },
+            'activeImage.rotation'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.rotation = oldValue;
+                    this.previousOperations.push({property: 'ROTATION', value: oldValue});
+                }
+            },
+            'activeImage.roundFactor'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.roundFactor = oldValue;
+                    this.previousOperations.push({property: 'ROUND_FACTOR', value: oldValue});
+                }
+            },
+            'activeImage.sepiaLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.sepiaLevel = oldValue;
+                    this.previousOperations.push({property: 'SEPIA_LEVEL', value: oldValue});
+                }
+            },
+            'activeImage.saturationLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.saturationLevel = oldValue;
+                    this.previousOperations.push({property: 'SATURATION_LEVEL', value: oldValue});
+                }
+            },
+            'activeImage.invertLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.invertLevel = oldValue;
+                    this.previousOperations.push({property: 'INVERT_LEVEL', value: oldValue});
+                }
+            },
+            'activeImage.contrastLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.contrastLevel = oldValue;
+                    this.previousOperations.push({property: 'CONTRAST_LEVEL', value: oldValue});
+                }
+            },
+            'activeImage.brightnessLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.brightnessLevel = oldValue;
+                    this.previousOperations.push({property: 'BRIGHTNESS_LEVEL', value: oldValue});
+                }
+            },
+            'activeImage.blurringLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.blurringLevel = oldValue;
+                    this.previousOperations.push({property: 'BLURRING_LEVEL', value: oldValue});
+                }
+            },
+            'activeImage.opacityLevel'(newValue, oldValue) {
+                if(!this.undoInProgress) {
+                    const activeImageCopy = Object.assign({}, this.activeImage);
+                    activeImageCopy.opacityLevel = oldValue;
+                    this.previousOperations.push({property: 'OPACITY_LEVEL', value: oldValue});
+                }
             }
         },
         created() {
@@ -283,6 +365,7 @@
                 }
             }
             this.maxImageWidth = this.globalMaxImageWidth;
+            this.computedWidth = Math.round(this.activeImage.width / this.maxImageWidth * 100 * 100) / 100;
         },
         methods: {
             ...mapActions([
@@ -292,9 +375,18 @@
                 'saveImage',
                 'exchangeImages',
                 'exchangeImageWithNeighbourRow',
-                'exchangeImageWithNeighbourColumn'
+                'exchangeImageWithNeighbourColumn',
+                'setRotationOnActiveImage',
+                'setWidthOnActiveImage',
+                'setRoundFactorOnActiveImage',
+                'setSepiaLevelOnActiveImage',
+                'setBrightnessLevelOnActiveImage',
+                'setOpacityLevelOnActiveImage',
+                'setBlurringLevelOnActiveImage',
+                'setContrastLevelOnActiveImage',
+                'setInvertLevelOnActiveImage',
+                'setSaturationLevelOnActiveImage'
             ]),
-
             removeAndClearImage() {
                 this.closeDeleteAlert(true);
                 this.deleteActiveImageData(this.activeImage);
@@ -319,7 +411,7 @@
                     uuid: this.activeImage.uuid,
                     backgroundSize: this.backgroundSize
                 };
-                this.setBackgroundImage(this.background);//
+                this.setBackgroundImage(this.background);
                 EventBus.$emit('BACKGROUND_IMAGE_SET', this.background);
                 //this.activeImage.isBackgroundImage.isEnabled = this.background.isEnabled;
                 this.activeImage.isBackgroundImage.isEnabled = e;
@@ -341,10 +433,14 @@
                 }
             },
             zoomOut () {
-                this.activeImage.width = (this.activeImage.width - 5) || 0
+                this.activeImage.width = (this.activeImage.width - 5) || 0;
+                this.setActiveImage(this.activeImage);
+                this.saveImage(this.activeImage);
             },
             zoomIn () {
-                this.activeImage.width = (this.activeImage.width + 5) || 500
+                this.activeImage.width = (this.activeImage.width + 5) || 500;
+                this.setActiveImage(this.activeImage);
+                this.saveImage(this.activeImage);
             },
             clearConfigurer() {
                 this.deleteAlertShown = false;
@@ -376,6 +472,39 @@
                 this.exchangeImageWithNeighbourColumn(this.activeImage.uuid);
                 this.setActiveImage(null);
                 EventBus.$emit(this.imageManipulateAction.CONFIGURER_EXITED);
+            },
+            async revertToPreviousPresentationState() {
+                this.undoInProgress = true;
+                const operation = this.previousOperations.pop();
+                //operation.property
+                if(operation.property === 'WIDTH') {
+                    this.setWidthOnActiveImage(operation.value);
+                    this.computedWidth = Math.round(this.activeImage.width / this.maxImageWidth * 100 * 100) / 100;
+                } else if(operation.property === 'ROTATION') {
+                    this.setRotationOnActiveImage(operation.value);
+                } else if(operation.property === 'ROUND_FACTOR') {
+                    this.setRoundFactorOnActiveImage(operation.value);
+                } else if(operation.property === 'SEPIA_LEVEL') {
+                    this.setSepiaLevelOnActiveImage(operation.value);
+                } else if(operation.property === 'SATURATION_LEVEL') {
+                    this.setSaturationLevelOnActiveImage(operation.value);
+                } else if(operation.property === 'BLURRING_LEVEL') {
+                    this.setBlurringLevelOnActiveImage(operation.value);
+                } else if(operation.property === 'BRIGHTNESS_LEVEL') {
+                    this.setBrightnessLevelOnActiveImage(operation.value);
+                } else if(operation.property === 'OPACITY_LEVEL') {
+                    this.setOpacityLevelOnActiveImage(operation.value);
+                } else if(operation.property === 'CONTRAST_LEVEL') {
+                    this.setContrastLevelOnActiveImage(operation.value);
+                } else if(operation.property === 'INVERT_LEVEL') {
+                    this.setInvertLevelOnActiveImage(operation.value);
+                }
+                //this.activeImage.roundFactor = this.previousOperations.roundFactor;
+                setTimeout(() => {
+                    this.undoInProgress = false;
+                }, 25);
+                this.value = 'basic';
+
             }
         }
     };

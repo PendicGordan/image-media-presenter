@@ -27,7 +27,8 @@ export default new Vuex.Store({
 			reverse: false,
 			playMusic: false
 		},
-		globalMaxImageWidth: 800
+		globalMaxImageWidth: 800,
+		previousPresentationStates: []
 	},
 	getters: {
 		activeSlide: state => state.activeSlide,
@@ -37,7 +38,8 @@ export default new Vuex.Store({
 		presentationId: state => state.presentationId,
 		presentationModeActive: state => state.presentationModeActive,
 		autosliding: state => state.autosliding,
-		globalMaxImageWidth: state => state.globalMaxImageWidth
+		globalMaxImageWidth: state => state.globalMaxImageWidth,
+		previousPresentationStates: state => state.previousPresentationStates
 	},
 	actions: {
 		async saveSlide({state}, slide) {
@@ -168,8 +170,71 @@ export default new Vuex.Store({
 		setGlobalMaxImageWidth({commit}, data) {
 			commit('setGlobalMaxImageWidth', data);
 		},
+		revertToPreviousPresentationState({commit}) {
+			commit('revertToPreviousPresentationState');
+		},
+		setRotationOnActiveImage({commit}, rotation) {
+			commit('setRotationOnActiveImage', rotation);
+		},
+		setWidthOnActiveImage({commit}, width) {
+			commit('setWidthOnActiveImage', width);
+		},
+		setRoundFactorOnActiveImage({commit}, roundFactor) {
+			commit('setRoundFactorOnActiveImage', roundFactor);
+		},
+		setSepiaLevelOnActiveImage({commit}, sepiaLevel) {
+			commit('setSepiaLevelOnActiveImage', sepiaLevel);
+		},
+		setBrightnessLevelOnActiveImage({commit}, brightnessLevel) {
+			commit('setBrightnessLevelOnActiveImage', brightnessLevel);
+		},
+		setOpacityLevelOnActiveImage({commit}, opacityLevel) {
+			commit('setOpacityLevelOnActiveImage', opacityLevel);
+		},
+		setBlurringLevelOnActiveImage({commit}, blurringLevel) {
+			commit('setBlurringLevelOnActiveImage', blurringLevel);
+		},
+		setContrastLevelOnActiveImage({commit}, contrastLevel) {
+			commit('setContrastLevelOnActiveImage', contrastLevel);
+		},
+		setInvertLevelOnActiveImage({commit}, invertLevel) {
+			commit('setInvertLevelOnActiveImage', invertLevel);
+		},
+		setSaturationLevelOnActiveImage({commit}, saturationLevel) {
+			commit('setSaturationLevelOnActiveImage', saturationLevel);
+		}
     },
 	mutations: {
+		setSaturationLevelOnActiveImage(state, data) {
+			state.activeImage.saturationLevel = data;
+		},
+		setInvertLevelOnActiveImage(state, data) {
+			state.activeImage.invertLevel = data;
+		},
+		setContrastLevelOnActiveImage(state, data) {
+			state.activeImage.contrastLevel = data;
+		},
+		setOpacityLevelOnActiveImage(state, data) {
+			state.activeImage.opacityLevel = data;
+		},
+		setBlurringLevelOnActiveImage(state, data) {
+			state.activeImage.blurringLevel = data;
+		},
+		setBrightnessLevelOnActiveImage(state, data) {
+			state.activeImage.brightnessLevel = data;
+		},
+		setSepiaLevelOnActiveImage(state, data) {
+			state.activeImage.sepiaLevel = data;
+		},
+		setRoundFactorOnActiveImage(state, data) {
+			state.activeImage.roundFactor = data;
+		},
+		setWidthOnActiveImage(state, data) {
+			state.activeImage.width = data;
+		},
+		setRotationOnActiveImage(state, data) {
+			state.activeImage.rotation = data;
+		},
 		setGlobalMaxImageWidth(state, data) {
 			state.globalMaxImageWidth = data;
 		},
@@ -372,7 +437,7 @@ export default new Vuex.Store({
 			const presentationUuid = uuid.v4();
 			const columns = [
 				{ label: 'Id', value: 'id' },
-				{ label: 'Name', value: 'name' },// Top level data
+				{ label: 'Name', value: 'name' },
 				{ label: 'Content', value: 'content' },
 				{ label: 'Audio', value: 'audio' },
 				{ label: 'Background', value: 'background' },
