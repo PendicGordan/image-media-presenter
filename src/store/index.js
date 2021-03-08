@@ -298,17 +298,27 @@ export default new Vuex.Store({
 			}
 		},
 		createNewSlide(state) {
-			const nextSlideId = state.slides.length + 1;
+			//const nextSlideId = state.slides.length + 1;
 			let maxX = 2, maxY = 1;
-			if(state.slides[state.slides.length - 1]) {
-				maxX = state.slides[state.slides.length - 1].maxX;
-				maxY = state.slides[state.slides.length - 1].maxY;
+			let activeSlideId = 1;
+			if(state.slides.length === 0) {
+				state.slides.push({ text: 1, images: {}, maxX, maxY});
+			} else {
+				activeSlideId = parseInt(state.activeSlide.text);
+				if(state.slides[activeSlideId - 1]) {
+					maxX = state.slides[activeSlideId - 1].maxX;
+					maxY = state.slides[activeSlideId - 1].maxY;
+				}
+				//state.slides.push({ text: nextSlideId, images: {}, maxX, maxY});
+				state.slides.splice(activeSlideId, 0, { text: activeSlideId + 1, images: {}, maxX, maxY});
 			}
-			state.slides.push({ text: nextSlideId, images: {}, maxX, maxY});
+
+
 			for(let i = 0; i < maxX; ++i) {
 				for(let j = 0; j < maxY; ++j) {
 					const imageUuid = uuid.v4();
-					state.slides[state.slides.length - 1].images[imageUuid] = {
+					if(state.slides.length === 1)
+						state.slides[activeSlideId - 1].images[imageUuid] = {
 						uuid: imageUuid,
 						src: null,
 						width: "500",
@@ -327,9 +337,32 @@ export default new Vuex.Store({
 						contrastLevel: 100,
 						isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
 					}
+					else
+						state.slides[activeSlideId].images[imageUuid] = {
+							uuid: imageUuid,
+							src: null,
+							width: "500",
+							x: i,
+							y: j,
+							rotation: 0,
+							positionX: null,
+							positionY: null,
+							roundFactor: 0,
+							blurringLevel: 0,
+							sepiaLevel: 0,
+							saturationLevel: 1,
+							invertLevel: 0,
+							opacityLevel: 100,
+							brightnessLevel: 100,
+							contrastLevel: 100,
+							isBackgroundImage: { isEnabled: null, backgroundSize: 'cover' }
+						}
 				}
 			}
-			state.activeSlide = state.slides[state.slides.length - 1];
+			if(state.slides.length === 1)
+				state.activeSlide = state.slides[activeSlideId - 1];
+			else
+				state.activeSlide = state.slides[activeSlideId];
 		},
 		deleteSlideFromStore(state, slideId) {
 			state.slides = state.slides.filter(slide => slide.text !== slideId);
