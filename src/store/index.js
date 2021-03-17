@@ -310,6 +310,12 @@ export default new Vuex.Store({
 					maxY = state.slides[activeSlideId - 1].maxY;
 				}
 				//state.slides.push({ text: nextSlideId, images: {}, maxX, maxY});
+				state.slides.forEach(slide => {
+					console.log(slide, activeSlideId + 1);
+					if(slide.text > activeSlideId) {
+						slide.text += 1;
+					}
+				});
 				state.slides.splice(activeSlideId, 0, { text: activeSlideId + 1, images: {}, maxX, maxY});
 			}
 
@@ -363,6 +369,8 @@ export default new Vuex.Store({
 				state.activeSlide = state.slides[activeSlideId - 1];
 			else
 				state.activeSlide = state.slides[activeSlideId];
+
+			console.log(state.slides);
 		},
 		deleteSlideFromStore(state, slideId) {
 			state.slides = state.slides.filter(slide => slide.text !== slideId);
