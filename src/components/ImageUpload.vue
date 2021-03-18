@@ -442,7 +442,7 @@
     //background-image: url("../../public/img/uploader.jpg");
     }
     .border {
-        border: 2px solid #555;
+        //border: 2px solid #555;
     }
     .animated {
         -webkit-animation: filter-animation 5s infinite;
